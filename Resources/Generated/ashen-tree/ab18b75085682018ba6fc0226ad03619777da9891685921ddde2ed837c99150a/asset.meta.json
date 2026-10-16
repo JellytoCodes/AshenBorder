@@ -1,0 +1,140 @@
+{
+  "assetId": "ashen-tree",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 492,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 492
+  },
+  "formatVersion": 1,
+  "generation": "ab18b75085682018ba6fc0226ad03619777da9891685921ddde2ed837c99150a",
+  "importOptions": {
+    "assetId": "ashen-tree",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "tree.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "tree.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "58dd1eec6feaebc2e7b3b21f5f645af5c5a9b242f4123c74fc44ff65980df30a",
+  "inputs": [
+    {
+      "bytes": 766,
+      "path": "import.json",
+      "sha256": "22a751aa3982cee7d4264250cea69dab275aa745716d6a8447db9e7c81f5da63"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 513,
+      "path": "source.json",
+      "sha256": "3e0fae6a9cb397332c933ed824d9bdf4fec4805eddcf525d3d78f1af7970e057"
+    },
+    {
+      "bytes": 117934,
+      "path": "tree.geometry.json",
+      "sha256": "cc511fef97fcca49ae6a10fe1a208fdb2af347ff20b75943b82601d5a43d663a"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 17954,
+      "kind": "model",
+      "path": "tree.mesh",
+      "sha256": "63113725ac70547febf329cee9c5dbe4dec25c5669a0e67c606c0617d8e3e7b0"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-tree",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "charred irregular trunk and four solid branches",
+      "muted ash-grey angular foliage",
+      "ground pivot y=0"
+    ],
+    "gameplayCollisionAdded": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        0.8600000143051147,
+        3.8455448150634766,
+        0.7519481182098389
+      ],
+      "min": [
+        -0.8986976146697998,
+        0.0,
+        -0.7147060036659241
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      1.7586976289749146,
+      3.8455448150634766,
+      1.466654121875763
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.00027063225849757055,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 164
+  }
+}

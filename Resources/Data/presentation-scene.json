@@ -1,0 +1,179 @@
+{
+  "audio": {
+    "blade": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/blade.wav",
+    "bow": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/bow.wav",
+    "death": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/death.wav",
+    "defeat": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/defeat.wav",
+    "fire": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/fire.wav",
+    "hit": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/hit.wav",
+    "music": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/music.wav",
+    "pickup": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/pickup.wav",
+    "select": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/select.wav",
+    "throwingKnife": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/throwingKnife.wav",
+    "victory": "Generated/ashen-audio/a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8/victory.wav"
+  },
+  "models": {
+    "blade": "Generated/ashen-blade/f0203f180e4de763df7b97630be3c24ad4b96d2a83adc9eb984aaa3099d6ad18/blade.mesh",
+    "currency": "Generated/ashen-supplies/6f047b0b44a37ed40a32d50e0025e05f97356ca933e66bdebd3d20517dce4e2a/currency.mesh",
+    "experience": "Generated/trial-experience/8f1a2160b3ea0cc41f7b2b83404e7cee33f9f75670a019bfe4956b0c82f4c928/experience.mesh",
+    "tree": "Generated/ashen-tree/275cc366f0dd99ba02f563111b30969ded53ec16fa744394e32aa291d70e90aa/tree.mesh",
+    "bow": "Generated/ashen-bow/7b231b8d1035d3560c04bf65930323f42a5fd9ba66d4dc347a109f8309053636/bow.mesh",
+    "throwingKnife": "Generated/ashen-throwing-knife/79b96fbc62b29b2f1319b72fc4f44ef22ccac8279d6cc6f8881801d38c6889b6/throwingKnife.mesh",
+    "arrow": "Generated/ashen-arrow/457479d2152ff7bab14df7723a5532d57327db4fd54c5f5b0234dc01c98d65ac/arrow.mesh",
+    "knifeProjectile": "Generated/ashen-knife-projectile/df7454aa095926520bca12e10d8a8145857351acb72dfca33910ffea6d7e928a/knifeProjectile.mesh",
+    "banner": "Generated/ashen-banner/1aa6e756a47f9085063ba7daeed88a13ec38ecb7082a1860cff1118690d9ec83/banner.mesh",
+    "brazier": "Generated/ashen-brazier/f274af0c46bd69814bb225d64e4b33dd2b44d2ac34c6aaa907146144b46030b9/brazier.mesh",
+    "brokenWall": "Generated/ashen-broken-wall/eaec61b832594ff6ec2b9a87cfd24d698f9c0a08bc31ec81bfd2f8ad5f54958c/brokenWall.mesh",
+    "gate": "Generated/ashen-gate/ecd17279a93e8c2c97597028a6458b335beefe59aa6e2d8b99666ee899c39712/gate.mesh",
+    "supplies": "Generated/ashen-outpost-supplies/9e41bc0672e27f789608d7651832bfd93b3c414fc8bed70cb3ee5b364f03742a/supplies.mesh"
+  },
+  "schemaVersion": 1,
+  "trees": [
+    [
+      -9.6,
+      -5,
+      1,
+      0
+    ],
+    [
+      -9.6,
+      3.5,
+      1,
+      0
+    ],
+    [
+      9.6,
+      -5,
+      1,
+      0
+    ],
+    [
+      9.6,
+      3.5,
+      1,
+      0
+    ],
+    [
+      -5,
+      9.6,
+      1,
+      0
+    ],
+    [
+      5,
+      9.6,
+      1,
+      0
+    ],
+    [
+      -5,
+      -9.6,
+      1,
+      0
+    ],
+    [
+      5,
+      -9.6,
+      1,
+      0
+    ]
+  ],
+  "props": [
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": -4.7,
+      "yaw": 0,
+      "z": -10.4
+    },
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": 4.7,
+      "yaw": 0,
+      "z": -10.4
+    },
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": -10.4,
+      "yaw": 1.5707963267948966,
+      "z": -4
+    },
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": -10.4,
+      "yaw": 1.5707963267948966,
+      "z": 4
+    },
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": 10.4,
+      "yaw": 1.5707963267948966,
+      "z": -4
+    },
+    {
+      "model": "brokenWall",
+      "occludes": true,
+      "scale": 1,
+      "x": 10.4,
+      "yaw": 1.5707963267948966,
+      "z": 4
+    },
+    {
+      "model": "gate",
+      "occludes": true,
+      "scale": 1,
+      "x": 0,
+      "yaw": 0,
+      "z": 10.6
+    },
+    {
+      "model": "supplies",
+      "occludes": true,
+      "scale": 1,
+      "x": -10.6,
+      "yaw": 0.2,
+      "z": 0.2
+    },
+    {
+      "model": "supplies",
+      "occludes": true,
+      "scale": 1,
+      "x": 10.6,
+      "yaw": 2.8,
+      "z": 0.4
+    },
+    {
+      "model": "brazier",
+      "occludes": false,
+      "scale": 1,
+      "x": -9.7,
+      "yaw": 0,
+      "z": -7.3
+    },
+    {
+      "model": "brazier",
+      "occludes": false,
+      "scale": 1,
+      "x": 9.7,
+      "yaw": 0,
+      "z": -7.3
+    },
+    {
+      "model": "banner",
+      "occludes": true,
+      "scale": 1,
+      "x": -2.8,
+      "yaw": 0.1,
+      "z": 10.7
+    }
+  ]
+}

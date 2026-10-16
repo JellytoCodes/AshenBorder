@@ -1,0 +1,186 @@
+{
+  "assetId": "ashen-knife-projectile",
+  "converter": {
+    "name": "BuildAshenArsenal.py",
+    "revision": 1,
+    "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+  },
+  "converterRevision": 1,
+  "converterSha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+  "counts": {
+    "indices": 402,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 402
+  },
+  "formatVersion": 1,
+  "generation": "df7454aa095926520bca12e10d8a8145857351acb72dfca33910ffea6d7e928a",
+  "importOptions": {
+    "assetId": "ashen-knife-projectile",
+    "flipV": false,
+    "flipX": false,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "knifeProjectile.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": false,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "knifeProjectile.geometry.json",
+    "sourceFormat": "project_authored_geometry_json",
+    "sourceFront": "+Z",
+    "sourceHandedness": "LH",
+    "sourceUnitsPerMeter": 1,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "495ef336f2c3f7dfbe9a535f8df59e7f45e07df32f532e356fdec3ad395f65ab",
+  "inputs": [
+    {
+      "bytes": 958,
+      "path": "import.json",
+      "sha256": "9d54e5ceaa7410a63c8edebed2d30603af0390d4657975ecbdfb8d752eec4960"
+    },
+    {
+      "bytes": 79008,
+      "path": "knifeProjectile.geometry.json",
+      "sha256": "50266d73933e6d6826a05a97d3754aab4d5c157800264d30611ca463de97f57d"
+    },
+    {
+      "bytes": 247,
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 1913,
+      "path": "source.json",
+      "sha256": "37719ad1c68295694691f0e60aaabf32988fa73e3aa33729fb4f068466710660"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 14724,
+      "kind": "model",
+      "path": "knifeProjectile.mesh",
+      "sha256": "0a318c6437c1928959851e1899cfb6bc6d1dc9612a08b8548923f5820c799a48"
+    },
+    {
+      "bytes": 247,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-knife-projectile",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "bounds": {
+      "max": [
+        0.04749999940395355,
+        0.01991858519613743,
+        0.23999999463558197
+      ],
+      "min": [
+        -0.04749999940395355,
+        -0.01991858519613743,
+        -0.1599999964237213
+      ]
+    },
+    "creatorScript": {
+      "path": "Scripts/BuildAshenArsenal.py",
+      "revision": 1,
+      "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+    },
+    "dimensionsMeters": [
+      0.0949999988079071,
+      0.03983717039227486,
+      0.3999999910593033
+    ],
+    "displayName": "날아가는 투척칼",
+    "externalAssets": false,
+    "features": [
+      "compact flying knife",
+      "short leather grip",
+      "steel point +Z",
+      "distinct from held knife mesh"
+    ],
+    "forward": "+Z",
+    "gameplayStatsChanged": false,
+    "historicalReplica": false,
+    "noExternalAssetBytesCopied": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "redistribution": "This project repository and game builds; preserve original source notice",
+    "repositoryInclusion": true,
+    "role": "knifeProjectile",
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 958,
+        "path": "import.json",
+        "sha256": "9d54e5ceaa7410a63c8edebed2d30603af0390d4657975ecbdfb8d752eec4960"
+      },
+      {
+        "bytes": 79008,
+        "path": "knifeProjectile.geometry.json",
+        "sha256": "50266d73933e6d6826a05a97d3754aab4d5c157800264d30611ca463de97f57d"
+      },
+      {
+        "bytes": 247,
+        "path": "palette.png",
+        "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+      },
+      {
+        "bytes": 756,
+        "path": "projectauthoredsource.txt",
+        "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+      }
+    ],
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1,
+    "up": "+Y"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

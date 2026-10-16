@@ -1,0 +1,10 @@
+SAVE MYSELF: ASHEN BORDER - Original ruined outpost assets
+Original procedural geometry and palette authored by this project in
+Scripts/BuildAshenOutpost.py. No external model or texture bytes are copied.
+The terrain heightfield is the project's preserved LF05 heightmap; its vertex,
+normal, UV and index bytes are unchanged. Only its two texture images change.
+These stylized props suggest a fictional late-17th-century border outpost;
+they are not historical replicas and do not add collision or game rules.
+Project-authored source and generated files may be stored, modified and
+redistributed with this project's repository and builds. Preserve this notice
+with redistributed bundles. No unrelated dependency license is changed.

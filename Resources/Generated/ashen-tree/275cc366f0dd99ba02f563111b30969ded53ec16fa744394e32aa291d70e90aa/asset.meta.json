@@ -1,0 +1,144 @@
+{
+  "assetId": "ashen-tree",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 2,
+    "sha256": "f5bd027b871bf8b0a8745cf14e5f9d26f00e093414bb86450ba3af7c2de2163a"
+  },
+  "converterRevision": 2,
+  "converterSha256": "f5bd027b871bf8b0a8745cf14e5f9d26f00e093414bb86450ba3af7c2de2163a",
+  "counts": {
+    "indices": 480,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 480
+  },
+  "formatVersion": 1,
+  "generation": "275cc366f0dd99ba02f563111b30969ded53ec16fa744394e32aa291d70e90aa",
+  "importOptions": {
+    "assetId": "ashen-tree",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "tree.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "tree.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "58dd1eec6feaebc2e7b3b21f5f645af5c5a9b242f4123c74fc44ff65980df30a",
+  "inputs": [
+    {
+      "bytes": 766,
+      "path": "import.json",
+      "sha256": "22a751aa3982cee7d4264250cea69dab275aa745716d6a8447db9e7c81f5da63"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 781,
+      "path": "source.json",
+      "sha256": "61bcd5d89210a8e738cf650a73f087c66c2015e1e38d0985f5fe7e376fbdd80a"
+    },
+    {
+      "bytes": 114883,
+      "path": "tree.geometry.json",
+      "sha256": "6f41e1706fe57e6bc771bb16149d5ab970b7bf55415e4763a74aa31f597653d6"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 17536,
+      "kind": "model",
+      "path": "tree.mesh",
+      "sha256": "19847eefe930768baa98c89947506052afc6ef6d356ad0a4b2d2d092c606353a"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-tree",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "narrow charred trunk, with branches starting above 2.6 metres",
+      "wide ash-grey canopy above 2.7 metres, about 5.9 metres total height",
+      "upper canopy may overhang the arena; solid lower trunk remains outside body clearance",
+      "ground pivot y=0, no new gameplay collision"
+    ],
+    "gameplayCollisionAdded": false,
+    "lowerSolidHeight": 2.2,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "preservedRevision": "v001",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v002",
+    "unitsPerMeter": 1,
+    "upperCanopyOverhangAllowed": true
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        1.899999976158142,
+        5.904129505157471,
+        1.8070074319839478
+      ],
+      "min": [
+        -1.899999976158142,
+        0.0,
+        -1.8070074319839478
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      3.799999952316284,
+      5.904129505157471,
+      3.6140148639678955
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.0002706311221008032,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 160
+  }
+}

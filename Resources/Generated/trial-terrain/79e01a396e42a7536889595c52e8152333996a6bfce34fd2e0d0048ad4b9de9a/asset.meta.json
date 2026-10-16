@@ -1,0 +1,173 @@
+{
+  "assetId": "trial-terrain",
+  "converter": {
+    "name": "BuildTrialTerrainAssets.py",
+    "revision": 1,
+    "sha256": "59a6fd7b022aa30eeeed9e9d4094c43caf80a527697dc37c762a93475f56fb58"
+  },
+  "counts": {
+    "indices": 98304,
+    "materials": 2,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 16641
+  },
+  "formatVersion": 1,
+  "generation": "79e01a396e42a7536889595c52e8152333996a6bfce34fd2e0d0048ad4b9de9a",
+  "importOptions": {
+    "assetId": "trial-terrain",
+    "blendEndHeight": 1.2,
+    "blendStartHeight": 0.65,
+    "cellSize": 0.1875,
+    "encoderSha256": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+    "formatVersion": 1,
+    "height": 129,
+    "heightScale": 2.4,
+    "maximumSlopeDegrees": 30.0,
+    "nameProfile": "preserve",
+    "normalMethod": "world_height_finite_difference",
+    "origin": [
+      -12.0,
+      0.0,
+      -12.0
+    ],
+    "outputFile": "terrain.mesh",
+    "playBounds": [
+      -8.0,
+      8.0,
+      -8.0,
+      8.0
+    ],
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_heightfield_only",
+    "skinCount": 0,
+    "sourceFile": "heightmap.pgm",
+    "sourceFormat": "P2_PGM",
+    "triangleOrder": "A-C-B/B-C-D",
+    "uvMeters": 2.0,
+    "width": 129
+  },
+  "importOptionsSha256": "f6defda254281c05e21bdacb1f73a62feff840258a4c0bef9181d7a037cd00e4",
+  "inputs": [
+    {
+      "bytes": 9960,
+      "path": "Textures/grass.png",
+      "sha256": "9ce2683c27e6d402c9403754ef82029027d83d8123ada773d159ba4077435a98"
+    },
+    {
+      "bytes": 10351,
+      "path": "Textures/rock.png",
+      "sha256": "f9f54123f6c0c7cfb16d9fb1ab7cf2c7e457b7495ede9d6001c0387ca3c62d23"
+    },
+    {
+      "bytes": 92158,
+      "path": "heightmap.pgm",
+      "sha256": "1048aa3ed85abb5f64112e58c6aa6869a306d9c032cc0430ba1c9ba7970831db"
+    },
+    {
+      "bytes": 336,
+      "path": "projectauthoredsource.txt",
+      "sha256": "4fdab042cd47d5f9457e0b1bc8545bf371a5d76a6cf01bf9a33d0f54d887be15"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 9960,
+      "kind": "texture",
+      "path": "Textures/grass.png",
+      "sha256": "9ce2683c27e6d402c9403754ef82029027d83d8123ada773d159ba4077435a98"
+    },
+    {
+      "bytes": 10351,
+      "kind": "texture",
+      "path": "Textures/rock.png",
+      "sha256": "f9f54123f6c0c7cfb16d9fb1ab7cf2c7e457b7495ede9d6001c0387ca3c62d23"
+    },
+    {
+      "bytes": 336,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "4fdab042cd47d5f9457e0b1bc8545bf371a5d76a6cf01bf9a33d0f54d887be15"
+    },
+    {
+      "bytes": 926031,
+      "kind": "model",
+      "path": "terrain.mesh",
+      "sha256": "fbc388c3c6e1f32ad09ba7d7cd57a62fd17f4b55767d1881512faf1cc7062e7e"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "trial-terrain",
+    "author": "LASTFIELD project",
+    "externalAssets": false,
+    "heightRecipe": {
+      "base": 0.1,
+      "detailAmplitude": 0.025,
+      "detailFrequencyX": 0.65,
+      "detailFrequencyZ": 0.5,
+      "hills": [
+        [
+          -3.0,
+          -2.0,
+          3.6,
+          0.28
+        ],
+        [
+          4.0,
+          3.0,
+          4.8,
+          0.22
+        ]
+      ],
+      "quantizationMaximum": 65535
+    },
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored",
+    "permission": "Project-authored calibration data; no third-party source or license.",
+    "purpose": "LF05 height/triangle/UV/material calibration; not final game art.",
+    "redistribution": "Include the project-authored source notice with the selected bundle.",
+    "repositoryInclusion": true,
+    "schemaVersion": 1,
+    "sourceRevision": 1,
+    "textureRecipe": {
+      "algorithm": "periodic lattice bilinear noise with periodic trigonometric detail",
+      "channels": "RGBA8",
+      "colorSpace": "sRGB",
+      "height": 128,
+      "sampler": "wrap",
+      "seed": 20261014,
+      "width": 128
+    },
+    "thirdPartyLicense": null
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN",
+    "heightRangeMeters": [
+      0.182852,
+      0.996915
+    ],
+    "maximumReconstructionErrorMeters": 0.0,
+    "maximumSlopeDegrees": 8.471199,
+    "playMaximumSlopeDegrees": 8.471199,
+    "playTriangleCount": 14792,
+    "triangleCount": 32768
+  }
+}

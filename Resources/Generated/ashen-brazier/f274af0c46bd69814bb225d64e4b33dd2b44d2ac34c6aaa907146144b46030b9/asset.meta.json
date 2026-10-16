@@ -1,0 +1,140 @@
+{
+  "assetId": "ashen-brazier",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 432,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 432
+  },
+  "formatVersion": 1,
+  "generation": "f274af0c46bd69814bb225d64e4b33dd2b44d2ac34c6aaa907146144b46030b9",
+  "importOptions": {
+    "assetId": "ashen-brazier",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "brazier.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "brazier.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "3d67adad63be679ac6d829261ecaccdabba897089da0925f086fa6e040b5d8f3",
+  "inputs": [
+    {
+      "bytes": 99817,
+      "path": "brazier.geometry.json",
+      "sha256": "ed2076a47f8dbf0327c5556388e7160cc48217fad1d3af6b529da844da1f1062"
+    },
+    {
+      "bytes": 775,
+      "path": "import.json",
+      "sha256": "937f3456304eff9495b3ec61ecd8da4ff4042f60ef23cffa9a98f3acbc7ec506"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 534,
+      "path": "source.json",
+      "sha256": "8da023f489b3890dcdbbed260eaf5dd986b1065b042bcb7b486b4cd82474bbd4"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 15802,
+      "kind": "model",
+      "path": "brazier.mesh",
+      "sha256": "5e3df6c730d2e52d601c74a43c53f2bbae93ac1ac57eede5fa9801334cd95961"
+    },
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-brazier",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "three iron legs and coal bowl",
+      "solid stylized warm-colour flame geometry",
+      "not an animated light or particle emitter"
+    ],
+    "gameplayCollisionAdded": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        0.5099999904632568,
+        1.681577444076538,
+        0.5099999904632568
+      ],
+      "min": [
+        -0.5099999904632568,
+        0.0,
+        -0.5099999904632568
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      1.0199999809265137,
+      1.681577444076538,
+      1.0199999809265137
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.0009629438442888324,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 144
+  }
+}

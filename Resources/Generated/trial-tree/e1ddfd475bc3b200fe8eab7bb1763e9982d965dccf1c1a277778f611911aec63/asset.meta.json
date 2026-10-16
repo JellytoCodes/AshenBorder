@@ -1,0 +1,87 @@
+{
+  "assetId": "trial-tree",
+  "converter": {
+    "name": "BuildPresentationAssets.py",
+    "revision": 1,
+    "sha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97"
+  },
+  "converterRevision": 1,
+  "converterSha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97",
+  "counts": {
+    "indices": 240,
+    "materials": 7,
+    "meshes": 3,
+    "nodes": 1,
+    "vertices": 240
+  },
+  "formatVersion": 1,
+  "generation": "e1ddfd475bc3b200fe8eab7bb1763e9982d965dccf1c1a277778f611911aec63",
+  "importOptions": {
+    "model": "tree",
+    "source": "tree.geometry.json",
+    "unitsPerMeter": 1.0
+  },
+  "importOptionsSha256": "ed7571fcdecec79b6a8358dd23bb4c1d3101e592f85c321763bbbe7451f7e40c",
+  "inputs": [
+    {
+      "bytes": 227,
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 336,
+      "path": "source.json",
+      "sha256": "40241ba59088cdbefa789b473e6192fd744ca35b96b2ae87102a6398eafc00ac"
+    },
+    {
+      "bytes": 47508,
+      "path": "tree.geometry.json",
+      "sha256": "8595dbac270f09619b2b2b68504f71260b778c0017ea560f3e4ef1c88e16e909"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 227,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 9159,
+      "kind": "model",
+      "path": "tree.mesh",
+      "sha256": "aabeef72734a8c8e442dac47faddb0ff607e456ec4af970b86aac6e0992f18f5"
+    },
+    {
+      "bytes": 68,
+      "kind": "texture",
+      "path": "white.png",
+      "sha256": "7ac2abfce2be8b46dd9826d597d94edeefc1570b4a992622721b90a1850e3ee9"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "asset": "LASTFIELD presentation probes",
+    "author": "LASTFIELD project",
+    "externalAssets": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored",
+    "purpose": "LF12/LF13 technical test art and synthesized audio",
+    "redistribution": "Include original source notice",
+    "repositoryInclusion": true
+  },
+  "staticOnly": true,
+  "validation": {
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

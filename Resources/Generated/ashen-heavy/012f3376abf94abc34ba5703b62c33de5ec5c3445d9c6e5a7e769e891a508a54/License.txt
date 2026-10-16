@@ -1,0 +1,10 @@
+SAVE MYSELF: ASHEN BORDER - Original character assets
+
+Geometry, rig, idle/walk/attack/death key animation and palette are original procedural work
+authored for this project in Scripts/BuildAshenCharacters.py. No Kenney or other
+external asset data was copied into these models, clips or textures.
+
+These project-authored files may be stored, modified and redistributed with this
+project's source repository and game builds. This notice does not change the
+license of the engine, Assimp, other dependencies or unrelated original assets.
+A separate third-party asset-pack license is not granted by this notice.

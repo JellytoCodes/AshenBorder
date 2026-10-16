@@ -1,0 +1,23 @@
+# Build outputs and local verification results
+/Binaries/
+/Intermediate/
+/Saved/
+
+# Local tests, asset authoring and offline tools
+/Tests/
+/SourceAssets/
+/Scripts/
+/Tools/
+/Libraries/Assimp/
+/agents.md
+
+# Visual Studio user settings and caches
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Python caches
+__pycache__/
+*.pyc

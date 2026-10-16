@@ -1,0 +1,4 @@
+SAVE MYSELF: ASHEN BORDER project-authored audio.
+Original deterministic procedural PCM waveforms; no recordings, external samples, songs or third-party music.
+Project source and generated audio may be included in the game and redistributed with this notice.
+Sound design is fictional stylization, not a historical recording or a claim of human listening acceptance.

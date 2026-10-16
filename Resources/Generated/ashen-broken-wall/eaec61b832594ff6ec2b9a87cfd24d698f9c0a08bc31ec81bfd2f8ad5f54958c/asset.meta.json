@@ -1,0 +1,140 @@
+{
+  "assetId": "ashen-broken-wall",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 756,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 756
+  },
+  "formatVersion": 1,
+  "generation": "eaec61b832594ff6ec2b9a87cfd24d698f9c0a08bc31ec81bfd2f8ad5f54958c",
+  "importOptions": {
+    "assetId": "ashen-broken-wall",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "brokenWall.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "brokenWall.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "4e01807b4b1806669fa7a31ad92607723042871604a4ba1dde011cbd84df0967",
+  "inputs": [
+    {
+      "bytes": 150095,
+      "path": "brokenWall.geometry.json",
+      "sha256": "613e1288d76c8b23ea921829b8a0340d9dd55127e4f665776ab3a868b867c81b"
+    },
+    {
+      "bytes": 785,
+      "path": "import.json",
+      "sha256": "8f337d2bd408c172625a015c7d79fed684a0fbe87901ef5dcb7dd686762a5226"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 528,
+      "path": "source.json",
+      "sha256": "633161edc922f0f53060a3abca01399bb899e1b7c72b412ed400ab5effd69925"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 27482,
+      "kind": "model",
+      "path": "brokenWall.mesh",
+      "sha256": "33fab22092904c8ae22d6a9bff9c7bdf49e31d9d468cb601a16013a53f6aeb8b"
+    },
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-broken-wall",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "three uneven stone courses with missing upper blocks",
+      "splintered timber stakes",
+      "fallen rubble at the base"
+    ],
+    "gameplayCollisionAdded": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        1.625,
+        1.9523576498031616,
+        0.7400000095367432
+      ],
+      "min": [
+        -1.5449999570846558,
+        0.0,
+        -0.28999999165534973
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      3.1699999570846558,
+      1.9523576498031616,
+      1.030000001192093
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.0009629425432312322,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 252
+  }
+}

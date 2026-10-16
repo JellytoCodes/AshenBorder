@@ -1,0 +1,117 @@
+{
+  "assetId": "trial-projectile",
+  "converter": {
+    "name": "BuildPresentationAssets.py",
+    "revision": 1,
+    "sha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97"
+  },
+  "converterRevision": 1,
+  "converterSha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97",
+  "counts": {
+    "indices": 36,
+    "materials": 7,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 36
+  },
+  "formatVersion": 1,
+  "generation": "afc8fabd798a85f5fc72f6df776a37ceda5eb475dbfa91d01c2248bd5e596d89",
+  "importOptions": {
+    "model": "projectile",
+    "source": "projectile.geometry.json",
+    "unitsPerMeter": 1.0
+  },
+  "importOptionsSha256": "e90611ab39f72b8fbd018e4af770bdcc8c17f215c9741454fa48e4ff0fdb1a17",
+  "inputs": [
+    {
+      "bytes": 20192,
+      "path": "blade.geometry.json",
+      "sha256": "66713fde907beea740e6c634911f63c6e180d48b5a71e669c6e1dca2a4de0238"
+    },
+    {
+      "bytes": 29977,
+      "path": "currency.geometry.json",
+      "sha256": "d07c68f780f38de5a0bc5ae766ca12e9bf8c7995e1d3ff2d920fc3565ec789d6"
+    },
+    {
+      "bytes": 15055,
+      "path": "experience.geometry.json",
+      "sha256": "2617fde9136b975c6933dc5e721c6c537447b3c770540079437e9235f04d7aac"
+    },
+    {
+      "bytes": 26579,
+      "path": "pistol.geometry.json",
+      "sha256": "08b65b51af0ede78d0823f5c25d904870e8947933bd4fad65f2e48668cce3e31"
+    },
+    {
+      "bytes": 227,
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 7186,
+      "path": "projectile.geometry.json",
+      "sha256": "a7cf35ec31f7d0a52766ba68ce1a2ca0ac3bbf703ba5c09f9c0844a8313a23c3"
+    },
+    {
+      "bytes": 26476,
+      "path": "shotgun.geometry.json",
+      "sha256": "e10edeed344b4cf35f358669f0090a39f82c00170428b57f11cba3332e5b4f7e"
+    },
+    {
+      "bytes": 336,
+      "path": "source.json",
+      "sha256": "40241ba59088cdbefa789b473e6192fd744ca35b96b2ae87102a6398eafc00ac"
+    },
+    {
+      "bytes": 47508,
+      "path": "tree.geometry.json",
+      "sha256": "8595dbac270f09619b2b2b68504f71260b778c0017ea560f3e4ef1c88e16e909"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 227,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 1775,
+      "kind": "model",
+      "path": "projectile.mesh",
+      "sha256": "2d7632fc628af1d22896ca4ff95340a7404bbaadcbf955ede409bc7066641c61"
+    },
+    {
+      "bytes": 68,
+      "kind": "texture",
+      "path": "white.png",
+      "sha256": "7ac2abfce2be8b46dd9826d597d94edeefc1570b4a992622721b90a1850e3ee9"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "asset": "LASTFIELD presentation probes",
+    "author": "LASTFIELD project",
+    "externalAssets": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored",
+    "purpose": "LF12/LF13 technical test art and synthesized audio",
+    "redistribution": "Include original source notice",
+    "repositoryInclusion": true
+  },
+  "staticOnly": true,
+  "validation": {
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

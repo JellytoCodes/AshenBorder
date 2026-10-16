@@ -1,0 +1,123 @@
+{
+  "assetId": "trial-character",
+  "converter": {
+    "name": "BuildTrialAssets.py",
+    "revision": 1,
+    "sha256": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+  },
+  "counts": {
+    "indices": 2169,
+    "materials": 1,
+    "meshes": 2,
+    "nodes": 2,
+    "vertices": 771
+  },
+  "formatVersion": 1,
+  "generation": "f8ea140992f24230b0805a25e1a0883cee16dfe8bf49a97b25a9fc0edf6ddf50",
+  "importOptions": {
+    "assetId": "trial-character",
+    "flipV": true,
+    "flipX": true,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "character.mesh",
+    "requireNormals": true,
+    "requireUv": true,
+    "reverseWinding": true,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "character-male-a.obj",
+    "sourceFormat": "OBJ",
+    "sourceFront": "+Z",
+    "sourceHandedness": "RH",
+    "sourceUnitsPerMeter": 1.0,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "bottom_left",
+    "supportedFaceSizes": [
+      3,
+      4
+    ]
+  },
+  "importOptionsSha256": "3bbcd2d10f4e0700751fef4049ed09b42e64d2f4301d4a4ce666fffd9769fd89",
+  "inputs": [
+    {
+      "bytes": 718,
+      "path": "License.txt",
+      "sha256": "28358ae5accc85b572eb42507956afc8beae05acb4648bb9026a5714d421b785"
+    },
+    {
+      "bytes": 8706,
+      "path": "Textures/colormap.png",
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+    },
+    {
+      "bytes": 98,
+      "path": "character-male-a.mtl",
+      "sha256": "45a6736aa344a0c7e286b9c43c6a48f25b6a2f78d8c5949e430c3b4a93b4e060"
+    },
+    {
+      "bytes": 54415,
+      "path": "character-male-a.obj",
+      "sha256": "c8be0f9680abdbb2a4358e2799354a43c4b5bc3dc5f6821741e899394bf8618b"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 718,
+      "kind": "license",
+      "path": "License.txt",
+      "sha256": "28358ae5accc85b572eb42507956afc8beae05acb4648bb9026a5714d421b785"
+    },
+    {
+      "bytes": 8706,
+      "kind": "texture",
+      "path": "Textures/colormap.png",
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+    },
+    {
+      "bytes": 33685,
+      "kind": "model",
+      "path": "character.mesh",
+      "sha256": "0d86ee339ea0224cb14f69152eed1a20d3bc46ad3b2b1db309476cb0ffb06636"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "archiveFile": "kenney_mini-characters.zip",
+    "archiveSha256": "9e1d48e6d7b8479ebbe84df71eb5bd8e1b3f0da546dea641890dccc8a02d0999",
+    "asset": "Kenney Mini Characters 1.0",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseFile": "License.txt",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "selectedEntries": {
+      "License.txt": "License.txt",
+      "Models/OBJ format/Textures/colormap.png": "Textures/colormap.png",
+      "Models/OBJ format/character-male-a.mtl": "character-male-a.mtl",
+      "Models/OBJ format/character-male-a.obj": "character-male-a.obj"
+    },
+    "sourceUrl": "https://kenney.nl/assets/mini-characters",
+    "use": "Technical static-model validation; not final game art"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

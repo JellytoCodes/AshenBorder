@@ -1,0 +1,620 @@
+{
+  "assetId": "trial-animated",
+  "clipFormatVersion": 1,
+  "clips": [
+    {
+      "channelCount": 4,
+      "durationSeconds": 1.3333333740234374,
+      "name": "idle",
+      "nodeCount": 10,
+      "path": "idle.clip",
+      "skeletonSignature": "177f5168d612570c6828f3dec491739a4f1a5a482c62672dcba66be8102faa27",
+      "sourceTake": "idle"
+    },
+    {
+      "channelCount": 7,
+      "durationSeconds": 0.6666666870117187,
+      "name": "walk",
+      "nodeCount": 10,
+      "path": "walk.clip",
+      "skeletonSignature": "177f5168d612570c6828f3dec491739a4f1a5a482c62672dcba66be8102faa27",
+      "sourceTake": "walk"
+    }
+  ],
+  "converter": {
+    "name": "BuildAnimatedAssets.py",
+    "revision": 1,
+    "sha256": "45841fec746da7b0536cd427882e8fb585461e710323b516505b73882019e5b9"
+  },
+  "counts": {
+    "indices": 2169,
+    "materials": 1,
+    "meshes": 2,
+    "nodes": 10,
+    "skins": 2,
+    "vertices": 1259
+  },
+  "formatVersion": 2,
+  "generation": "01447dfa9f9abfe83a760912cb255fb26c59a440d2eed7aa3c52e54065e5f6c5",
+  "importOptions": {
+    "assetId": "trial-animated",
+    "comparisonSourceFile": "character-male-a.fbx",
+    "comparisonSourceFormat": "FBX",
+    "comparisonSourceUnitsPerMeter": 100.0,
+    "flipV": true,
+    "flipX": true,
+    "generatedTextureSha256": {},
+    "importDiagnostics": {
+      "aiBoneBytes": 1120,
+      "aiMatrix4x4Bytes": 64,
+      "aiRealBytes": 4,
+      "assimpCompileFlags": 17,
+      "assimpRevision": 0,
+      "assimpVersion": "6.0.4",
+      "boneMappings": [
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 1,
+          "originalName": "root",
+          "resolution": "mNode",
+          "sourceBoneIndex": 0
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 2,
+          "originalName": "leg-left",
+          "resolution": "mNode",
+          "sourceBoneIndex": 1
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 3,
+          "originalName": "leg-right",
+          "resolution": "mNode",
+          "sourceBoneIndex": 2
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 4,
+          "originalName": "torso",
+          "resolution": "mNode",
+          "sourceBoneIndex": 3
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 5,
+          "originalName": "arm-left",
+          "resolution": "mNode",
+          "sourceBoneIndex": 4
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 6,
+          "originalName": "arm-right",
+          "resolution": "mNode",
+          "sourceBoneIndex": 5
+        },
+        {
+          "meshNodeIndex": 8,
+          "nodeIndex": 7,
+          "originalName": "head",
+          "resolution": "mNode",
+          "sourceBoneIndex": 6
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 1,
+          "originalName": "root",
+          "resolution": "mNode",
+          "sourceBoneIndex": 0
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 2,
+          "originalName": "leg-left",
+          "resolution": "mNode",
+          "sourceBoneIndex": 1
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 3,
+          "originalName": "leg-right",
+          "resolution": "mNode",
+          "sourceBoneIndex": 2
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 4,
+          "originalName": "torso",
+          "resolution": "mNode",
+          "sourceBoneIndex": 3
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 5,
+          "originalName": "arm-left",
+          "resolution": "mNode",
+          "sourceBoneIndex": 4
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 6,
+          "originalName": "arm-right",
+          "resolution": "mNode",
+          "sourceBoneIndex": 5
+        },
+        {
+          "meshNodeIndex": 9,
+          "nodeIndex": 7,
+          "originalName": "head",
+          "resolution": "mNode",
+          "sourceBoneIndex": 6
+        }
+      ],
+      "fbxPreservePivots": true,
+      "missingChannelPolicy": "Preserve bind-local; do not bake or remove helper nodes",
+      "nameMappings": [
+        {
+          "nodeIndex": 0,
+          "originalName": "character-male-a",
+          "runtimeName": "character-male-a"
+        },
+        {
+          "nodeIndex": 1,
+          "originalName": "root",
+          "runtimeName": "root"
+        },
+        {
+          "nodeIndex": 2,
+          "originalName": "leg-left",
+          "runtimeName": "leg-left"
+        },
+        {
+          "nodeIndex": 3,
+          "originalName": "leg-right",
+          "runtimeName": "leg-right"
+        },
+        {
+          "nodeIndex": 4,
+          "originalName": "torso",
+          "runtimeName": "torso"
+        },
+        {
+          "nodeIndex": 5,
+          "originalName": "arm-left",
+          "runtimeName": "arm-left"
+        },
+        {
+          "nodeIndex": 6,
+          "originalName": "arm-right",
+          "runtimeName": "arm-right"
+        },
+        {
+          "nodeIndex": 7,
+          "originalName": "head",
+          "runtimeName": "head"
+        },
+        {
+          "nodeIndex": 8,
+          "originalName": "body-mesh",
+          "runtimeName": "body-mesh"
+        },
+        {
+          "nodeIndex": 9,
+          "originalName": "head-mesh",
+          "runtimeName": "head-mesh"
+        }
+      ],
+      "nameProfile": "preserve",
+      "normalization": "reflectX+reverseWinding+flipV",
+      "postprocessFlags": 17416,
+      "sourceFile": "character-male-a.glb",
+      "sourceFormat": ".glb",
+      "sourceMetadata": {},
+      "sourceUnitsPerMeter": 1.0,
+      "times": [
+        {
+          "durationTicks": 100.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "static",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 1333.3333740234375,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "idle",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 666.6666870117188,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "walk",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "sprint",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "jump",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 333.3333435058594,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "fall",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "crouch",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "sit",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "drive",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 333.3333435058594,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "die",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 333.3333435058594,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "pick-up",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 666.6666870117188,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "emote-yes",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 666.6666870117188,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "emote-no",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-right",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-both",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 200.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-right-shoot",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 200.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-left-shoot",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 200.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "holding-both-shoot",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 416.6666564941406,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "attack-melee-right",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 416.6666564941406,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "attack-melee-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 533.3333740234375,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "attack-kick-right",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 533.3333740234375,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "attack-kick-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 666.6666870117188,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "interact-right",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 666.6666870117188,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "interact-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 166.6666717529297,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-sit",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 333.3333435058594,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-look-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 333.3333435058594,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-look-right",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-move-forward",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-move-back",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-move-left",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 500.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "wheelchair-move-right",
+          "ticksPerSecond": 1000.0
+        }
+      ],
+      "unitPolicy": "Explicit settings; metadata recorded, never applied a second time",
+      "unusedMaterialsRemoved": 1,
+      "unweightedPolicy": "Explicit mesh-node identity inverse-bind joint; no pruning"
+    },
+    "importedUvOrigin": "bottom_left",
+    "importerFingerprint": {
+      "assimpLibrarySha256": "7647d322b3a9462cf05e1a851a1ccbe108f7e1171701c94022e1f1e32bf13a1b",
+      "assimpSourceArchiveSha256": "1eeb63f3e6f6c9d820cc52f7d44fa6b6557256330f45ddaa903aa658c47fece5",
+      "assimpVersion": "6.0.4",
+      "nativeExecutableSha256": "b9e0a1b8385c96a4024e3e4bd641d677d8ad931de8080ccd513f703a6cd505ef",
+      "nativeSourceSha256": "5dd3afd2cf26e7ca446cb3bf9fbb5711c8087671610841845abfb72f555bb71b"
+    },
+    "keyTimePolicy": "source_ticks_divided_by_reported_ticks_per_second",
+    "keyTimeUnit": "seconds",
+    "loopPolicyOwner": "Client",
+    "maximumJointsPerMesh": 128,
+    "maximumWeightsPerVertex": 4,
+    "mixamoAliases": false,
+    "nameProfile": "preserve",
+    "normalizedSceneSha256": "b68850dfc802551c3c14cf9837a874f57ccf41c1aab8c3e84d1773ab3db8d817",
+    "outputClips": {
+      "idle.clip": "idle",
+      "walk.clip": "walk"
+    },
+    "outputModel": "character.mesh",
+    "publisherDependencies": {
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": true,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "skeletal_model_and_selected_clips",
+    "selectedTakes": [
+      "idle",
+      "walk"
+    ],
+    "sourceFile": "character-male-a.glb",
+    "sourceFormat": "glTF2_GLB",
+    "sourceFront": "+Z",
+    "sourceHandedness": "RH",
+    "sourceUnitsPerMeter": 1.0,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "d63eb8aaf194b62e88ea6b690b194aaffa913082e02df41dbcdb9159608c34d1",
+  "inputs": [
+    {
+      "bytes": 718,
+      "path": "License.txt",
+      "sha256": "28358ae5accc85b572eb42507956afc8beae05acb4648bb9026a5714d421b785"
+    },
+    {
+      "bytes": 8706,
+      "path": "Textures/colormap.png",
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+    },
+    {
+      "bytes": 719360,
+      "path": "character-male-a.fbx",
+      "sha256": "5c99dc0ede89c720e2e38b0fdaaa80fafb1d06ad5a2b95f95c7b9946a01b5591"
+    },
+    {
+      "bytes": 246916,
+      "path": "character-male-a.glb",
+      "sha256": "77572792bfe2773b715b8cd8e18644b52b3e1f155fe10450254b50f9c364382a"
+    },
+    {
+      "bytes": 1116,
+      "path": "import.json",
+      "sha256": "d6215b98b5ed98794cf5611beb0c130ad200a28878ccba7468c978d61324bdc9"
+    },
+    {
+      "bytes": 1577,
+      "path": "source.json",
+      "sha256": "dccc7cbf90586e80b29533e6a3499670153401be804a951db6558ed1da8fe868"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 718,
+      "kind": "license",
+      "path": "License.txt",
+      "sha256": "28358ae5accc85b572eb42507956afc8beae05acb4648bb9026a5714d421b785"
+    },
+    {
+      "bytes": 8706,
+      "kind": "texture",
+      "path": "Textures/colormap.png",
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+    },
+    {
+      "bytes": 91188,
+      "kind": "model",
+      "path": "character.mesh",
+      "sha256": "61a611a4447b6a6d7f2d14ed6edea6e8da1b20502de9770ad84ae68db5de29e5"
+    },
+    {
+      "bytes": 4212,
+      "kind": "clip",
+      "path": "idle.clip",
+      "sha256": "34fd3baaee8b2bc3a853288aa9d76351c9d8b1443f32a50f019171de82ff1061"
+    },
+    {
+      "bytes": 3824,
+      "kind": "clip",
+      "path": "walk.clip",
+      "sha256": "e1f6f281af68c16cfab44088aaf8ce48ecf702b2d669c848b3bd81ece6803a68"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 2,
+  "skeletonSignature": "177f5168d612570c6828f3dec491739a4f1a5a482c62672dcba66be8102faa27",
+  "skinCount": 2,
+  "source": {
+    "archiveBytes": 2403059,
+    "archiveSha256": "9e1d48e6d7b8479ebbe84df71eb5bd8e1b3f0da546dea641890dccc8a02d0999",
+    "assetId": "trial-animated",
+    "creator": "Kenney",
+    "license": "CC0-1.0",
+    "licenseFile": "License.txt",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "package": "Mini Characters",
+    "packageVersion": "1.0",
+    "rights": {
+      "attributionRequired": false,
+      "commercial": true,
+      "modification": true,
+      "personal": true,
+      "redistribution": true,
+      "repositoryInclusion": true
+    },
+    "schemaVersion": 1,
+    "scope": "Original general skeletal sample; not Mixamo content or final game art.",
+    "selectedFiles": [
+      {
+        "archiveEntry": "Models/FBX format/character-male-a.fbx",
+        "bytes": 719360,
+        "path": "character-male-a.fbx",
+        "sha256": "5c99dc0ede89c720e2e38b0fdaaa80fafb1d06ad5a2b95f95c7b9946a01b5591"
+      },
+      {
+        "archiveEntry": "Models/GLB format/character-male-a.glb",
+        "bytes": 246916,
+        "path": "character-male-a.glb",
+        "sha256": "77572792bfe2773b715b8cd8e18644b52b3e1f155fe10450254b50f9c364382a"
+      },
+      {
+        "archiveEntry": "Models/GLB format/Textures/colormap.png",
+        "bytes": 8706,
+        "path": "Textures/colormap.png",
+        "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+      },
+      {
+        "archiveEntry": "License.txt",
+        "bytes": 718,
+        "path": "License.txt",
+        "sha256": "28358ae5accc85b572eb42507956afc8beae05acb4648bb9026a5714d421b785"
+      }
+    ],
+    "sourceUrl": "https://kenney.nl/assets/mini-characters"
+  },
+  "staticOnly": false,
+  "validation": {
+    "animationRuntime": "NOT_RUN",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN",
+    "mixamoSample": "NOT_RUN"
+  }
+}

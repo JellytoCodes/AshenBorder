@@ -1,0 +1,166 @@
+{
+  "assetId": "ashen-terrain",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 24576,
+    "materials": 2,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 4225
+  },
+  "formatVersion": 1,
+  "generation": "0ebf8f5ff121c2b8d423c85e6361b1510056625d62c973bf6c5c50016266aaff",
+  "importOptions": {
+    "assetId": "ashen-terrain",
+    "blendEndHeight": 1.2,
+    "blendStartHeight": 0.65,
+    "cellSize": 0.375,
+    "formatVersion": 1,
+    "height": 65,
+    "heightScale": 2.4,
+    "maximumSlopeDegrees": 30.0,
+    "nameProfile": "preserve",
+    "normalMethod": "world_height_finite_difference",
+    "origin": [
+      -12.0,
+      0.0,
+      -12.0
+    ],
+    "outputFile": "terrain.mesh",
+    "playBounds": [
+      -8.0,
+      8.0,
+      -8.0,
+      8.0
+    ],
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_heightfield_only",
+    "skinCount": 0,
+    "sourceFile": "terrain.geometry.json",
+    "sourceFormat": "P2_PGM",
+    "triangleOrder": "A-C-B/B-C-D",
+    "uvMeters": 2.0,
+    "width": 65
+  },
+  "importOptionsSha256": "bbe6fbb2a7534e200de20eb86b21ee4da2bce7bab2c3e690b5abf7883373d689",
+  "inputs": [
+    {
+      "bytes": 13774,
+      "path": "Textures/grass.png",
+      "sha256": "1336c109b8be866ca6d037f36ace8e83b543cb6c9eeccd5a2009a58642e56924"
+    },
+    {
+      "bytes": 13753,
+      "path": "Textures/rock.png",
+      "sha256": "1731de881b71504c11657e597571e0c6ac4b2431060626190dc4783591effa49"
+    },
+    {
+      "bytes": 23419,
+      "path": "heightmap-65.pgm",
+      "sha256": "275206fe1d5264a3049ba0fadbdeb4e92186b44b03b0d9c8f431953947f9ffb9"
+    },
+    {
+      "bytes": 1299,
+      "path": "import.json",
+      "sha256": "93442cf3fb2903057f71d3395d08ce6d0f567ea54b249a8d887894b7331d669e"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 642,
+      "path": "source.json",
+      "sha256": "ca3c5c26dc77decdf64227030259b88878649d2ffbe7b0e00ddca6eb15099088"
+    },
+    {
+      "bytes": 1236428,
+      "path": "terrain.geometry.json",
+      "sha256": "012852db6fa779ab86a0bdd440751ba45f0a7d362e250c0b812a49729de0e3e7"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 13774,
+      "kind": "texture",
+      "path": "Textures/grass.png",
+      "sha256": "1336c109b8be866ca6d037f36ace8e83b543cb6c9eeccd5a2009a58642e56924"
+    },
+    {
+      "bytes": 13753,
+      "kind": "texture",
+      "path": "Textures/rock.png",
+      "sha256": "1731de881b71504c11657e597571e0c6ac4b2431060626190dc4783591effa49"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 233807,
+      "kind": "model",
+      "path": "terrain.mesh",
+      "sha256": "431903713a099b36b758a1d6d96476088cbf6724ba7203d8780f93056d1865c5"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-terrain",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "geometryBytesUnchanged": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored_LF05_heightfield_with_original_ash_soil_textures",
+    "originalHeightmapSha256": "275206fe1d5264a3049ba0fadbdeb4e92186b44b03b0d9c8f431953947f9ffb9",
+    "originalMeshSha256": "431903713a099b36b758a1d6d96476088cbf6724ba7203d8780f93056d1865c5",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "textureNamesRetained": "Textures/grass.png and rock.png retained for byte-identical mesh references; new images are soil and ash"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "geometryBytesUnchanged": true,
+    "gpuUpload": "NOT_RUN",
+    "heightRangeMeters": [
+      0.182852,
+      0.996915
+    ],
+    "maximumReconstructionErrorMeters": 0.0,
+    "maximumSlopeDegrees": 8.486998,
+    "playMaximumSlopeDegrees": 8.486998,
+    "playTriangleCount": 3872,
+    "triangleCount": 8192
+  }
+}

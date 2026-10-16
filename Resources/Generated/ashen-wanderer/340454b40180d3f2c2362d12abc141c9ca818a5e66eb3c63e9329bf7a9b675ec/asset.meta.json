@@ -1,0 +1,842 @@
+{
+  "assetId": "ashen-wanderer",
+  "clipFormatVersion": 1,
+  "clips": [
+    {
+      "channelCount": 17,
+      "durationSeconds": 2.4,
+      "name": "idle",
+      "nodeCount": 19,
+      "path": "idle.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "idle"
+    },
+    {
+      "channelCount": 17,
+      "durationSeconds": 1.0,
+      "name": "walk",
+      "nodeCount": 19,
+      "path": "walk.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "walk"
+    }
+  ],
+  "converter": {
+    "name": "BuildAshenCharacters.py",
+    "revision": 1,
+    "sha256": "77f50397cc955dfe6df5df3c85b7974981ac306bd26f767ba89533b130e0f275"
+  },
+  "counts": {
+    "indices": 3000,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 19,
+    "skins": 1,
+    "vertices": 3000
+  },
+  "formatVersion": 2,
+  "generation": "340454b40180d3f2c2362d12abc141c9ca818a5e66eb3c63e9329bf7a9b675ec",
+  "importOptions": {
+    "assetId": "ashen-wanderer",
+    "flipV": true,
+    "flipX": true,
+    "generatedTextureSha256": {
+      "Textures/palette.png": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    "importDiagnostics": {
+      "aiBoneBytes": 1120,
+      "aiMatrix4x4Bytes": 64,
+      "aiRealBytes": 4,
+      "assimpCompileFlags": 17,
+      "assimpRevision": 0,
+      "assimpVersion": "6.0.4",
+      "boneMappings": [
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 1,
+          "originalName": "Pelvis",
+          "resolution": "mNode",
+          "sourceBoneIndex": 0
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 2,
+          "originalName": "Spine",
+          "resolution": "mNode",
+          "sourceBoneIndex": 1
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 3,
+          "originalName": "Chest",
+          "resolution": "mNode",
+          "sourceBoneIndex": 2
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 4,
+          "originalName": "Neck",
+          "resolution": "mNode",
+          "sourceBoneIndex": 3
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 5,
+          "originalName": "Head",
+          "resolution": "mNode",
+          "sourceBoneIndex": 4
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 6,
+          "originalName": "UpperArm_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 5
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 7,
+          "originalName": "Forearm_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 6
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 8,
+          "originalName": "Hand_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 7
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 9,
+          "originalName": "UpperArm_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 8
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 10,
+          "originalName": "Forearm_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 9
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 11,
+          "originalName": "Hand_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 10
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 12,
+          "originalName": "Thigh_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 11
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 13,
+          "originalName": "Shin_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 12
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 14,
+          "originalName": "Foot_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 13
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 15,
+          "originalName": "Thigh_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 14
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 16,
+          "originalName": "Shin_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 15
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 17,
+          "originalName": "Foot_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 16
+        }
+      ],
+      "fbxPreservePivots": true,
+      "missingChannelPolicy": "Preserve bind-local; do not bake or remove helper nodes",
+      "nameMappings": [
+        {
+          "nodeIndex": 0,
+          "originalName": "ASHEN_ROOT",
+          "runtimeName": "ASHEN_ROOT"
+        },
+        {
+          "nodeIndex": 1,
+          "originalName": "Pelvis",
+          "runtimeName": "Pelvis"
+        },
+        {
+          "nodeIndex": 2,
+          "originalName": "Spine",
+          "runtimeName": "Spine"
+        },
+        {
+          "nodeIndex": 3,
+          "originalName": "Chest",
+          "runtimeName": "Chest"
+        },
+        {
+          "nodeIndex": 4,
+          "originalName": "Neck",
+          "runtimeName": "Neck"
+        },
+        {
+          "nodeIndex": 5,
+          "originalName": "Head",
+          "runtimeName": "Head"
+        },
+        {
+          "nodeIndex": 6,
+          "originalName": "UpperArm_L",
+          "runtimeName": "UpperArm_L"
+        },
+        {
+          "nodeIndex": 7,
+          "originalName": "Forearm_L",
+          "runtimeName": "Forearm_L"
+        },
+        {
+          "nodeIndex": 8,
+          "originalName": "Hand_L",
+          "runtimeName": "Hand_L"
+        },
+        {
+          "nodeIndex": 9,
+          "originalName": "UpperArm_R",
+          "runtimeName": "UpperArm_R"
+        },
+        {
+          "nodeIndex": 10,
+          "originalName": "Forearm_R",
+          "runtimeName": "Forearm_R"
+        },
+        {
+          "nodeIndex": 11,
+          "originalName": "Hand_R",
+          "runtimeName": "Hand_R"
+        },
+        {
+          "nodeIndex": 12,
+          "originalName": "Thigh_L",
+          "runtimeName": "Thigh_L"
+        },
+        {
+          "nodeIndex": 13,
+          "originalName": "Shin_L",
+          "runtimeName": "Shin_L"
+        },
+        {
+          "nodeIndex": 14,
+          "originalName": "Foot_L",
+          "runtimeName": "Foot_L"
+        },
+        {
+          "nodeIndex": 15,
+          "originalName": "Thigh_R",
+          "runtimeName": "Thigh_R"
+        },
+        {
+          "nodeIndex": 16,
+          "originalName": "Shin_R",
+          "runtimeName": "Shin_R"
+        },
+        {
+          "nodeIndex": 17,
+          "originalName": "Foot_R",
+          "runtimeName": "Foot_R"
+        },
+        {
+          "nodeIndex": 18,
+          "originalName": "Body",
+          "runtimeName": "Body"
+        }
+      ],
+      "nameProfile": "preserve",
+      "normalization": "reflectX+reverseWinding+flipV",
+      "postprocessFlags": 17416,
+      "sourceBehaviorEnum": {
+        "0": "DEFAULT",
+        "1": "CONSTANT",
+        "2": "LINEAR",
+        "3": "REPEAT"
+      },
+      "sourceChannelBehaviors": [
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        }
+      ],
+      "sourceFile": "character.glb",
+      "sourceFormat": ".glb",
+      "sourceMetadata": {},
+      "sourceUnitsPerMeter": 1.0,
+      "times": [
+        {
+          "durationTicks": 2400.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "idle",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 1000.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "walk",
+          "ticksPerSecond": 1000.0
+        }
+      ],
+      "trackOutsideKeyPolicy": "clamp_to_nearest_key",
+      "unitPolicy": "Explicit settings; metadata recorded, never applied a second time",
+      "unusedMaterialsRemoved": 1,
+      "unweightedPolicy": "Explicit mesh-node identity inverse-bind joint; no pruning"
+    },
+    "importedUvOrigin": "bottom_left",
+    "importerFingerprint": {
+      "assimpLibrarySha256": "7647d322b3a9462cf05e1a851a1ccbe108f7e1171701c94022e1f1e32bf13a1b",
+      "assimpSourceArchiveSha256": "1eeb63f3e6f6c9d820cc52f7d44fa6b6557256330f45ddaa903aa658c47fece5",
+      "assimpVersion": "6.0.4",
+      "nativeExecutableSha256": "334bf3d07660e065827c6552473c2b4c801666787332e75fbf928c627efd23dc",
+      "nativeSourceSha256": "7761fbfcbe1f9b97ab9e1766dd9e0aae4bb49cd66499e641a66ae274dfa45ee3"
+    },
+    "keyTimePolicy": "source_ticks_divided_by_reported_ticks_per_second",
+    "keyTimeUnit": "seconds",
+    "loopPolicyOwner": "Client",
+    "maximumJointsPerMesh": 128,
+    "maximumWeightsPerVertex": 4,
+    "mixamoAliases": false,
+    "nameProfile": "preserve",
+    "normalizedSceneSha256": "0e8b20893d79288aaed679f8742add1d753a53cf2294e590e59b77d70f1c5198",
+    "outputClips": {
+      "idle.clip": "idle",
+      "walk.clip": "walk"
+    },
+    "outputModel": "character.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": true,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "skeletal_model_and_selected_clips",
+    "selectedTakes": [
+      "idle",
+      "walk"
+    ],
+    "sourceFile": "character.glb",
+    "sourceFormat": "glTF2_GLB",
+    "sourceFront": "+Z",
+    "sourceHandedness": "RH",
+    "sourceUnitsPerMeter": 1.0,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left",
+    "textureRemap": {
+      "*0": "Textures/palette.png"
+    }
+  },
+  "importOptionsSha256": "dbb8800a206f43c0cbcfa8aee2394fa4ae9c7d8aac6aa816751271a568a44a49",
+  "inputs": [
+    {
+      "bytes": 597,
+      "path": "License.txt",
+      "sha256": "5e573a7f6b12435e1e9fd833bdace35fb6b9a5a089f0bb147cf50978d3654bf7"
+    },
+    {
+      "bytes": 246,
+      "path": "Textures/palette.png",
+      "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    {
+      "bytes": 216244,
+      "path": "character.glb",
+      "sha256": "5896884ff45c8dea83671b8ececbb69e7b986e59a5eb92d9614930e8944f2817"
+    },
+    {
+      "bytes": 1000,
+      "path": "import.json",
+      "sha256": "464337f62b341d5ea1deca4bf5cde748de7475416365b10154529643ee2aac0e"
+    },
+    {
+      "bytes": 4627,
+      "path": "source.json",
+      "sha256": "2916f1d158b1aaed55bae2b94f0442496dea979648fa58b41a7e098ebf92316d"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 597,
+      "kind": "license",
+      "path": "License.txt",
+      "sha256": "5e573a7f6b12435e1e9fd833bdace35fb6b9a5a089f0bb147cf50978d3654bf7"
+    },
+    {
+      "bytes": 246,
+      "kind": "texture",
+      "path": "Textures/palette.png",
+      "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    {
+      "bytes": 206798,
+      "kind": "model",
+      "path": "character.mesh",
+      "sha256": "9a87616913ea512cc7211363b0ebbf1b384995a0deb765ead257258c4eca27f7"
+    },
+    {
+      "bytes": 22052,
+      "kind": "clip",
+      "path": "idle.clip",
+      "sha256": "29089e4a0e9c5bf8ce4943310e37403f3d8cb035bbe59119b84cfee0f4841272"
+    },
+    {
+      "bytes": 15204,
+      "kind": "clip",
+      "path": "walk.clip",
+      "sha256": "59c5b173bf6697fe67c4304f267647e6c12282cdf3fd230406c397fdc7504a5f"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 2,
+  "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+  "skinCount": 1,
+  "source": {
+    "animationAuthoringChecks": {
+      "idle": {
+        "durationSeconds": 2.4,
+        "exactLoopEndpoint": true,
+        "maximumSkinnedDisplacementMeters": 0.060029195368807846,
+        "minimumVertexYAtAuthoredKeys": 0.0019999999999998352,
+        "sampledKeys": 49,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      },
+      "walk": {
+        "durationSeconds": 1.0,
+        "exactLoopEndpoint": true,
+        "maximumSkinnedDisplacementMeters": 0.3766509503364151,
+        "minimumVertexYAtAuthoredKeys": 0.0019999999999998352,
+        "sampledKeys": 33,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      }
+    },
+    "assetId": "ashen-wanderer",
+    "authoredBounds": {
+      "max": [
+        0.4350521696132336,
+        1.705,
+        0.3406568542494924
+      ],
+      "min": [
+        -0.4350521696132337,
+        0.0,
+        -0.22325349715248305
+      ]
+    },
+    "creator": "SAVE MYSELF: ASHEN BORDER project",
+    "front": "+Z",
+    "generator": {
+      "path": "Scripts/BuildAshenCharacters.py",
+      "revision": 1,
+      "sha256": "77f50397cc955dfe6df5df3c85b7974981ac306bd26f767ba89533b130e0f275"
+    },
+    "heightMeters": 1.705,
+    "joints": 17,
+    "license": "Project-authored; project repository and game redistribution permitted",
+    "licenseFile": "License.txt",
+    "materials": 1,
+    "meshes": 1,
+    "noExternalAssetBytesCopied": true,
+    "parts": [
+      {
+        "firstVertex": 0,
+        "name": "trouser-upper-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 144,
+        "name": "trouser-lower-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 288,
+        "name": "boot-L",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 384,
+        "name": "sleeve-upper-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 528,
+        "name": "sleeve-lower-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 672,
+        "name": "glove-L",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 852,
+        "name": "trouser-upper-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 996,
+        "name": "trouser-lower-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1140,
+        "name": "boot-R",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1236,
+        "name": "sleeve-upper-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1380,
+        "name": "sleeve-lower-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1524,
+        "name": "glove-R",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 1704,
+        "name": "pelvis-belt-base",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1800,
+        "name": "waist",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1896,
+        "name": "stooped-ash-torso",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 2040,
+        "name": "hunched-back",
+        "vertices": 240
+      },
+      {
+        "firstVertex": 2280,
+        "name": "broken-collar",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2376,
+        "name": "ash-head",
+        "vertices": 240
+      },
+      {
+        "firstVertex": 2616,
+        "name": "dark-eye-socket",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2712,
+        "name": "jaw-fracture",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2808,
+        "name": "torn-shoulder-cloth",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2904,
+        "name": "ash-chest-crack",
+        "vertices": 96
+      }
+    ],
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "rights": {
+      "attributionRequired": false,
+      "commercial": true,
+      "modification": true,
+      "personal": true,
+      "redistribution": true,
+      "repositoryInclusion": true,
+      "scope": "This project repository and game builds; not a separate third-party asset pack license"
+    },
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 597,
+        "path": "License.txt",
+        "sha256": "5e573a7f6b12435e1e9fd833bdace35fb6b9a5a089f0bb147cf50978d3654bf7"
+      },
+      {
+        "bytes": 246,
+        "path": "Textures/palette.png",
+        "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+      },
+      {
+        "bytes": 216244,
+        "path": "character.glb",
+        "sha256": "5896884ff45c8dea83671b8ececbb69e7b986e59a5eb92d9614930e8944f2817"
+      },
+      {
+        "bytes": 1000,
+        "path": "import.json",
+        "sha256": "464337f62b341d5ea1deca4bf5cde748de7475416365b10154529643ee2aac0e"
+      }
+    ],
+    "sourceRevision": "v001",
+    "sourceType": "Original procedural authoring from this repository script; no external assets",
+    "triangles": 1000,
+    "unitsPerMeter": 1,
+    "up": "+Y",
+    "variantId": "wanderer",
+    "vertices": 3000
+  },
+  "staticOnly": false,
+  "validation": {
+    "animationRuntime": "NOT_RUN",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN",
+    "mixamoSample": "NOT_APPLICABLE"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "assetId": "ashen-arrow",
+  "converter": {
+    "name": "BuildAshenArsenal.py",
+    "revision": 1,
+    "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+  },
+  "converterRevision": 1,
+  "converterSha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+  "counts": {
+    "indices": 294,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 294
+  },
+  "formatVersion": 1,
+  "generation": "457479d2152ff7bab14df7723a5532d57327db4fd54c5f5b0234dc01c98d65ac",
+  "importOptions": {
+    "assetId": "ashen-arrow",
+    "flipV": false,
+    "flipX": false,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "arrow.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": false,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "arrow.geometry.json",
+    "sourceFormat": "project_authored_geometry_json",
+    "sourceFront": "+Z",
+    "sourceHandedness": "LH",
+    "sourceUnitsPerMeter": 1,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "82dfe28661cbccbb1b85986b5aa69972b7eb52d081e8c1b23b85198c16d0f205",
+  "inputs": [
+    {
+      "bytes": 60084,
+      "path": "arrow.geometry.json",
+      "sha256": "79aa9068397ce09b8433a5c40ab69d9296d591cca1aa885a3215993d55456034"
+    },
+    {
+      "bytes": 927,
+      "path": "import.json",
+      "sha256": "061fa8e2a4473d7a2cb74a5dab781d2d63cad23ed80fed228bac76cb84f87f9d"
+    },
+    {
+      "bytes": 247,
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 1864,
+      "path": "source.json",
+      "sha256": "f122039abf77776a84da1373bd0a43454e756792ad962e3d486b04df1458853b"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 10826,
+      "kind": "model",
+      "path": "arrow.mesh",
+      "sha256": "44bcd32ab9b26f1c1cb373fb9755fe4b36dbb29fb2bac40ccd00da315880f2a2"
+    },
+    {
+      "bytes": 247,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-arrow",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "bounds": {
+      "max": [
+        0.05999999865889549,
+        0.05396152287721634,
+        0.36000001430511475
+      ],
+      "min": [
+        -0.05000000074505806,
+        -0.05396152287721634,
+        -0.23999999463558197
+      ]
+    },
+    "creatorScript": {
+      "path": "Scripts/BuildAshenArsenal.py",
+      "revision": 1,
+      "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+    },
+    "dimensionsMeters": [
+      0.10999999940395355,
+      0.10792304575443268,
+      0.6000000089406967
+    ],
+    "displayName": "화살",
+    "externalAssets": false,
+    "features": [
+      "wooden shaft",
+      "iron head points +Z",
+      "three solid rear fletchings",
+      "0.60m source length"
+    ],
+    "forward": "+Z",
+    "gameplayStatsChanged": false,
+    "historicalReplica": false,
+    "noExternalAssetBytesCopied": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "redistribution": "This project repository and game builds; preserve original source notice",
+    "repositoryInclusion": true,
+    "role": "arrow",
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 60084,
+        "path": "arrow.geometry.json",
+        "sha256": "79aa9068397ce09b8433a5c40ab69d9296d591cca1aa885a3215993d55456034"
+      },
+      {
+        "bytes": 927,
+        "path": "import.json",
+        "sha256": "061fa8e2a4473d7a2cb74a5dab781d2d63cad23ed80fed228bac76cb84f87f9d"
+      },
+      {
+        "bytes": 247,
+        "path": "palette.png",
+        "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+      },
+      {
+        "bytes": 756,
+        "path": "projectauthoredsource.txt",
+        "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+      }
+    ],
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1,
+    "up": "+Y"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

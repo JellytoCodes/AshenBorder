@@ -1,0 +1,423 @@
+{
+  "assetId": "ashen-audio",
+  "converter": {
+    "name": "BuildPresentationAssets.py",
+    "revision": 1,
+    "sha256": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949"
+  },
+  "converterRevision": 1,
+  "converterSha256": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+  "counts": {
+    "audioClips": 11
+  },
+  "formatVersion": 1,
+  "generation": "a3d89bb2bc846752dc36b05b4135e1b50dae8e425e0094f8aa574a6239f3c2f8",
+  "importOptions": {
+    "bitsPerSample": 16,
+    "channels": 1,
+    "generatorSha256": "c430ad72b4cf1e3f9b413ef610ff2ad2fa8c8ee48ab5008f8e221c51b245918d",
+    "loop": {
+      "key": "music",
+      "seconds": 12,
+      "smoothEndpointSeconds": 0.02,
+      "windWrapCrossfadeSeconds": 0.5
+    },
+    "measuredPcm": {
+      "blade": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -2.092502117414426e-06,
+        "durationSeconds": 0.42,
+        "frames": 18522,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "047c761dc3ba720f57ab29517bd70e27c470d156ecd240ded4f2e6e5715551d2",
+        "peak": 0.079986572265625,
+        "rms": 0.015522659431223364,
+        "sampleRate": 44100,
+        "sha256": "8d24278a42340761c2eeb21f5023be27f2c6a699ab00a72708b7ddcc0dd8f616"
+      },
+      "bow": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -2.4340805040586637e-05,
+        "durationSeconds": 0.58,
+        "frames": 25578,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "57d304f538eb5656c7a2974e427bea89faec1e0d9de641bc6b9a30192684e65f",
+        "peak": 0.084991455078125,
+        "rms": 0.00815345201573749,
+        "sampleRate": 44100,
+        "sha256": "62d06dc5959c52267b52f2e2346d18b2b77a193d82b6c025877333967491891c"
+      },
+      "death": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": 9.752773412192258e-05,
+        "durationSeconds": 1.05,
+        "frames": 46305,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "75a40344cb8a0180ade92a1c483419a5f82e8c9e7368ae58410be297666201ef",
+        "peak": 0.079986572265625,
+        "rms": 0.010615424926499622,
+        "sampleRate": 44100,
+        "sha256": "549dc1f65de3086858dea06d8e63008824aae1d1b0e84baacc398ab7c3c3809d"
+      },
+      "defeat": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": 0.00010306062726542637,
+        "durationSeconds": 1.65,
+        "frames": 72765,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "653d9ff1aebb578a731789aa723c992bf8baea483c1cd02624062dae578054e9",
+        "peak": 0.079986572265625,
+        "rms": 0.013157868643129216,
+        "sampleRate": 44100,
+        "sha256": "83298605bbe68eb949370f8c31bed8bd90851cc94377c33c6428fd5bb69bf807"
+      },
+      "fire": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -1.282687321580418e-06,
+        "durationSeconds": 0.28,
+        "frames": 12348,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "2f709b82660646449d440ef3dc9c26c3eb0366acbedc8e7f38334e560cba6209",
+        "peak": 0.07000732421875,
+        "rms": 0.014794746672281544,
+        "sampleRate": 44100,
+        "sha256": "756e5fbf0f9e3bb9f9c7ba4c8b324949dae9743a8b663384321b722cd94afeec"
+      },
+      "hit": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": 6.78895011780754e-05,
+        "durationSeconds": 0.4,
+        "frames": 17640,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "073fbbd93111bfbdc9b1ea48fb45b35bb35670038a2baf3878b85c2c6c83c921",
+        "peak": 0.084991455078125,
+        "rms": 0.010429749237972916,
+        "sampleRate": 44100,
+        "sha256": "54bb69eb509a37acc0d4c7f76fd3f759f5fa6acec7be1fb2d180f3463d1a4f6f"
+      },
+      "music": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": 8.19978259858631e-06,
+        "durationSeconds": 12.0,
+        "frames": 529200,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "436ac2ea7b121281079939d9eaa6432e4757e7267a14a1145cceba4d084e2002",
+        "peak": 0.05499267578125,
+        "rms": 0.012994548331188138,
+        "sampleRate": 44100,
+        "sha256": "ba894c94703bbaf55f382e3277d8aa9e6d1187891dd18e98bc58bfcbc32b7529"
+      },
+      "pickup": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -8.165701176303855e-06,
+        "durationSeconds": 0.34,
+        "frames": 14994,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "870c2f7542959b8710911c78a27b53b94e25cc47fbd29136bb23ff9881ca9fe6",
+        "peak": 0.07000732421875,
+        "rms": 0.014463726732189486,
+        "sampleRate": 44100,
+        "sha256": "98288373bcc3eacc122075ff6c0ddb5329149c6b83ba694ea75f8b304354643d"
+      },
+      "select": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -1.8842816803370654e-05,
+        "durationSeconds": 0.24,
+        "frames": 10584,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "7b5f55d5ce04efb0e175d1081975125bafad789e4b52820b44c534f9063f6d98",
+        "peak": 0.05999755859375,
+        "rms": 0.009858095098487955,
+        "sampleRate": 44100,
+        "sha256": "08ff26f85e6a3a7c8f7f1f9b0a8abd24feabe8bf116f5b14d9522102007914b5"
+      },
+      "throwingKnife": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": -2.930859843937575e-07,
+        "durationSeconds": 0.34,
+        "frames": 14994,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "c5cf72229b4a5460337a9edc6f0dfb1b5914d87988303dc27b8330d9ba99a93c",
+        "peak": 0.079986572265625,
+        "rms": 0.017742041257171916,
+        "sampleRate": 44100,
+        "sha256": "ae2651d1649679a9b335d217a9f0889e4f5586446a335aa12c3145ac205b54bf"
+      },
+      "victory": {
+        "bitsPerSample": 16,
+        "channels": 1,
+        "dcMean": 4.4416954788281054e-05,
+        "durationSeconds": 1.8,
+        "frames": 79380,
+        "loopEdgeSlopeDifference": 0.0,
+        "loopEdgeStep": 0.0,
+        "pcmSha256": "b43561ed5feaec97c3b074c0583cdcf45508ca4a4dcc9d093a58189826aa3bcc",
+        "peak": 0.079986572265625,
+        "rms": 0.008250009096643468,
+        "sampleRate": 44100,
+        "sha256": "1903c0db39628c47c5ea3214281540884eca259b7875c5b18a789b75a59c0337"
+      }
+    },
+    "mixBudget": {
+      "effectVoices": 16,
+      "maxEffectGain": 0.65,
+      "maxMusicGain": 0.6,
+      "worstAlignedPeakUpperBound": 0.9170000000000001
+    },
+    "publisherSha256": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+    "revision": 1,
+    "sampleRate": 44100,
+    "seed": 731905,
+    "tracks": {
+      "blade": {
+        "design": "cloth-and-air blade swish; impact is the separate hit cue",
+        "durationSeconds": 0.42,
+        "targetPeak": 0.08
+      },
+      "bow": {
+        "design": "damped string twang and short arrow air movement",
+        "durationSeconds": 0.58,
+        "targetPeak": 0.085
+      },
+      "death": {
+        "design": "cloth collapse, soft ground thud and ash gust",
+        "durationSeconds": 1.05,
+        "targetPeak": 0.08
+      },
+      "defeat": {
+        "design": "low hollow impact and receding wind",
+        "durationSeconds": 1.65,
+        "targetPeak": 0.08
+      },
+      "fire": {
+        "design": "neutral air-cut fallback, no firearm transient",
+        "durationSeconds": 0.28,
+        "targetPeak": 0.07
+      },
+      "hit": {
+        "design": "dull armor/body impact and irregular metal resonance",
+        "durationSeconds": 0.4,
+        "targetPeak": 0.085
+      },
+      "music": {
+        "design": "seam-controlled subdued wind, low drone and sparse skin-drum/wood loop",
+        "durationSeconds": 12.0,
+        "targetPeak": 0.055
+      },
+      "pickup": {
+        "design": "cloth supplies rustle and dry wooden clacks, no coin jingle",
+        "durationSeconds": 0.34,
+        "targetPeak": 0.07
+      },
+      "select": {
+        "design": "leather fold and wooden fastening click",
+        "durationSeconds": 0.24,
+        "targetPeak": 0.06
+      },
+      "throwingKnife": {
+        "design": "short narrow air cut with a faint irregular metal tail",
+        "durationSeconds": 0.34,
+        "targetPeak": 0.08
+      },
+      "victory": {
+        "design": "restrained skin-drum/wood/string resolution",
+        "durationSeconds": 1.8,
+        "targetPeak": 0.08
+      }
+    }
+  },
+  "importOptionsSha256": "b0387e9fafabf757d4cc6d165792fa167f38ee460e2b9fee4aa28c74dfd1b216",
+  "inputs": [
+    {
+      "bytes": 37088,
+      "path": "blade.wav",
+      "sha256": "8d24278a42340761c2eeb21f5023be27f2c6a699ab00a72708b7ddcc0dd8f616"
+    },
+    {
+      "bytes": 51200,
+      "path": "bow.wav",
+      "sha256": "62d06dc5959c52267b52f2e2346d18b2b77a193d82b6c025877333967491891c"
+    },
+    {
+      "bytes": 92654,
+      "path": "death.wav",
+      "sha256": "549dc1f65de3086858dea06d8e63008824aae1d1b0e84baacc398ab7c3c3809d"
+    },
+    {
+      "bytes": 145574,
+      "path": "defeat.wav",
+      "sha256": "83298605bbe68eb949370f8c31bed8bd90851cc94377c33c6428fd5bb69bf807"
+    },
+    {
+      "bytes": 24740,
+      "path": "fire.wav",
+      "sha256": "756e5fbf0f9e3bb9f9c7ba4c8b324949dae9743a8b663384321b722cd94afeec"
+    },
+    {
+      "bytes": 35324,
+      "path": "hit.wav",
+      "sha256": "54bb69eb509a37acc0d4c7f76fd3f759f5fa6acec7be1fb2d180f3463d1a4f6f"
+    },
+    {
+      "bytes": 2032,
+      "path": "import.json",
+      "sha256": "8268aa01767a461842aaa79e26ec336597de7b61c607553e4dc19ed81c0bdb9f"
+    },
+    {
+      "bytes": 1058444,
+      "path": "music.wav",
+      "sha256": "ba894c94703bbaf55f382e3277d8aa9e6d1187891dd18e98bc58bfcbc32b7529"
+    },
+    {
+      "bytes": 30032,
+      "path": "pickup.wav",
+      "sha256": "98288373bcc3eacc122075ff6c0ddb5329149c6b83ba694ea75f8b304354643d"
+    },
+    {
+      "bytes": 367,
+      "path": "projectauthoredsource.txt",
+      "sha256": "f6a28d16d90835a142ee1526d463b07946d84a353c14ffc7ba8273a7f28783b2"
+    },
+    {
+      "bytes": 21212,
+      "path": "select.wav",
+      "sha256": "08ff26f85e6a3a7c8f7f1f9b0a8abd24feabe8bf116f5b14d9522102007914b5"
+    },
+    {
+      "bytes": 353,
+      "path": "source.json",
+      "sha256": "37c789a5771bd57b9e79eb251d947a3eefbe0d77ef0fe307a2a1b8df766d7791"
+    },
+    {
+      "bytes": 30032,
+      "path": "throwingKnife.wav",
+      "sha256": "ae2651d1649679a9b335d217a9f0889e4f5586446a335aa12c3145ac205b54bf"
+    },
+    {
+      "bytes": 158804,
+      "path": "victory.wav",
+      "sha256": "1903c0db39628c47c5ea3214281540884eca259b7875c5b18a789b75a59c0337"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 37088,
+      "kind": "audio",
+      "path": "blade.wav",
+      "sha256": "8d24278a42340761c2eeb21f5023be27f2c6a699ab00a72708b7ddcc0dd8f616"
+    },
+    {
+      "bytes": 51200,
+      "kind": "audio",
+      "path": "bow.wav",
+      "sha256": "62d06dc5959c52267b52f2e2346d18b2b77a193d82b6c025877333967491891c"
+    },
+    {
+      "bytes": 92654,
+      "kind": "audio",
+      "path": "death.wav",
+      "sha256": "549dc1f65de3086858dea06d8e63008824aae1d1b0e84baacc398ab7c3c3809d"
+    },
+    {
+      "bytes": 145574,
+      "kind": "audio",
+      "path": "defeat.wav",
+      "sha256": "83298605bbe68eb949370f8c31bed8bd90851cc94377c33c6428fd5bb69bf807"
+    },
+    {
+      "bytes": 24740,
+      "kind": "audio",
+      "path": "fire.wav",
+      "sha256": "756e5fbf0f9e3bb9f9c7ba4c8b324949dae9743a8b663384321b722cd94afeec"
+    },
+    {
+      "bytes": 35324,
+      "kind": "audio",
+      "path": "hit.wav",
+      "sha256": "54bb69eb509a37acc0d4c7f76fd3f759f5fa6acec7be1fb2d180f3463d1a4f6f"
+    },
+    {
+      "bytes": 1058444,
+      "kind": "audio",
+      "path": "music.wav",
+      "sha256": "ba894c94703bbaf55f382e3277d8aa9e6d1187891dd18e98bc58bfcbc32b7529"
+    },
+    {
+      "bytes": 30032,
+      "kind": "audio",
+      "path": "pickup.wav",
+      "sha256": "98288373bcc3eacc122075ff6c0ddb5329149c6b83ba694ea75f8b304354643d"
+    },
+    {
+      "bytes": 367,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "f6a28d16d90835a142ee1526d463b07946d84a353c14ffc7ba8273a7f28783b2"
+    },
+    {
+      "bytes": 21212,
+      "kind": "audio",
+      "path": "select.wav",
+      "sha256": "08ff26f85e6a3a7c8f7f1f9b0a8abd24feabe8bf116f5b14d9522102007914b5"
+    },
+    {
+      "bytes": 30032,
+      "kind": "audio",
+      "path": "throwingKnife.wav",
+      "sha256": "ae2651d1649679a9b335d217a9f0889e4f5586446a335aa12c3145ac205b54bf"
+    },
+    {
+      "bytes": 158804,
+      "kind": "audio",
+      "path": "victory.wav",
+      "sha256": "1903c0db39628c47c5ea3214281540884eca259b7875c5b18a789b75a59c0337"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "scope": "project-authored PCM WAV source copies; not EMSH metadata",
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "asset": "ASHEN BORDER authored audio v001",
+    "author": "ASHEN BORDER project",
+    "externalAssets": false,
+    "generatorScript": "Scripts/BuildAshenAudio.py",
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored",
+    "redistribution": "Include original authored-source notice",
+    "repositoryInclusion": true,
+    "seed": 731905
+  },
+  "staticOnly": true,
+  "validation": {
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

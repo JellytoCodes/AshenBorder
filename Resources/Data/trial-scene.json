@@ -1,0 +1,118 @@
+{
+  "modelPath": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/character.mesh",
+  "animationSlots": {
+    "attack": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/attack.clip",
+    "death": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/death.clip",
+    "idle": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/idle.clip",
+    "move": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/walk.clip"
+  },
+  "terrain": {
+    "modelPath": "Generated/ashen-terrain/0ebf8f5ff121c2b8d423c85e6361b1510056625d62c973bf6c5c50016266aaff/terrain.mesh",
+    "width": 65,
+    "height": 65,
+    "origin": [
+      -12.0,
+      0.0,
+      -12.0
+    ],
+    "cellSize": 0.375,
+    "heightScale": 2.4,
+    "uvMeters": 2.0,
+    "blendStartHeight": 0.65,
+    "blendEndHeight": 1.2,
+    "maxSlopeDegrees": 30.0
+  },
+  "enemyVisuals": [
+    {
+      "modelPath": "Generated/ashen-wanderer/dce6388885a79772c1aeb7c637765049c493e01652aad28f9a068d5f7615dc37/character.mesh",
+      "definitionId": 1,
+      "animationSlots": {
+        "attack": "Generated/ashen-wanderer/dce6388885a79772c1aeb7c637765049c493e01652aad28f9a068d5f7615dc37/attack.clip",
+        "death": "Generated/ashen-wanderer/dce6388885a79772c1aeb7c637765049c493e01652aad28f9a068d5f7615dc37/death.clip",
+        "idle": "Generated/ashen-wanderer/dce6388885a79772c1aeb7c637765049c493e01652aad28f9a068d5f7615dc37/idle.clip",
+        "move": "Generated/ashen-wanderer/dce6388885a79772c1aeb7c637765049c493e01652aad28f9a068d5f7615dc37/walk.clip"
+      }
+    },
+    {
+      "modelPath": "Generated/ashen-scout/cbc526f719207cbec5a62e7d74190e9cc2749763edfc15d7633e4e1eb2ee488c/character.mesh",
+      "definitionId": 2,
+      "animationSlots": {
+        "attack": "Generated/ashen-scout/cbc526f719207cbec5a62e7d74190e9cc2749763edfc15d7633e4e1eb2ee488c/attack.clip",
+        "death": "Generated/ashen-scout/cbc526f719207cbec5a62e7d74190e9cc2749763edfc15d7633e4e1eb2ee488c/death.clip",
+        "idle": "Generated/ashen-scout/cbc526f719207cbec5a62e7d74190e9cc2749763edfc15d7633e4e1eb2ee488c/idle.clip",
+        "move": "Generated/ashen-scout/cbc526f719207cbec5a62e7d74190e9cc2749763edfc15d7633e4e1eb2ee488c/walk.clip"
+      }
+    },
+    {
+      "modelPath": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/character.mesh",
+      "definitionId": 3,
+      "animationSlots": {
+        "attack": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/attack.clip",
+        "death": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/death.clip",
+        "idle": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/idle.clip",
+        "move": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/walk.clip"
+      }
+    }
+  ],
+  "weaponAttackSlots": {
+    "blade": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/attack_blade.clip",
+    "bow": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/attack_bow.clip",
+    "throwingKnife": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/attack_throwingKnife.clip"
+  },
+  "weaponAttachments": {
+    "blade": {
+      "nodeName": "Hand_R",
+      "position": [
+        0,
+        -0.14,
+        0
+      ],
+      "rotation": [
+        1.5707963267948966,
+        0,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    },
+    "bow": {
+      "nodeName": "Hand_L",
+      "position": [
+        0,
+        -0.00925,
+        0
+      ],
+      "rotation": [
+        1.5707963267948966,
+        -1.5707963267948966,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    },
+    "throwingKnife": {
+      "nodeName": "Hand_R",
+      "position": [
+        0,
+        -0.095,
+        0
+      ],
+      "rotation": [
+        1.5707963267948966,
+        0,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "assetId": "ashen-gate",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 528,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 528
+  },
+  "formatVersion": 1,
+  "generation": "ecd17279a93e8c2c97597028a6458b335beefe59aa6e2d8b99666ee899c39712",
+  "importOptions": {
+    "assetId": "ashen-gate",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "gate.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "gate.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "148e914d90464dae437f04a9b1ff08ba6c7bf07cdd1b817e1b3ec84165383658",
+  "inputs": [
+    {
+      "bytes": 110823,
+      "path": "gate.geometry.json",
+      "sha256": "c79853d449c17468de0fd7fa880ef74ea762b5f9dc8268163ad6590945757529"
+    },
+    {
+      "bytes": 766,
+      "path": "import.json",
+      "sha256": "a224c4134263991caa7dd20503e869a9ef2c26f5ece5f057ed988abe1b7b1071"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 516,
+      "path": "source.json",
+      "sha256": "22b08ab7129b30db2d0fc51ad5e57dc0cd2acb12bbeaea39dc3e923fdc5fceb8"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 19262,
+      "kind": "model",
+      "path": "gate.mesh",
+      "sha256": "6d21becc10ec6fa180e1e317a868014ba00dc073c6651e97b65edca2fcf118dc"
+    },
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-gate",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "two timber posts on stone feet",
+      "uneven lintel and braces",
+      "open centre, no gameplay gate or collision"
+    ],
+    "gameplayCollisionAdded": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        1.7400000095367432,
+        2.8159310817718506,
+        0.3499999940395355
+      ],
+      "min": [
+        -1.7400000095367432,
+        0.0,
+        -0.3499999940395355
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      3.4800000190734863,
+      2.8159310817718506,
+      0.699999988079071
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.0024499973800417357,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 176
+  }
+}

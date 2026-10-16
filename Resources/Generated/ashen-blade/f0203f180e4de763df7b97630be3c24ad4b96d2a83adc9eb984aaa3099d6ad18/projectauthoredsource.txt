@@ -1,0 +1,13 @@
+SAVE MYSELF: ASHEN BORDER - Original arsenal and supplies assets
+
+Original procedural geometry and palette authored for this project in
+Scripts/BuildAshenArsenal.py. No external model, animation or texture data was
+copied. These are stylized game props, not historically accurate replicas.
+
+These project-authored source and generated files may be stored, modified and
+redistributed with this project's repository and game builds. Keep this notice
+with redistributed generated bundles. It grants no separate third-party asset
+pack license and does not change unrelated dependency or engine licenses.
+
+The spread weapon's five flying knives are an arcade delivery pattern. The
+geometry does not assert a historical firing mechanism or alter gameplay stats.

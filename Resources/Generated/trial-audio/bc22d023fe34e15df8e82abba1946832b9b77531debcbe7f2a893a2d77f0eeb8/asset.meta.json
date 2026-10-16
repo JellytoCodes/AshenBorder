@@ -1,0 +1,186 @@
+{
+  "assetId": "trial-audio",
+  "converter": {
+    "name": "BuildPresentationAssets.py",
+    "revision": 1,
+    "sha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97"
+  },
+  "converterRevision": 1,
+  "converterSha256": "123ab72f1c33c91fdc05f831a7a783e68e2a32fc1dc4dfb2fd17532c930f4e97",
+  "formatVersion": 1,
+  "generation": "bc22d023fe34e15df8e82abba1946832b9b77531debcbe7f2a893a2d77f0eeb8",
+  "importOptions": {
+    "pcm": "mono16",
+    "sampleRate": 22050
+  },
+  "importOptionsSha256": "8fc28599e9879fdf6d364336cfd949b6cae2fa26c2e2910182a681633c649f0c",
+  "inputs": [
+    {
+      "bytes": 20192,
+      "path": "blade.geometry.json",
+      "sha256": "66713fde907beea740e6c634911f63c6e180d48b5a71e669c6e1dca2a4de0238"
+    },
+    {
+      "bytes": 29977,
+      "path": "currency.geometry.json",
+      "sha256": "d07c68f780f38de5a0bc5ae766ca12e9bf8c7995e1d3ff2d920fc3565ec789d6"
+    },
+    {
+      "bytes": 12392,
+      "path": "death.wav",
+      "sha256": "4fa70d92b16efbf6daac17feac922ba123e26dc3934a3da26ea914f0a8532903"
+    },
+    {
+      "bytes": 35324,
+      "path": "defeat.wav",
+      "sha256": "ee30cb52d92dd27176b087fe4d8bb608f4d7d96fd2ddf5ff8c824b9235a9d19c"
+    },
+    {
+      "bytes": 15055,
+      "path": "experience.geometry.json",
+      "sha256": "2617fde9136b975c6933dc5e721c6c537447b3c770540079437e9235f04d7aac"
+    },
+    {
+      "bytes": 3350,
+      "path": "fire.wav",
+      "sha256": "336debe4f9371562ee8923e242ad1b59278facd45d743ffe6104ee34e72e1911"
+    },
+    {
+      "bytes": 6218,
+      "path": "hit.wav",
+      "sha256": "69a49997d0768f69536a642de6cf22519bb402eb38c6286a050e4eabe27bf29d"
+    },
+    {
+      "bytes": 176444,
+      "path": "music.wav",
+      "sha256": "ce0ffe8bcc5e7e3ed6da860311de15320bca5dfa7856e60a92f3b35f9ea50f7b"
+    },
+    {
+      "bytes": 5336,
+      "path": "pickup.wav",
+      "sha256": "9dda84f7dde8c301478a35da16cacc37a0118419c19528797573c7d251309afa"
+    },
+    {
+      "bytes": 26579,
+      "path": "pistol.geometry.json",
+      "sha256": "08b65b51af0ede78d0823f5c25d904870e8947933bd4fad65f2e48668cce3e31"
+    },
+    {
+      "bytes": 227,
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 7186,
+      "path": "projectile.geometry.json",
+      "sha256": "a7cf35ec31f7d0a52766ba68ce1a2ca0ac3bbf703ba5c09f9c0844a8313a23c3"
+    },
+    {
+      "bytes": 8864,
+      "path": "select.wav",
+      "sha256": "87bcf5cfcef011bf8a7825f0e5fda5cc268ff6032646bd4c7f6ee0f40fbd4337"
+    },
+    {
+      "bytes": 26476,
+      "path": "shotgun.geometry.json",
+      "sha256": "e10edeed344b4cf35f358669f0090a39f82c00170428b57f11cba3332e5b4f7e"
+    },
+    {
+      "bytes": 336,
+      "path": "source.json",
+      "sha256": "40241ba59088cdbefa789b473e6192fd744ca35b96b2ae87102a6398eafc00ac"
+    },
+    {
+      "bytes": 47508,
+      "path": "tree.geometry.json",
+      "sha256": "8595dbac270f09619b2b2b68504f71260b778c0017ea560f3e4ef1c88e16e909"
+    },
+    {
+      "bytes": 35324,
+      "path": "victory.wav",
+      "sha256": "6f055a2483f50bbbf1b356841625daf114b56f08fe23622ec2bf1565517adee4"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 12392,
+      "kind": "audio",
+      "path": "death.wav",
+      "sha256": "4fa70d92b16efbf6daac17feac922ba123e26dc3934a3da26ea914f0a8532903"
+    },
+    {
+      "bytes": 35324,
+      "kind": "audio",
+      "path": "defeat.wav",
+      "sha256": "ee30cb52d92dd27176b087fe4d8bb608f4d7d96fd2ddf5ff8c824b9235a9d19c"
+    },
+    {
+      "bytes": 3350,
+      "kind": "audio",
+      "path": "fire.wav",
+      "sha256": "336debe4f9371562ee8923e242ad1b59278facd45d743ffe6104ee34e72e1911"
+    },
+    {
+      "bytes": 6218,
+      "kind": "audio",
+      "path": "hit.wav",
+      "sha256": "69a49997d0768f69536a642de6cf22519bb402eb38c6286a050e4eabe27bf29d"
+    },
+    {
+      "bytes": 176444,
+      "kind": "audio",
+      "path": "music.wav",
+      "sha256": "ce0ffe8bcc5e7e3ed6da860311de15320bca5dfa7856e60a92f3b35f9ea50f7b"
+    },
+    {
+      "bytes": 5336,
+      "kind": "audio",
+      "path": "pickup.wav",
+      "sha256": "9dda84f7dde8c301478a35da16cacc37a0118419c19528797573c7d251309afa"
+    },
+    {
+      "bytes": 227,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "a088fee698b18d4ece33692a805645e3d5a1063b86dde12a1d1edde2a81d0210"
+    },
+    {
+      "bytes": 8864,
+      "kind": "audio",
+      "path": "select.wav",
+      "sha256": "87bcf5cfcef011bf8a7825f0e5fda5cc268ff6032646bd4c7f6ee0f40fbd4337"
+    },
+    {
+      "bytes": 35324,
+      "kind": "audio",
+      "path": "victory.wav",
+      "sha256": "6f055a2483f50bbbf1b356841625daf114b56f08fe23622ec2bf1565517adee4"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "scope": "project-authored PCM WAV source copies; not EMSH metadata",
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "asset": "LASTFIELD presentation probes",
+    "author": "LASTFIELD project",
+    "externalAssets": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored",
+    "purpose": "LF12/LF13 technical test art and synthesized audio",
+    "redistribution": "Include original source notice",
+    "repositoryInclusion": true
+  },
+  "staticOnly": true,
+  "validation": {
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

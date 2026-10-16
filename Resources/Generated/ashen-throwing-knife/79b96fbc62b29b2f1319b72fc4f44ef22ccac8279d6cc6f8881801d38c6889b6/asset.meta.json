@@ -1,0 +1,185 @@
+{
+  "assetId": "ashen-throwing-knife",
+  "converter": {
+    "name": "BuildAshenArsenal.py",
+    "revision": 1,
+    "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+  },
+  "converterRevision": 1,
+  "converterSha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+  "counts": {
+    "indices": 546,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 546
+  },
+  "formatVersion": 1,
+  "generation": "79b96fbc62b29b2f1319b72fc4f44ef22ccac8279d6cc6f8881801d38c6889b6",
+  "importOptions": {
+    "assetId": "ashen-throwing-knife",
+    "flipV": false,
+    "flipX": false,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "throwingKnife.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": false,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "throwingKnife.geometry.json",
+    "sourceFormat": "project_authored_geometry_json",
+    "sourceFront": "+Z",
+    "sourceHandedness": "LH",
+    "sourceUnitsPerMeter": 1,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "681515f8ee07d73f61d0fe449cfcd14cfc1e2742bdacccda860c1d7d19fb86c7",
+  "inputs": [
+    {
+      "bytes": 952,
+      "path": "import.json",
+      "sha256": "808a0274a9302787442305873e8ea97439abdbe2074ded3d3edb3158d0c5ec2d"
+    },
+    {
+      "bytes": 247,
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 1866,
+      "path": "source.json",
+      "sha256": "455eb0ae39c85f605777cd8e0547e84b9cdbf2114678026adb448d146dcefaef"
+    },
+    {
+      "bytes": 108828,
+      "path": "throwingKnife.geometry.json",
+      "sha256": "aee92860efcee69945d6e51b998f3e2056042655089c7ecb2b3cef8b918ec2e3"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 247,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 19894,
+      "kind": "model",
+      "path": "throwingKnife.mesh",
+      "sha256": "065cad8dd33142870dc30949f16a494d362d24e35e54fb8bf85da16131254044"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-throwing-knife",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "bounds": {
+      "max": [
+        0.05999999865889549,
+        0.02424871176481247,
+        0.36500000953674316
+      ],
+      "min": [
+        -0.05999999865889549,
+        -0.02424871176481247,
+        -0.1875
+      ]
+    },
+    "creatorScript": {
+      "path": "Scripts/BuildAshenArsenal.py",
+      "revision": 1,
+      "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+    },
+    "dimensionsMeters": [
+      0.11999999731779099,
+      0.04849742352962494,
+      0.5525000095367432
+    ],
+    "displayName": "투척칼",
+    "externalAssets": false,
+    "features": [
+      "leather wrapped short grip",
+      "small steel stop",
+      "slender symmetric steel point"
+    ],
+    "forward": "+Z",
+    "gameplayStatsChanged": false,
+    "historicalReplica": false,
+    "noExternalAssetBytesCopied": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "redistribution": "This project repository and game builds; preserve original source notice",
+    "repositoryInclusion": true,
+    "role": "throwingKnife",
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 952,
+        "path": "import.json",
+        "sha256": "808a0274a9302787442305873e8ea97439abdbe2074ded3d3edb3158d0c5ec2d"
+      },
+      {
+        "bytes": 247,
+        "path": "palette.png",
+        "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+      },
+      {
+        "bytes": 756,
+        "path": "projectauthoredsource.txt",
+        "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+      },
+      {
+        "bytes": 108828,
+        "path": "throwingKnife.geometry.json",
+        "sha256": "aee92860efcee69945d6e51b998f3e2056042655089c7ecb2b3cef8b918ec2e3"
+      }
+    ],
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1,
+    "up": "+Y"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

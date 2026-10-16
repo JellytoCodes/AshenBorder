@@ -1,0 +1,185 @@
+{
+  "assetId": "ashen-blade",
+  "converter": {
+    "name": "BuildAshenArsenal.py",
+    "revision": 1,
+    "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+  },
+  "converterRevision": 1,
+  "converterSha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+  "counts": {
+    "indices": 918,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 918
+  },
+  "formatVersion": 1,
+  "generation": "f0203f180e4de763df7b97630be3c24ad4b96d2a83adc9eb984aaa3099d6ad18",
+  "importOptions": {
+    "assetId": "ashen-blade",
+    "flipV": false,
+    "flipX": false,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "blade.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": false,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "blade.geometry.json",
+    "sourceFormat": "project_authored_geometry_json",
+    "sourceFront": "+Z",
+    "sourceHandedness": "LH",
+    "sourceUnitsPerMeter": 1,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "ccfa53e269ea85304c64d1c2583f8a0cf075bbcee27d33f3669979c07dbcac77",
+  "inputs": [
+    {
+      "bytes": 187102,
+      "path": "blade.geometry.json",
+      "sha256": "457c3504cedefd696add44f418752c8f2ab4eb88c107dade16574b07c3bfa22f"
+    },
+    {
+      "bytes": 927,
+      "path": "import.json",
+      "sha256": "f9e1d3f2d8b3c76af46cabbe5236e2f6f6b314eb9d30f564863d498b313df930"
+    },
+    {
+      "bytes": 247,
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 1858,
+      "path": "source.json",
+      "sha256": "30708d19e2c993c73662adea4651d1a90c30e851040138d72493ac985a3a6255"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 33288,
+      "kind": "model",
+      "path": "blade.mesh",
+      "sha256": "a4e2fa6bdda6cefa6068dad6fb4f210a88ed88b0ca0da231cbec52542f5b86a3"
+    },
+    {
+      "bytes": 247,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-blade",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "bounds": {
+      "max": [
+        0.12999999523162842,
+        0.041999999433755875,
+        0.574999988079071
+      ],
+      "min": [
+        -0.12999999523162842,
+        -0.041999999433755875,
+        -0.1875
+      ]
+    },
+    "creatorScript": {
+      "path": "Scripts/BuildAshenArsenal.py",
+      "revision": 1,
+      "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+    },
+    "dimensionsMeters": [
+      0.25999999046325684,
+      0.08399999886751175,
+      0.762499988079071
+    ],
+    "displayName": "군용 단검",
+    "externalAssets": false,
+    "features": [
+      "leather-wrapped grip",
+      "steel crossguard and pommel",
+      "double-bevel steel blade with +Z point"
+    ],
+    "forward": "+Z",
+    "gameplayStatsChanged": false,
+    "historicalReplica": false,
+    "noExternalAssetBytesCopied": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "redistribution": "This project repository and game builds; preserve original source notice",
+    "repositoryInclusion": true,
+    "role": "blade",
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 187102,
+        "path": "blade.geometry.json",
+        "sha256": "457c3504cedefd696add44f418752c8f2ab4eb88c107dade16574b07c3bfa22f"
+      },
+      {
+        "bytes": 927,
+        "path": "import.json",
+        "sha256": "f9e1d3f2d8b3c76af46cabbe5236e2f6f6b314eb9d30f564863d498b313df930"
+      },
+      {
+        "bytes": 247,
+        "path": "palette.png",
+        "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+      },
+      {
+        "bytes": 756,
+        "path": "projectauthoredsource.txt",
+        "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+      }
+    ],
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1,
+    "up": "+Y"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

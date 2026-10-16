@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 2,
+  "player": {
+    "maxHp": 100,
+    "speed": 5,
+    "armor": 0,
+    "damageMultiplier": 1,
+    "attackSpeed": 1,
+    "pickupRadius": 2,
+    "hitInvulnerability": 0.5,
+    "knockbackDecay": 8,
+    "radius": 0.35,
+    "height": 1.8
+  },
+  "pools": {
+    "enemyCapacity": 64,
+    "projectileCapacity": 128,
+    "dropCapacity": 64
+  },
+  "slotLimit": 6,
+  "maxAttacksPerTick": 6,
+  "maxSpawnsPerTick": 8,
+  "minimumCooldown": 0.05,
+  "enemies": [
+    {
+      "id": 1,
+      "hp": 20,
+      "speed": 1.5,
+      "armor": 0,
+      "radius": 0.35,
+      "height": 1.8,
+      "contactDamage": 5,
+      "contactInterval": 0.8,
+      "knockback": 2,
+      "xp": 2,
+      "currency": 1
+    },
+    {
+      "id": 2,
+      "hp": 10,
+      "speed": 2.5,
+      "armor": 0,
+      "radius": 0.28,
+      "height": 1.5,
+      "contactDamage": 3,
+      "contactInterval": 0.6,
+      "knockback": 1,
+      "xp": 2,
+      "currency": 1
+    },
+    {
+      "id": 3,
+      "hp": 45,
+      "speed": 0.8,
+      "armor": 2,
+      "radius": 0.5,
+      "height": 2,
+      "contactDamage": 9,
+      "contactInterval": 1,
+      "knockback": 3,
+      "xp": 5,
+      "currency": 2
+    }
+  ],
+  "weapons": [
+    {
+      "id": 1,
+      "kind": "Melee",
+      "damage": 12,
+      "cooldown": 0.65,
+      "range": 2.5,
+      "knockback": 3,
+      "halfAngleRadians": 1.04719755
+    },
+    {
+      "id": 2,
+      "kind": "SingleProjectile",
+      "damage": 9,
+      "cooldown": 0.45,
+      "range": 12,
+      "knockback": 1,
+      "projectileSpeed": 20,
+      "projectileLife": 1,
+      "projectileRadius": 0.12,
+      "projectileCount": 1,
+      "spreadRadians": 0
+    },
+    {
+      "id": 3,
+      "kind": "Shotgun",
+      "damage": 5,
+      "cooldown": 1.2,
+      "range": 8,
+      "knockback": 1.5,
+      "projectileSpeed": 18,
+      "projectileLife": 0.8,
+      "projectileRadius": 0.1,
+      "projectileCount": 5,
+      "spreadRadians": 0.523598776
+    }
+  ],
+  "waves": [
+    {
+      "id": 1,
+      "duration": 12,
+      "maxAlive": 16,
+      "spawnPerSecond": 2,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 7
+        },
+        {
+          "enemyId": 2,
+          "weight": 2
+        },
+        {
+          "enemyId": 3,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "duration": 12,
+      "maxAlive": 24,
+      "spawnPerSecond": 3,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 4
+        },
+        {
+          "enemyId": 2,
+          "weight": 4
+        },
+        {
+          "enemyId": 3,
+          "weight": 2
+        }
+      ]
+    }
+  ],
+  "loadout": [
+    1
+  ],
+  "passives": [
+    {
+      "id": 1,
+      "name": "Vitality",
+      "maxStacks": 3,
+      "weight": 0,
+      "modifiers": [
+        {
+          "stat": "MaxHp",
+          "operation": "Flat",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Stride",
+      "maxStacks": 3,
+      "weight": 1,
+      "modifiers": [
+        {
+          "stat": "Speed",
+          "operation": "Percent",
+          "value": 0.08
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Guard",
+      "maxStacks": 3,
+      "weight": 1,
+      "modifiers": [
+        {
+          "stat": "Armor",
+          "operation": "Flat",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Power",
+      "maxStacks": 3,
+      "weight": 1,
+      "modifiers": [
+        {
+          "stat": "DamageMultiplier",
+          "operation": "Percent",
+          "value": 0.12
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Haste",
+      "maxStacks": 3,
+      "weight": 1,
+      "modifiers": [
+        {
+          "stat": "AttackSpeed",
+          "operation": "Percent",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Reach",
+      "maxStacks": 3,
+      "weight": 0,
+      "modifiers": [
+        {
+          "stat": "PickupRadius",
+          "operation": "Flat",
+          "value": 0.5
+        }
+      ]
+    }
+  ],
+  "progression": {
+    "cumulativeXp": [
+      5,
+      12,
+      22,
+      36,
+      55,
+      80
+    ],
+    "choiceCount": 3
+  },
+  "shop": {
+    "offerCount": 4,
+    "rerollCost": 2,
+    "items": [
+      {
+        "kind": "Weapon",
+        "definitionId": 1,
+        "price": 5,
+        "weight": 1
+      },
+      {
+        "kind": "Weapon",
+        "definitionId": 2,
+        "price": 6,
+        "weight": 1
+      },
+      {
+        "kind": "Weapon",
+        "definitionId": 3,
+        "price": 7,
+        "weight": 1
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 1,
+        "price": 4,
+        "weight": 0
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 2,
+        "price": 4,
+        "weight": 1
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 3,
+        "price": 4,
+        "weight": 1
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 4,
+        "price": 4,
+        "weight": 1
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 5,
+        "price": 4,
+        "weight": 1
+      },
+      {
+        "kind": "Passive",
+        "definitionId": 6,
+        "price": 4,
+        "weight": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "assetId": "ashen-supplies",
+  "converter": {
+    "name": "BuildAshenArsenal.py",
+    "revision": 1,
+    "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+  },
+  "converterRevision": 1,
+  "converterSha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+  "counts": {
+    "indices": 744,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 744
+  },
+  "formatVersion": 1,
+  "generation": "6f047b0b44a37ed40a32d50e0025e05f97356ca933e66bdebd3d20517dce4e2a",
+  "importOptions": {
+    "assetId": "ashen-supplies",
+    "flipV": false,
+    "flipX": false,
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "currency.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9"
+    },
+    "reverseWinding": false,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_only",
+    "skinCount": 0,
+    "sourceFile": "currency.geometry.json",
+    "sourceFormat": "project_authored_geometry_json",
+    "sourceFront": "+Z",
+    "sourceHandedness": "LH",
+    "sourceUnitsPerMeter": 1,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left"
+  },
+  "importOptionsSha256": "bb87f9ea789ef12e9fd2de2c9d2ffeb7b2297f121c899fcdff434f75c6e2aabe",
+  "inputs": [
+    {
+      "bytes": 171047,
+      "path": "currency.geometry.json",
+      "sha256": "64e570d050cab213732b8e36a77e19128a658896a6d2e14b3ae8f3bfaa86524f"
+    },
+    {
+      "bytes": 936,
+      "path": "import.json",
+      "sha256": "6194a19a4a4269856d068e7a3ce56177bb48c6f95391b543a8636a44d85cca08"
+    },
+    {
+      "bytes": 247,
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    },
+    {
+      "bytes": 1879,
+      "path": "source.json",
+      "sha256": "85a23f901c5e5bfc75f9d73af1befdaed77f01fa735cec63f8fab23d9dd14f0c"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 27028,
+      "kind": "model",
+      "path": "currency.mesh",
+      "sha256": "eaac15d958747bb28a28f9a478ee68e6948251ba070c89b64dc120297f2667e6"
+    },
+    {
+      "bytes": 247,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+    },
+    {
+      "bytes": 756,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-supplies",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "bounds": {
+      "max": [
+        0.14499999582767487,
+        0.28999999165534973,
+        0.10999999940395355
+      ],
+      "min": [
+        -0.14499999582767487,
+        0.0,
+        -0.10999999940395355
+      ]
+    },
+    "creatorScript": {
+      "path": "Scripts/BuildAshenArsenal.py",
+      "revision": 1,
+      "sha256": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144"
+    },
+    "dimensionsMeters": [
+      0.28999999165534973,
+      0.28999999165534973,
+      0.2199999988079071
+    ],
+    "displayName": "보급품 주머니",
+    "externalAssets": false,
+    "features": [
+      "faceted cloth supplies bag",
+      "cinched neck",
+      "visible rope knot and tails",
+      "no gold coin geometry"
+    ],
+    "forward": "+Z",
+    "gameplayStatsChanged": false,
+    "historicalReplica": false,
+    "noExternalAssetBytesCopied": true,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "redistribution": "This project repository and game builds; preserve original source notice",
+    "repositoryInclusion": true,
+    "role": "currency",
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 171047,
+        "path": "currency.geometry.json",
+        "sha256": "64e570d050cab213732b8e36a77e19128a658896a6d2e14b3ae8f3bfaa86524f"
+      },
+      {
+        "bytes": 936,
+        "path": "import.json",
+        "sha256": "6194a19a4a4269856d068e7a3ce56177bb48c6f95391b543a8636a44d85cca08"
+      },
+      {
+        "bytes": 247,
+        "path": "palette.png",
+        "sha256": "335c3dbc8f3ff54253f16eb674bd48c549bc40c11c79b417b503bc0f57243d72"
+      },
+      {
+        "bytes": 756,
+        "path": "projectauthoredsource.txt",
+        "sha256": "ee81fb374a296ac2c2732cb0c7c4a072075b52494d25e38c9e12aed07e477181"
+      }
+    ],
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1,
+    "up": "+Y"
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN"
+  }
+}

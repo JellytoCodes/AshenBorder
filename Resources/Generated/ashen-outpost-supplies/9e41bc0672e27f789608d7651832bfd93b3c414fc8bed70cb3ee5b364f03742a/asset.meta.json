@@ -1,0 +1,140 @@
+{
+  "assetId": "ashen-outpost-supplies",
+  "converter": {
+    "name": "BuildAshenOutpost.py",
+    "revision": 1,
+    "sha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b"
+  },
+  "converterRevision": 1,
+  "converterSha256": "c5d3424546baf3686df3bef7bf37f954343b93effa98d0fcbdad4a8e2413b08b",
+  "counts": {
+    "indices": 900,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 900
+  },
+  "formatVersion": 1,
+  "generation": "9e41bc0672e27f789608d7651832bfd93b3c414fc8bed70cb3ee5b364f03742a",
+  "importOptions": {
+    "assetId": "ashen-outpost-supplies",
+    "formatVersion": 1,
+    "nameProfile": "preserve",
+    "outputFile": "supplies.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "08284d774601b58fd90c0f55aa0c0530b49087bcce32f55e67435dd532fa0c22",
+      "BuildAshenArsenal.py": "45fcfd0211c5f2c83408a89df97be96387d84b26431822f21fa5fd6838daf144",
+      "BuildPresentationAssets.py": "76326c4db59be9af5f35159d23cf7fb7c81d8672e8ac49714be4f38da16c1949",
+      "BuildTrialAssets.py": "0d1d8d828d2117fc0805e1681cefea3fb3da695a9dfd86fcc4bd4ed4761b8af9",
+      "BuildTrialTerrainAssets.py": "c9754aaa19e427bc3f6ff88c58d6803fa081a4a7f44a446d3d59a1e5f99caad4"
+    },
+    "schemaVersion": 1,
+    "skinCount": 0,
+    "sourceFile": "supplies.geometry.json",
+    "sourceFormat": "project_authored_geometry_json"
+  },
+  "importOptionsSha256": "46dd80f48aa57c1298c2167e15dd815d8c4960543858494e7a77d0a2d0a8e50e",
+  "inputs": [
+    {
+      "bytes": 786,
+      "path": "import.json",
+      "sha256": "f189467f1900fa188c938568b9492fe85d9687d281f571afb2c344e59df0b29b"
+    },
+    {
+      "bytes": 245,
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 524,
+      "path": "source.json",
+      "sha256": "ad0f21faf40f356d605b4311b93e83471bfeca50d6caa9ab56fa89ed49157bfd"
+    },
+    {
+      "bytes": 171186,
+      "path": "supplies.geometry.json",
+      "sha256": "468014ff1ae8f54adc5c7828ecb09431d9392aaaa5186d43374f9b37c43dbeec"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 245,
+      "kind": "texture",
+      "path": "palette.png",
+      "sha256": "76664a5cc4ddcde35dc32abe64186a84d15c63f1b487a60b737783f329abdd80"
+    },
+    {
+      "bytes": 732,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "79727d4f30bb14a8322a8b47bf09eb88b0389802cd5e14bc3fdb1a69fe1da14f"
+    },
+    {
+      "bytes": 32664,
+      "kind": "model",
+      "path": "supplies.mesh",
+      "sha256": "87c51b22062d57dc7c648d748851de40b27dd9852e150ca2e5113e7d30453a53"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-outpost-supplies",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "externalAssets": false,
+    "features": [
+      "three framed wooden supply crates",
+      "ten-sided barrel with two iron hoops",
+      "static abandoned stores"
+    ],
+    "gameplayCollisionAdded": false,
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "original_procedural_geometry",
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUp": "+Y",
+    "schemaVersion": 1,
+    "sourceRevision": "v001",
+    "unitsPerMeter": 1
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "bounds": {
+      "max": [
+        1.2740000486373901,
+        1.2400000095367432,
+        0.44999998807907104
+      ],
+      "min": [
+        -0.9049999713897705,
+        0.0,
+        -0.4681423008441925
+      ]
+    },
+    "cpuConversion": "PASS",
+    "dimensionsMeters": [
+      2.1790000200271606,
+      1.2400000095367432,
+      0.9181422889232635
+    ],
+    "gpuUpload": "NOT_RUN",
+    "minimumTriangleAreaMetersSquared": 0.0012249992281199162,
+    "scope": "Float32 CPU finite/index/flat-normal/winding/area/UV checks, not native ModelCache/GPU acceptance",
+    "status": "PASS",
+    "triangles": 300
+  }
+}

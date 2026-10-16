@@ -1,0 +1,3 @@
+LASTFIELD project-authored technical presentation assets.
+Original procedural geometry and synthesized PCM audio; no third-party asset source.
+Keep this notice with redistributed generated bundles. Not approved final game art.
