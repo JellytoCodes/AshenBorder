@@ -31,7 +31,7 @@ v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 
 
 ## 스트레스와 계측
 
-제작·테스트 자료와 빌드 결과는 `_Local/`에 모으고 폴더 전체를 Git에서 제외한다. Tests·SourceAssets·Scripts·Tools·Libraries/Assimp·agents.md·Binaries·Intermediate·Saved가 그 안에 있다. 아래 명령은 이 로컬 자료가 있을 때 사용한다. 게임 소스·Resources·Engine/Shaders·JSON 헤더와 라이선스·기준서는 저장소에 포함한다. Visual Studio가 만드는 `.vs/`와 사용자 설정은 별도로 제외한다.
+제작·테스트 자료와 빌드 결과는 `_Local/`에 모으고 폴더 전체를 Git에서 제외한다. Tests·SourceAssets·Scripts·Tools·Libraries/Assimp·agents.md·Binaries·Intermediate·Saved가 그 안에 있다. 아래 명령은 이 로컬 자료가 있을 때 사용한다. 게임 소스·Resources·Engine/Shaders·JSON 헤더와 라이선스는 저장소에 포함한다. 기준서는 _Local/Docs에 보존한다. Visual Studio가 만드는 `.vs/`와 사용자 설정은 별도로 제외한다.
 
 일반 Verify에는 짧은 Stress만 포함된다. 아래 10분 반복과 계측은 따로 실행한다. Before는 변경 전 소스/실행 파일에서 보존하고 After는 변경 후에 실행한다. 다른 빌드·게임·GPU 작업과 동시에 실행하지 않는다. 별도 --balance는 1/60초 tick의 빠른 시뮬레이션이며 실제 시간 플레이·일반 승률·가격 효율 검증은 아니다.
 
@@ -98,10 +98,10 @@ python .\_Local\Scripts\BuildAshenAudio.py
 
 GLB/FBX 실제 일반 샘플을 확인했다. 원본 이름·계층·메시별 inverse bind·초 단위 키를 보존한다. Mixamo 이름 정책은 지정한 프로필에만 적용하며 실제 Mixamo 원본 검증은 남아 있다. Terrain은 65×65·24m 범위·8,192삼각형이고, 접지와 충돌은 렌더 삼각형 표면을 사용한다.
 
-JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-Clause다. JSON 고지는 Libraries에, Assimp 원본과 고지는 _Local/Libraries/Assimp에 보존했다. 외부 pugixml/LICENSE.md는 Markdown 정책의 보존 예외다. 런타임은 D3D11·DXGI·User32·D3DCompiler·WindowsCodecs·Ole32·BCrypt·XAudio2를 링크한다.
+JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-Clause다. JSON 고지는 Libraries에, Assimp 원본과 고지는 _Local/Libraries/Assimp에 보존했다. 외부 pugixml/LICENSE.md는 Markdown 정책의 보존 예외다. 런타임은 D3D11·DXGI·User32·D3DCompiler·WindowsCodecs·Ole32·Shell32·BCrypt·XAudio2를 링크한다.
 
 ## 다음 작업과 문서
 
 다음은 **사용자 플레이·밸런스 추가 확인 → 외형·가독성·실청 수락 → LF17 배포·T13 최종 검증**이다. 새 아트 성능과 새 PC 검증은 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
 
-- [ASHEN BORDER 개발 기준서](Docs/AshenBorder_개발_기준서.docx) v0.26 — 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
+- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.26 — 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.

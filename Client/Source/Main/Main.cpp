@@ -4,6 +4,7 @@
 #include "Core/Log.h"
 
 #include <Windows.h>
+#include <ShlObj.h>
 
 #include <exception>
 #include <filesystem>
@@ -16,6 +17,38 @@
 
 namespace
 {
+    bool IsDevelopmentBinary(const std::filesystem::path& directory)
+    {
+        auto parent = directory.parent_path();
+        const wchar_t* names[] = {L"x64", L"Binaries", L"_Local"};
+
+        for (const wchar_t* name : names)
+        {
+            if (CompareStringOrdinal(parent.filename().c_str(), -1, name, -1, TRUE) != CSTR_EQUAL)
+            {
+                return false;
+            }
+
+            parent = parent.parent_path();
+        }
+
+        return true;
+    }
+
+    std::filesystem::path GetUserLogFile()
+    {
+        PWSTR path = nullptr;
+        const HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, nullptr, &path);
+        const std::unique_ptr<wchar_t, decltype(&CoTaskMemFree)> ownedPath(path, CoTaskMemFree);
+
+        if (FAILED(result) || ownedPath == nullptr)
+        {
+            throw std::runtime_error("Cannot resolve LocalAppData for AshenBorder logs");
+        }
+
+        return std::filesystem::path(ownedPath.get()) / L"AshenBorder" / L"Saved" / L"AshenBorder.log";
+    }
+
     std::filesystem::path GetExecutablePath()
     {
         constexpr std::size_t kMaximumPathCapacity = 32768;
@@ -74,8 +107,11 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
     try
     {
         const std::filesystem::path executablePath = GetExecutablePath();
-        const std::filesystem::path projectRoot =
-            executablePath.parent_path().parent_path().parent_path().parent_path().parent_path();
+        const std::filesystem::path executableDirectory = executablePath.parent_path();
+        const bool developmentLayout = IsDevelopmentBinary(executableDirectory);
+        const std::filesystem::path projectRoot = developmentLayout
+            ? executableDirectory.parent_path().parent_path().parent_path().parent_path()
+            : executableDirectory;
 
         Engine::ApplicationDesc desc;
         desc.title = L"SAVE MYSELF: ASHEN BORDER";
@@ -83,7 +119,9 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
         desc.height = 720;
         desc.resourceRoot = projectRoot / L"Resources";
         desc.shaderRoot = projectRoot / L"Engine" / L"Shaders";
-        desc.logFile = projectRoot / L"_Local" / L"Saved" / L"AshenBorder.log";
+        desc.logFile = developmentLayout
+            ? projectRoot / L"_Local" / L"Saved" / L"AshenBorder.log"
+            : GetUserLogFile();
         desc.fixedSeconds = 1.0 / 60.0;
         desc.maxCatchUp = 4;
         desc.visible = !smoke;
