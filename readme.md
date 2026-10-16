@@ -10,7 +10,7 @@ VS에서 AshenBorder.sln을 열고 AshenBorder를 시작 프로젝트로 선택�
 
 ```powershell
 msbuild .\AshenBorder.sln /m /p:Configuration=Release /p:Platform=x64
-& .\Binaries\x64\Release\AshenBorder.exe
+& .\_Local\Binaries\x64\Release\AshenBorder.exe
 ```
 
 Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 공격, 웨이브 종료 후 1~3으로 성장 선택, 1~4로 상점 구매, R로 재추첨, Enter로 다음 웨이브다. 버튼 클릭도 같은 명령을 전달한다. 마지막 웨이브를 버티면 “초소 방어 성공”, 체력이 0이 되면 “전사”가 표시되며 Enter로 다시 시작한다.
@@ -21,28 +21,28 @@ Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 �
 
 2026-10-14 구현을 시작했고 사용자가 LF02 실행을 확인했다. Terrain·스키닝·풀·충돌·자동 전투·웨이브·성장/상점·그림자·가림·HUD와 승패/재시작을 연결했다. 시험 설정은 적 3종·무기 3종·패시브 정의 6종·활성 4종·12초 웨이브 2개다. 자체 제작 캐릭터 4종과 단검·활·투척칼, 초소 환경·무기별 동작·음향을 쓴다. UI 제목은 SAVE MYSELF / ASHEN BORDER, 성장·상점·재화 표시는 “생존 준비”·“야전 정비”·“보급품”이다. 시작 장비는 군용 단검 1개다. 사냥활·투척칼은 상점에서 추가한다. 게임 ID·전투 규칙은 유지한다.
 
-현재 Debug **2,631개**·Release **2,629개**와 각 90프레임 숨김 실행을 통과했다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
+현재 Debug **2,631개**·Release **2,629개**와 각 90프레임 숨김 실행을 통과했다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
 
-v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 실행을 통과했다. Environment 92·Action 122·Character 109·Presentation 392(오디오 72 포함)와 Engine 53파일 보존은 기준서 5.1.14·Saved/Verification/OutpostPolish.json을 따른다. v0.22의 **2,420/2,418개**, v0.21의 **2,145/2,143개**, v0.20의 **2,026/2,024개**·캐릭터 67개, LF15/16의 **1,920/1,918개**, LF11~LF14의 **1,736/1,734개**는 당시 기록으로 보존한다. 새 초소·무기 동작의 GPU 결과는 Saved/Verification/OutpostPolish-20261016에 보존한다. [실행 화면](https://chatgpt.com/space/page_22bac242ee888191a06de68f62d05b5c)에 초소 이미지 2장·무기 GIF 3개·음향 미리듣기를 반영했다.
+v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 실행을 통과했다. Environment 92·Action 122·Character 109·Presentation 392(오디오 72 포함)와 Engine 53파일 보존은 기준서 5.1.14·_Local/Saved/Verification/OutpostPolish.json을 따른다. v0.22의 **2,420/2,418개**, v0.21의 **2,145/2,143개**, v0.20의 **2,026/2,024개**·캐릭터 67개, LF15/16의 **1,920/1,918개**, LF11~LF14의 **1,736/1,734개**는 당시 기록으로 보존한다. 새 초소·무기 동작의 GPU 결과는 _Local/Saved/Verification/OutpostPolish-20261016에 보존한다. [실행 화면](https://chatgpt.com/space/page_22bac242ee888191a06de68f62d05b5c)에 초소 이미지 2장·무기 GIF 3개·음향 미리듣기를 반영했다.
 
 캐릭터 교체 전 LF15는 제안 용량별 정적 최대·초과, 256적/1024탄의 이동 충돌 4회·4096명중/반환과 App 20회 재시작을 검사했다. Release 원본 게임의 **실제 600초** 반복은 별도 20개 검사·exit 0이다. 최대 부하 10분 전투와 구분한다. LF16은 고정 렌더 전후·CPU 14case·짧은 옵션 4조합을 계측했다. CPU 제출과 GPU 시간은 별도이며 전체 게임 FPS가 아니다.
 
-결과는 Saved/Verification/LF15-LF16-20261016의 구성별 기록과 Soak.json/Soak.csv, Saved/Performance/LF16에 있다. SourceFree-LF15-LF16.json은 같은 PC에서 원본·Assimp·개발 도구 없는 복사본의 exit 0과 idle.clip 누락 exit 1·원본 불변을 확인했다. LF06~LF14 당시 기록은 보존한다. 사용자 T09 수락·OS 포커스/최소화 수락·가림/캐릭터 외형·음향 실청, 실제 Mixamo·발 IK·새 아트 성능·새 PC/T13은 남아 있다. 저장소는 [JellytoCodes/AshenBorder](https://github.com/JellytoCodes/AshenBorder)다.
+결과는 _Local/Saved/Verification/LF15-LF16-20261016의 구성별 기록과 Soak.json/Soak.csv, _Local/Saved/Performance/LF16에 있다. SourceFree-LF15-LF16.json은 같은 PC에서 원본·Assimp·개발 도구 없는 복사본의 exit 0과 idle.clip 누락 exit 1·원본 불변을 확인했다. LF06~LF14 당시 기록은 보존한다. 사용자 T09 수락·OS 포커스/최소화 수락·가림/캐릭터 외형·음향 실청, 실제 Mixamo·발 IK·새 아트 성능·새 PC/T13은 남아 있다. 저장소는 [JellytoCodes/AshenBorder](https://github.com/JellytoCodes/AshenBorder)다.
 
 ## 스트레스와 계측
 
-아래 명령은 로컬에 Tests와 Scripts가 있을 때만 사용한다. 이 폴더와 SourceAssets·Tools·변환기 전용 Libraries/Assimp·agents.md는 Git에서 제외한다. 게임 소스·Resources·Engine/Shaders·JSON 헤더와 라이선스·기준서는 포함한다. 제외한 파일은 로컬에 보존한다.
+제작·테스트 자료와 빌드 결과는 `_Local/`에 모으고 폴더 전체를 Git에서 제외한다. Tests·SourceAssets·Scripts·Tools·Libraries/Assimp·agents.md·Binaries·Intermediate·Saved가 그 안에 있다. 아래 명령은 이 로컬 자료가 있을 때 사용한다. 게임 소스·Resources·Engine/Shaders·JSON 헤더와 라이선스·기준서는 저장소에 포함한다. Visual Studio가 만드는 `.vs/`와 사용자 설정은 별도로 제외한다.
 
 일반 Verify에는 짧은 Stress만 포함된다. 아래 10분 반복과 계측은 따로 실행한다. Before는 변경 전 소스/실행 파일에서 보존하고 After는 변경 후에 실행한다. 다른 빌드·게임·GPU 작업과 동시에 실행하지 않는다. 별도 --balance는 1/60초 tick의 빠른 시뮬레이션이며 실제 시간 플레이·일반 승률·가격 효율 검증은 아니다.
 
 ```powershell
-.\Scripts\Verify.ps1 -Configuration Both
-& .\Binaries\x64\Release\RuntimeTests.exe --balance
-& .\Binaries\x64\Release\RuntimeTests.exe --stress
-& .\Binaries\x64\Release\RuntimeTests.exe --soak
-.\Scripts\Measure.ps1 -Phase Before
-.\Scripts\Measure.ps1 -Phase After
-.\Scripts\Measure.ps1 -Phase Options
+.\_Local\Scripts\Verify.ps1 -Configuration Both
+& .\_Local\Binaries\x64\Release\RuntimeTests.exe --balance
+& .\_Local\Binaries\x64\Release\RuntimeTests.exe --stress
+& .\_Local\Binaries\x64\Release\RuntimeTests.exe --soak
+.\_Local\Scripts\Measure.ps1 -Phase Before
+.\_Local\Scripts\Measure.ps1 -Phase After
+.\_Local\Scripts\Measure.ps1 -Phase Options
 ```
 
 이전 Kenney 조건의 LF16 공식 렌더는 1920×1080·부하 2종별 준비 30초/수집 60초×3회다. Probe와 Options는 짧은 진단이다. F12 컬링은 기본 OFF이며, 현재 옵션 장면에서는 instancing 단독보다 컬링 추가 비용이 컸다.
@@ -65,41 +65,43 @@ Engine/Source/
   Animation/ App/ Audio/ Core/ Entity/ Graphics/ Resource/ Scene/ Types/ UI/
 Client/Source/
   Core/ Game/ Main/ Scene/ UI/
-Tests/
+_Local/
+  Tests/ SourceAssets/ Scripts/ Tools/ Libraries/Assimp/
+  Binaries/ Intermediate/ Saved/ agents.md
 ```
 
 각 프로젝트의 Source를 include 루트로 사용한다. 예를 들어 `#include "Graphics/Model.h"`, `#include "Game/LastFieldRun.h"`, `#include "Scene/Environment.h"`로 불러온다. 동명 cpp도 같은 경로 규칙을 따른다. [JellytoStudio](https://github.com/JellytoCodes/Project_JellytoStudio)는 역할 분류를 참고했으며 실제 분석 범위는 기준서 2.17에 있다.
 
 ## 캐릭터와 시험 자산
 
-보급병·배회병·척후병·중갑병은 직접 만든 로우폴리 4종이다. 현재 SourceAssets/ashen-characters/v003은 공통 17본과 v002의 메시·palette·idle/move/attack/death 바이트를 보존하고 플레이어에 무기별 공격 3개를 추가했다. 승인 Fired에서 local SRT × 현재 pose.nodeWorld × characterWorld로 손에 붙이며 판정·발사를 늦추지 않는다. 이전 v001/v002와 [Kenney CC0 원본](https://kenney.nl/assets/mini-characters)은 회귀용으로 보존한다.
+보급병·배회병·척후병·중갑병은 직접 만든 로우폴리 4종이다. 현재 _Local/SourceAssets/ashen-characters/v003은 공통 17본과 v002의 메시·palette·idle/move/attack/death 바이트를 보존하고 플레이어에 무기별 공격 3개를 추가했다. 승인 Fired에서 local SRT × 현재 pose.nodeWorld × characterWorld로 손에 붙이며 판정·발사를 늦추지 않는다. 이전 v001/v002와 [Kenney CC0 원본](https://kenney.nl/assets/mini-characters)은 회귀용으로 보존한다.
 
 - Resources/Generated는 덮어쓰지 않는 generation별 완성 묶음이다. EMSH v1 정적 데이터·EMSH v2 스킨·ECLP v1 클립·텍스처·고지·asset.meta.json을 관리한다.
 - Resources/Data/trial-scene.json은 모델·행동/무기별 클립·손 부착·Terrain, trial-game.json schema 2는 전투·웨이브·성장·상점, presentation-scene.json은 표현 모델·음향·나무/장식을 선택한다.
 - Engine은 모델 묶음의 해시·버전·호환 정보를 확인한다. AudioClip::LoadWav는 RIFF를 검사하며 음향 sidecar/hash는 오프라인·자동 검사에서 대조한다. Client는 실행 중 변환이나 최신 폴더 탐색을 하지 않는다.
 
-에셋 제작 명령도 로컬의 SourceAssets·Scripts·Tools가 필요하며 저장소에는 포함하지 않는다. 정적 OBJ는 BuildTrialAssets.py, Terrain은 BuildTrialTerrainAssets.py, 표현 자산은 BuildPresentationAssets.py로 오프라인 변환한다. 기존 Kenney 원본의 스켈레탈 변환은 Tools/AssetConverter/AssetConverter.vcxproj를 별도로 빌드한 뒤 Python 3.10 이상에서 다음 명령을 사용한다. 검증된 새 generation을 출력하며 Client 경로는 자동 변경하지 않는다.
+에셋 제작 명령에는 `_Local/`의 SourceAssets·Scripts·Tools가 필요하다. 공개된 generation의 파일과 과거 검증 기록은 그대로 보존한다. 정적 OBJ는 BuildTrialAssets.py, Terrain은 BuildTrialTerrainAssets.py, 표현 자산은 BuildPresentationAssets.py로 오프라인 변환한다. 기존 Kenney 원본의 스켈레탈 변환은 _Local/Tools/AssetConverter/AssetConverter.vcxproj를 별도로 빌드한 뒤 Python 3.10 이상에서 다음 명령을 사용한다. 검증된 새 generation을 출력하며 Client 경로는 자동 변경하지 않는다.
 
 ```powershell
-.\Scripts\BuildAnimatedAssets.ps1 -Configuration Release -Python python
+.\_Local\Scripts\BuildAnimatedAssets.ps1 -Configuration Release -Python python
 ```
 
 현재 자작 캐릭터·초소·음향은 다음 명령으로 제작하거나 기존 불변 출력을 검증한다. 형상·클립을 바꾸면 새 revision을 사용하며 Client 선택은 자동 변경하지 않는다.
 
 ```powershell
-python .\Scripts\BuildAshenCharacters.py --configuration Release --revision v003
-python .\Scripts\BuildAshenOutpost.py --revision v002
-python .\Scripts\BuildAshenAudio.py
+python .\_Local\Scripts\BuildAshenCharacters.py --configuration Release --revision v003
+python .\_Local\Scripts\BuildAshenOutpost.py --revision v002
+python .\_Local\Scripts\BuildAshenAudio.py
 ```
 
-무기·투사체·보급품은 SourceAssets/ashen-arsenal/v001의 여섯 하위 폴더다. 초소는 v002 나무 8개와 v001 장식 5종 12개·Terrain을 쓴다. 낮은 줄기·장식 고형 부분은 플레이 몸체 밖, 높은 수관은 가장자리에 걸쳐 기존 가림에 참여한다. 새 충돌체는 추가하지 않았다. 자체 PCM 11역할은 기존 8개와 blade/bow/throwingKnife이며 총성·전자 알림음은 없다. v0.23의 19묶음 복사 실행 exit 0·attack_bow.clip 누락 exit 1·원본 유지는 Saved/Verification/SourceFree-Outpost.json에 있다. v0.20의 13묶음 SourceFree-AshenBorder.json도 보존한다.
+무기·투사체·보급품은 _Local/SourceAssets/ashen-arsenal/v001의 여섯 하위 폴더다. 초소는 v002 나무 8개와 v001 장식 5종 12개·Terrain을 쓴다. 낮은 줄기·장식 고형 부분은 플레이 몸체 밖, 높은 수관은 가장자리에 걸쳐 기존 가림에 참여한다. 새 충돌체는 추가하지 않았다. 자체 PCM 11역할은 기존 8개와 blade/bow/throwingKnife이며 총성·전자 알림음은 없다. v0.23의 19묶음 복사 실행 exit 0·attack_bow.clip 누락 exit 1·원본 유지는 _Local/Saved/Verification/SourceFree-Outpost.json에 있다. v0.20의 13묶음 SourceFree-AshenBorder.json도 보존한다.
 
 GLB/FBX 실제 일반 샘플을 확인했다. 원본 이름·계층·메시별 inverse bind·초 단위 키를 보존한다. Mixamo 이름 정책은 지정한 프로필에만 적용하며 실제 Mixamo 원본 검증은 남아 있다. Terrain은 65×65·24m 범위·8,192삼각형이고, 접지와 충돌은 렌더 삼각형 표면을 사용한다.
 
-JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-Clause다. 원본 고지는 Libraries에 보존했다. 외부 pugixml/LICENSE.md는 Markdown 정책의 보존 예외다. 런타임은 D3D11·DXGI·User32·D3DCompiler·WindowsCodecs·Ole32·BCrypt·XAudio2를 링크한다.
+JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-Clause다. JSON 고지는 Libraries에, Assimp 원본과 고지는 _Local/Libraries/Assimp에 보존했다. 외부 pugixml/LICENSE.md는 Markdown 정책의 보존 예외다. 런타임은 D3D11·DXGI·User32·D3DCompiler·WindowsCodecs·Ole32·BCrypt·XAudio2를 링크한다.
 
 ## 다음 작업과 문서
 
 다음은 **사용자 플레이·밸런스 추가 확인 → 외형·가독성·실청 수락 → LF17 배포·T13 최종 검증**이다. 새 아트 성능과 새 PC 검증은 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
 
-- [ASHEN BORDER 개발 기준서](Docs/AshenBorder_개발_기준서.docx) v0.25 — 저장소 포함 범위·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
+- [ASHEN BORDER 개발 기준서](Docs/AshenBorder_개발_기준서.docx) v0.26 — 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.

@@ -41,8 +41,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>$(MSBuildProjectDirectory)\..\Binaries\x64\$(Configuration)\</OutDir>
-    <IntDir>$(MSBuildProjectDirectory)\..\Intermediate\AshenBorder\x64\$(Configuration)\</IntDir>
+    <OutDir>$(MSBuildProjectDirectory)\..\_Local\Binaries\x64\$(Configuration)\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\..\_Local\Intermediate\AshenBorder\x64\$(Configuration)\</IntDir>
     <TargetName>AshenBorder</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

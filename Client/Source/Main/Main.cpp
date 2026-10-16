@@ -75,7 +75,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
     {
         const std::filesystem::path executablePath = GetExecutablePath();
         const std::filesystem::path projectRoot =
-            executablePath.parent_path().parent_path().parent_path().parent_path();
+            executablePath.parent_path().parent_path().parent_path().parent_path().parent_path();
 
         Engine::ApplicationDesc desc;
         desc.title = L"SAVE MYSELF: ASHEN BORDER";
@@ -83,7 +83,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
         desc.height = 720;
         desc.resourceRoot = projectRoot / L"Resources";
         desc.shaderRoot = projectRoot / L"Engine" / L"Shaders";
-        desc.logFile = projectRoot / L"Saved" / L"AshenBorder.log";
+        desc.logFile = projectRoot / L"_Local" / L"Saved" / L"AshenBorder.log";
         desc.fixedSeconds = 1.0 / 60.0;
         desc.maxCatchUp = 4;
         desc.visible = !smoke;

@@ -1,15 +1,5 @@
-# Build outputs and local verification results
-/Binaries/
-/Intermediate/
-/Saved/
-
-# Local tests, asset authoring and offline tools
-/Tests/
-/SourceAssets/
-/Scripts/
-/Tools/
-/Libraries/Assimp/
-/agents.md
+# Local tests, asset authoring, tools, build outputs and verification
+/_Local/
 
 # Visual Studio user settings and caches
 .vs/
