@@ -2,6 +2,12 @@
 
 Windows C++/Direct3D 11 자체 엔진의 싱글플레이 3D 탑다운 아레나 서바이벌. 역병 봉쇄 의식이 실패한 17세기 후반의 가상 국가에서, 귀환한 보급병이 옛 수비대 잔재와 한 초소에서 맞선다. 게임 클라이언트 프로그래머 취업용 포트폴리오다.
 
+## 배포본 실행
+
+[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
+
+2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 새 PC의 전체 플레이·승패·재시작은 사용자 확인 대기다. 현재 Windows 잠금으로 이번 배포본의 직접 조작 검증은 진행하지 못했다.
+
 ## 빌드와 실행
 
 VS2022 C++ 데스크톱 개발 도구·Windows SDK 10.0.26100.0·Graphics Tools를 사용한다. C++20·v143·Debug/Release x64, MDd/MD이며 PCH는 사용하지 않는다. 한국어 UI에는 Windows의 맑은 고딕 글꼴이 필요하다.
@@ -27,7 +33,7 @@ v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 
 
 캐릭터 교체 전 LF15는 제안 용량별 정적 최대·초과, 256적/1024탄의 이동 충돌 4회·4096명중/반환과 App 20회 재시작을 검사했다. Release 원본 게임의 **실제 600초** 반복은 별도 20개 검사·exit 0이다. 최대 부하 10분 전투와 구분한다. LF16은 고정 렌더 전후·CPU 14case·짧은 옵션 4조합을 계측했다. CPU 제출과 GPU 시간은 별도이며 전체 게임 FPS가 아니다.
 
-결과는 _Local/Saved/Verification/LF15-LF16-20261016의 구성별 기록과 Soak.json/Soak.csv, _Local/Saved/Performance/LF16에 있다. SourceFree-LF15-LF16.json은 같은 PC에서 원본·Assimp·개발 도구 없는 복사본의 exit 0과 idle.clip 누락 exit 1·원본 불변을 확인했다. LF06~LF14 당시 기록은 보존한다. 사용자 T09 수락·OS 포커스/최소화 수락·가림/캐릭터 외형·음향 실청, 실제 Mixamo·발 IK·새 아트 성능·새 PC/T13은 남아 있다. 저장소는 [JellytoCodes/AshenBorder](https://github.com/JellytoCodes/AshenBorder)다.
+결과는 _Local/Saved/Verification/LF15-LF16-20261016의 구성별 기록과 Soak.json/Soak.csv, _Local/Saved/Performance/LF16에 있다. SourceFree-LF15-LF16.json은 같은 PC에서 원본·Assimp·개발 도구 없는 복사본의 exit 0과 idle.clip 누락 exit 1·원본 불변을 확인했다. LF06~LF14 당시 기록은 보존한다. 사용자 T09 수락·OS 포커스/최소화 수락·가림/캐릭터 외형·음향 실청, 실제 Mixamo·발 IK·새 아트 성능·새 PC 확인은 남아 있다. 독립 Client/T13 결과는 아래 Engine과 Client 항목을 따른다. 저장소는 [JellytoCodes/AshenBorder](https://github.com/JellytoCodes/AshenBorder)다.
 
 ## 스트레스와 계측
 
@@ -54,7 +60,7 @@ v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 
 - AssetConverter는 Assimp를 사용하는 독립 오프라인 도구다. Engine·Client 실행에 Assimp DLL은 필요 없다.
 - RuntimeTests는 공통 기반·GPU 검사와 실제 Client 조립을 검사하며 Main을 제외한 Client cpp 6개도 컴파일한다.
 
-빌드 의존은 Client→Engine이다. Engine을 다른 Windows/D3D11 게임의 시작점으로 가져가는 프로젝트 템플릿을 목표로 한다. 별도 GPU harness의 Client 없는 실행과 최종 새 Client/T13 검증은 구분한다.
+빌드 의존은 Client→Engine이다. Engine을 다른 Windows/D3D11 게임의 시작점으로 가져가는 프로젝트 템플릿을 목표로 한다. 2026-10-17 원본 Engine 53파일을 그대로 복사해 게임 코드·게임 리소스가 없는 EngineReuseProbe를 만들었다. Engine 단독과 새 Client의 Debug/Release 빌드, 각 90프레임 실행·의도한 초기화/업데이트 실패 종료, 실제 Space 입력·창 크기 변경·Escape 종료를 확인했다. 원본과 복사본 Engine 해시는 같으며, 새 PC의 전체 게임 검증은 별도다.
 
 ## 폴더와 include
 
@@ -67,7 +73,7 @@ Client/Source/
   Core/ Game/ Main/ Scene/ UI/
 _Local/
   Tests/ SourceAssets/ Scripts/ Tools/ Libraries/Assimp/
-  Binaries/ Intermediate/ Saved/ agents.md
+  Binaries/ Intermediate/ Saved/ Docs/ Releases/ agents.md
 ```
 
 각 프로젝트의 Source를 include 루트로 사용한다. 예를 들어 `#include "Graphics/Model.h"`, `#include "Game/LastFieldRun.h"`, `#include "Scene/Environment.h"`로 불러온다. 동명 cpp도 같은 경로 규칙을 따른다. [JellytoStudio](https://github.com/JellytoCodes/Project_JellytoStudio)는 역할 분류를 참고했으며 실제 분석 범위는 기준서 2.17에 있다.
@@ -102,6 +108,6 @@ JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-C
 
 ## 다음 작업과 문서
 
-다음은 **사용자 플레이·밸런스 추가 확인 → 외형·가독성·실청 수락 → LF17 배포·T13 최종 검증**이다. 새 아트 성능과 새 PC 검증은 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
+LF17 배포 후보와 같은 PC의 배포·Engine 재사용 검증을 마쳤다. 다음은 **사용자 새 PC 전체 플레이·승패·재시작 확인**이다. 사용자 T09·외형·가독성·음향 실청 수락과 새 아트 성능은 별도로 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
 
-- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.26 — 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
+- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.27 — 배포·Engine 독립 실행 5.1.16, 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
