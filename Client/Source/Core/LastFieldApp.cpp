@@ -353,31 +353,8 @@ namespace Client
                 Engine::Log::Write("LastFieldApp weapon preview: " + error);
                 return false;
             }
-            for (std::size_t index = 0; index < roles.size(); ++index)
+            const auto readAttachment = [&](const auto& record, WeaponAttachment& out)
             {
-                const char* role = roles[index];
-                const auto& clips = config.at("weaponAttackSlots");
-                const auto& attachments = config.at("weaponAttachments");
-                if (!clips.contains(role) || !clips[role].is_string() || !attachments.contains(role) ||
-                    !attachments[role].is_object())
-                {
-                    Engine::Log::Write("LastFieldApp: invalid weapon action role " + std::string(role));
-                    return false;
-                }
-                Engine::ClipData data;
-                if (!Engine::ReadClipCache(_resourceRoot, Utf8Path(clips[role].get<std::string>()), data, error))
-                {
-                    Engine::Log::Write("LastFieldApp weapon clip read: " + error);
-                    return false;
-                }
-                auto clip = std::make_shared<Engine::AnimationClip>();
-                if (!clip->Initialize(data, error) || clip->Data().skeletonSignature != _character->SkeletonSignature() ||
-                    !preview.SetClip(clip, Engine::PlaybackMode::Clamp, error))
-                {
-                    Engine::Log::Write("LastFieldApp incompatible weapon action: " + std::string(role) + ": " + error);
-                    return false;
-                }
-                const auto& record = attachments[role];
                 if (!record.contains("nodeName") || !record["nodeName"].is_string())
                 {
                     Engine::Log::Write("LastFieldApp: weapon attachment requires a nodeName");
@@ -427,10 +404,54 @@ namespace Client
                     Engine::Log::Write("LastFieldApp: invalid weapon attachment transform");
                     return false;
                 }
-                _weaponAttachments[index] = {static_cast<std::size_t>(node - nodes.begin()), local.WorldMatrix()};
+                out = {static_cast<std::size_t>(node - nodes.begin()), local.WorldMatrix()};
+                return true;
+            };
+            for (std::size_t index = 0; index < roles.size(); ++index)
+            {
+                const char* role = roles[index];
+                const auto& clips = config.at("weaponAttackSlots");
+                const auto& attachments = config.at("weaponAttachments");
+                if (!clips.contains(role) || !clips[role].is_string() || !attachments.contains(role) ||
+                    !attachments[role].is_object())
+                {
+                    Engine::Log::Write("LastFieldApp: invalid weapon action role " + std::string(role));
+                    return false;
+                }
+                Engine::ClipData data;
+                if (!Engine::ReadClipCache(_resourceRoot, Utf8Path(clips[role].get<std::string>()), data, error))
+                {
+                    Engine::Log::Write("LastFieldApp weapon clip read: " + error);
+                    return false;
+                }
+                auto clip = std::make_shared<Engine::AnimationClip>();
+                if (!clip->Initialize(data, error) || clip->Data().skeletonSignature != _character->SkeletonSignature() ||
+                    !preview.SetClip(clip, Engine::PlaybackMode::Clamp, error))
+                {
+                    Engine::Log::Write("LastFieldApp incompatible weapon action: " + std::string(role) + ": " + error);
+                    return false;
+                }
+                if (!readAttachment(attachments[role], _weaponAttachments[index]))
+                {
+                    return false;
+                }
+                if (index == static_cast<std::size_t>(WeaponKind::SingleProjectile))
+                {
+                    const auto& bow = attachments[role];
+                    if (!bow.contains("stowed") || !bow["stowed"].is_object())
+                    {
+                        Engine::Log::Write("LastFieldApp: bow attachment requires a stowed transform");
+                        return false;
+                    }
+                    if (!readAttachment(bow["stowed"], _stowedBowAttachment))
+                    {
+                        return false;
+                    }
+                }
                 _weaponAttackClips[index] = std::move(clip);
             }
             _weaponAttachmentsEnabled = true;
+            Engine::Log::Write("LastFieldApp: weapon mounts ready; blade=hand, bow=back/hand, throwingKnife=active pooled projectiles only");
         }
         _cameraFocus = {0, spawnSurface->position.y + kCharacterHeight * 0.55f, 0};
         if (!UpdateCamera(0))
@@ -1814,43 +1835,53 @@ namespace Client
                 });
             if (_gameMode)
             {
-                const auto body = _run->PlayerCollider();
                 const auto slots = _run->WeaponSlots();
-                for (std::size_t index = 0; index < slots.size(); ++index)
+                std::optional<WeaponKind> activeKind;
+                if (_playerAction == PlayerAction::Attack && _activeWeaponSlot && *_activeWeaponSlot < slots.size())
+                {
+                    const auto* definition = _definitions->FindWeapon(slots[*_activeWeaponSlot].definitionId);
+                    if (!definition)
+                    {
+                        throw std::runtime_error("Player action references an unknown weapon definition");
+                    }
+                    activeKind = definition->kind;
+                }
+                std::array<bool, 3> submitted = {};
+                for (const auto& slot : slots)
                 {
                     if (_run->Player().dead)
                     {
                         break;
                     }
-                    const auto& slot = slots[index];
                     const auto* definition = _definitions->FindWeapon(slot.definitionId);
                     if (!definition)
                     {
                         throw std::runtime_error("Client visual weapon slot references an unknown definition");
                     }
                     const auto kind = static_cast<std::size_t>(definition->kind);
-                    if (_weaponAttachmentsEnabled && _playerAction == PlayerAction::Attack &&
-                        _activeWeaponSlot == index)
+                    if (!_weaponAttachmentsEnabled || definition->kind == WeaponKind::Shotgun || submitted[kind])
                     {
-                        const auto pose = _animator.Pose();
-                        const auto& attachment = _weaponAttachments[kind];
-                        if (!pose || attachment.nodeIndex >= pose->nodeWorld.size())
-                        {
-                            throw std::runtime_error("Player weapon attachment pose/node is invalid");
-                        }
-                        Engine::Matrix world;
-                        const auto characterWorld = _characterTransform.WorldMatrix();
-                        DirectX::XMStoreFloat4x4(&world, DirectX::XMLoadFloat4x4(&attachment.local) *
-                            DirectX::XMLoadFloat4x4(&pose->nodeWorld[attachment.nodeIndex]) *
-                            DirectX::XMLoadFloat4x4(&characterWorld));
-                        out.draws.push_back({_weaponModels[kind], world, {1, 1, 1, 1}});
                         continue;
                     }
-                    const float angle = DirectX::XM_2PI * static_cast<float>(index) / static_cast<float>(slots.size());
-                    const Engine::Vector3 position{body.base.x + std::sin(angle) * 0.65f, body.base.y + 0.7f,
-                                                   body.base.z + std::cos(angle) * 0.65f};
-                    prop(_weaponModels[static_cast<std::size_t>(definition->kind)], position, .65f, {1, 1, 1, 1},
-                         std::atan2(slot.direction.x, slot.direction.y));
+                    submitted[kind] = true;
+                    if (definition->kind == WeaponKind::Melee && activeKind && *activeKind != WeaponKind::Melee)
+                    {
+                        continue;
+                    }
+                    const bool stowedBow = definition->kind == WeaponKind::SingleProjectile &&
+                        activeKind != WeaponKind::SingleProjectile;
+                    const auto& attachment = stowedBow ? _stowedBowAttachment : _weaponAttachments[kind];
+                    const auto pose = _animator.Pose();
+                    if (!pose || attachment.nodeIndex >= pose->nodeWorld.size())
+                    {
+                        throw std::runtime_error("Player weapon attachment pose/node is invalid");
+                    }
+                    Engine::Matrix world;
+                    const auto characterWorld = _characterTransform.WorldMatrix();
+                    DirectX::XMStoreFloat4x4(&world, DirectX::XMLoadFloat4x4(&attachment.local) *
+                        DirectX::XMLoadFloat4x4(&pose->nodeWorld[attachment.nodeIndex]) *
+                        DirectX::XMLoadFloat4x4(&characterWorld));
+                    out.draws.push_back({_weaponModels[kind], world, {1, 1, 1, 1}});
                 }
                 for (const auto& marker : _eventMarkers)
                 {
@@ -1910,6 +1941,7 @@ namespace Client
         _deathClip.reset();
         _weaponAttackClips = {};
         _weaponAttachments = {};
+        _stowedBowAttachment = {};
         _weaponAttachmentsEnabled = false;
         _character.reset();
         _terrain.reset();

@@ -111,6 +111,7 @@ namespace Client
         std::shared_ptr<const Engine::AnimationClip> _deathClip;
         std::array<std::shared_ptr<const Engine::AnimationClip>, 3> _weaponAttackClips;
         std::array<WeaponAttachment, 3> _weaponAttachments;
+        WeaponAttachment _stowedBowAttachment;
         std::shared_ptr<const Engine::AnimationClip> _activeAttackClip;
         std::optional<std::size_t> _activeWeaponSlot;
         bool _weaponAttachmentsEnabled = false;

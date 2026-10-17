@@ -4,9 +4,9 @@ Windows C++/Direct3D 11 자체 엔진의 싱글플레이 3D 탑다운 아레나 
 
 ## 배포본 실행
 
-[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
+[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017-weapons)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
 
-2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 새 PC의 전체 플레이·승패·재시작은 사용자 확인 대기다. 현재 Windows 잠금으로 이번 배포본의 직접 조작 검증은 진행하지 못했다.
+2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 첫 LF17 후보는 사용자가 노트북의 Intel Arc 140T에서 초기화·일시정지/재개·정상 종료한 로그를 제공했다. 무기 장착을 고친 수정본의 새 PC 전체 플레이·승패·재시작은 확인 대기다.
 
 ## 빌드와 실행
 
@@ -21,13 +21,15 @@ msbuild .\AshenBorder.sln /m /p:Configuration=Release /p:Platform=x64
 
 Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 공격, 웨이브 종료 후 1~3으로 성장 선택, 1~4로 상점 구매, R로 재추첨, Enter로 다음 웨이브다. 버튼 클릭도 같은 명령을 전달한다. 마지막 웨이브를 버티면 “초소 방어 성공”, 체력이 0이 되면 “전사”가 표시되며 Enter로 다시 시작한다.
 
+단검은 평소 오른손에 들고 다른 무기 공격 중에는 숨긴다. 활은 등에 메고 활 공격 중에만 왼손으로 옮긴다. 투척칼은 몸 주변에 표시하지 않으며, 기존 128슬롯 풀에서 발사된 탄만 그린다. 같은 종류의 여러 슬롯은 장착 외형 하나를 공유하고 공격 규칙은 유지한다.
+
 시작 화면에서는 P를 무시한다. 게임 중 P 일시정지, M 음소거, F6 새 런, F9 자동 공격, F10 그림자, F11 instancing, F12 보수적 정적 컬링(기본 OFF)을 전환한다. F2는 Terrain wireframe, F3는 발·지면 높이/경사 표시다. Esc·창 닫기는 종료다. F4 풀 시험·F7 충돌 시험·시험 모드 F5 배치 재생성·F7의 Space 투사체/Q 근접 판정도 유지한다.
 
 ## 현재 상태
 
 2026-10-14 구현을 시작했고 사용자가 LF02 실행을 확인했다. Terrain·스키닝·풀·충돌·자동 전투·웨이브·성장/상점·그림자·가림·HUD와 승패/재시작을 연결했다. 시험 설정은 적 3종·무기 3종·패시브 정의 6종·활성 4종·12초 웨이브 2개다. 자체 제작 캐릭터 4종과 단검·활·투척칼, 초소 환경·무기별 동작·음향을 쓴다. UI 제목은 SAVE MYSELF / ASHEN BORDER, 성장·상점·재화 표시는 “생존 준비”·“야전 정비”·“보급품”이다. 시작 장비는 군용 단검 1개다. 사냥활·투척칼은 상점에서 추가한다. 게임 ID·전투 규칙은 유지한다.
 
-현재 Debug **2,631개**·Release **2,629개**와 각 90프레임 숨김 실행을 통과했다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
+현재 Debug **2,682개**·Release **2,680개**와 각 90프레임 숨김 실행을 통과했다. 무기 손·등 부착과 투척칼 활성 풀 표시의 현재 검사는 기준서 5.1.17에 기록한다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
 
 v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 실행을 통과했다. Environment 92·Action 122·Character 109·Presentation 392(오디오 72 포함)와 Engine 53파일 보존은 기준서 5.1.14·_Local/Saved/Verification/OutpostPolish.json을 따른다. v0.22의 **2,420/2,418개**, v0.21의 **2,145/2,143개**, v0.20의 **2,026/2,024개**·캐릭터 67개, LF15/16의 **1,920/1,918개**, LF11~LF14의 **1,736/1,734개**는 당시 기록으로 보존한다. 새 초소·무기 동작의 GPU 결과는 _Local/Saved/Verification/OutpostPolish-20261016에 보존한다. [실행 화면](https://chatgpt.com/space/page_22bac242ee888191a06de68f62d05b5c)에 초소 이미지 2장·무기 GIF 3개·음향 미리듣기를 반영했다.
 
@@ -110,4 +112,4 @@ JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-C
 
 LF17 배포 후보와 같은 PC의 배포·Engine 재사용 검증을 마쳤다. 다음은 **사용자 새 PC 전체 플레이·승패·재시작 확인**이다. 사용자 T09·외형·가독성·음향 실청 수락과 새 아트 성능은 별도로 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
 
-- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.27 — 배포·Engine 독립 실행 5.1.16, 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
+- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.28 — 무기 장착·투척 풀 표시 5.1.17, 배포·Engine 독립 실행 5.1.16, 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.

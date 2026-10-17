@@ -94,7 +94,25 @@
         0.65,
         0.65,
         0.65
-      ]
+      ],
+      "stowed": {
+        "nodeName": "Chest",
+        "position": [
+          0,
+          0.02,
+          -0.41
+        ],
+        "rotation": [
+          0,
+          0,
+          1.0471975511965976
+        ],
+        "scale": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      }
     },
     "throwingKnife": {
       "nodeName": "Hand_R",
