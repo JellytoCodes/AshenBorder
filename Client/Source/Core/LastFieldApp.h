@@ -128,6 +128,7 @@ namespace Client
         Engine::Animator _animator;
         std::shared_ptr<const Engine::AnimationPose> _poolPose;
         std::unique_ptr<Engine::Terrain> _terrain;
+        Engine::BoundsXZ _playBounds{{-8, -8}, {8, 8}};
         std::unique_ptr<LastFieldRun> _run;
         MeleeAttack _trialMelee;
         std::optional<EntityRef> _nearest;

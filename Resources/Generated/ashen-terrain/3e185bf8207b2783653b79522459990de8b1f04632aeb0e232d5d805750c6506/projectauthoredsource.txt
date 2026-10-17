@@ -1,0 +1,10 @@
+SAVE MYSELF: ASHEN BORDER - Expanded project-authored terrain
+BuildAshenMap.py reuses the project's preserved LF05 65 by 65 normalized
+height samples and its original ash/soil textures. The horizontal span is
+48 by 48 metres: origin (-24,0,-24), spacing 0.75 metres. Heights remain
+unchanged; world X/Z, lighting normals and world-metre UV values are rebuilt.
+The grid topology remains 8,192 triangles. Old terrain generations remain
+immutable. This bundle is new geometry, not a byte-identical old mesh.
+No external artwork or model bytes are introduced. Project-authored source
+and generated files may be stored, modified and redistributed with this
+project's repository and builds. Preserve this notice with the bundle.

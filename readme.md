@@ -4,9 +4,9 @@ Windows C++/Direct3D 11 자체 엔진의 싱글플레이 3D 탑다운 아레나 
 
 ## 배포본 실행
 
-[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017-weapons)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
+[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017-map)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
 
-2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 첫 LF17 후보는 사용자가 노트북의 Intel Arc 140T에서 초기화·일시정지/재개·정상 종료한 로그를 제공했다. 무기 장착을 고친 수정본의 새 PC 전체 플레이·승패·재시작은 확인 대기다.
+2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 첫 LF17 후보는 사용자가 노트북의 Intel Arc 140T에서 초기화·일시정지/재개·정상 종료한 로그를 제공했다. 맵 확장과 무기 장착을 반영한 수정본의 새 PC 전체 플레이·승패·재시작은 확인 대기다.
 
 ## 빌드와 실행
 
@@ -29,7 +29,7 @@ Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 �
 
 2026-10-14 구현을 시작했고 사용자가 LF02 실행을 확인했다. Terrain·스키닝·풀·충돌·자동 전투·웨이브·성장/상점·그림자·가림·HUD와 승패/재시작을 연결했다. 시험 설정은 적 3종·무기 3종·패시브 정의 6종·활성 4종·12초 웨이브 2개다. 자체 제작 캐릭터 4종과 단검·활·투척칼, 초소 환경·무기별 동작·음향을 쓴다. UI 제목은 SAVE MYSELF / ASHEN BORDER, 성장·상점·재화 표시는 “생존 준비”·“야전 정비”·“보급품”이다. 시작 장비는 군용 단검 1개다. 사냥활·투척칼은 상점에서 추가한다. 게임 ID·전투 규칙은 유지한다.
 
-현재 Debug **2,682개**·Release **2,680개**와 각 90프레임 숨김 실행을 통과했다. 무기 손·등 부착과 투척칼 활성 풀 표시의 현재 검사는 기준서 5.1.17에 기록한다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
+현재 Debug **2,725개**·Release **2,723개**와 각 90프레임 숨김 실행을 통과했다. 맵 확장과 실제 Client의 나무 가림 검사는 기준서 5.1.18, 무기 손·등 부착과 투척칼 활성 풀 표시는 5.1.17에 기록한다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
 
 v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 실행을 통과했다. Environment 92·Action 122·Character 109·Presentation 392(오디오 72 포함)와 Engine 53파일 보존은 기준서 5.1.14·_Local/Saved/Verification/OutpostPolish.json을 따른다. v0.22의 **2,420/2,418개**, v0.21의 **2,145/2,143개**, v0.20의 **2,026/2,024개**·캐릭터 67개, LF15/16의 **1,920/1,918개**, LF11~LF14의 **1,736/1,734개**는 당시 기록으로 보존한다. 새 초소·무기 동작의 GPU 결과는 _Local/Saved/Verification/OutpostPolish-20261016에 보존한다. [실행 화면](https://chatgpt.com/space/page_22bac242ee888191a06de68f62d05b5c)에 초소 이미지 2장·무기 GIF 3개·음향 미리듣기를 반영했다.
 
@@ -99,12 +99,13 @@ _Local/
 ```powershell
 python .\_Local\Scripts\BuildAshenCharacters.py --configuration Release --revision v003
 python .\_Local\Scripts\BuildAshenOutpost.py --revision v002
+python .\_Local\Scripts\BuildAshenMap.py
 python .\_Local\Scripts\BuildAshenAudio.py
 ```
 
-무기·투사체·보급품은 _Local/SourceAssets/ashen-arsenal/v001의 여섯 하위 폴더다. 초소는 v002 나무 8개와 v001 장식 5종 12개·Terrain을 쓴다. 낮은 줄기·장식 고형 부분은 플레이 몸체 밖, 높은 수관은 가장자리에 걸쳐 기존 가림에 참여한다. 새 충돌체는 추가하지 않았다. 자체 PCM 11역할은 기존 8개와 blade/bow/throwingKnife이며 총성·전자 알림음은 없다. v0.23의 19묶음 복사 실행 exit 0·attack_bow.clip 누락 exit 1·원본 유지는 _Local/Saved/Verification/SourceFree-Outpost.json에 있다. v0.20의 13묶음 SourceFree-AshenBorder.json도 보존한다.
+무기·투사체·보급품은 _Local/SourceAssets/ashen-arsenal/v001의 여섯 하위 폴더다. 초소는 v002 나무 32개와 v001 장식 5종 24개, 새 48×48m Terrain을 쓴다. 실제 이동 공간은 16×16m에서 32×32m로 넓혔다. 낮은 줄기·장식 고형 부분은 플레이 몸체 밖, 넓은 수관은 이동 경계 안쪽까지 드리운다. 시작 위치에서 S 방향으로 이동하면 앞쪽 나무 아래에서 기존 가림을 확인할 수 있다. 새 충돌체는 추가하지 않았다. 자체 PCM 11역할은 기존 8개와 blade/bow/throwingKnife이며 총성·전자 알림음은 없다. v0.23의 19묶음 복사 실행 exit 0·attack_bow.clip 누락 exit 1·원본 유지는 _Local/Saved/Verification/SourceFree-Outpost.json에 있다. v0.20의 13묶음 SourceFree-AshenBorder.json도 보존한다.
 
-GLB/FBX 실제 일반 샘플을 확인했다. 원본 이름·계층·메시별 inverse bind·초 단위 키를 보존한다. Mixamo 이름 정책은 지정한 프로필에만 적용하며 실제 Mixamo 원본 검증은 남아 있다. Terrain은 65×65·24m 범위·8,192삼각형이고, 접지와 충돌은 렌더 삼각형 표면을 사용한다.
+GLB/FBX 실제 일반 샘플을 확인했다. 원본 이름·계층·메시별 inverse bind·초 단위 키를 보존한다. Mixamo 이름 정책은 지정한 프로필에만 적용하며 실제 Mixamo 원본 검증은 남아 있다. Terrain은 65×65·48×48m·간격 0.75m·8,192삼각형이다. 높이와 텍스처 반복 크기, 캐릭터 크기와 카메라 거리·각도는 유지한다. 접지와 충돌은 새 렌더 삼각형 표면을 사용하며 그림자 범위도 맵에 맞춰 넓혔다.
 
 JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-Clause다. JSON 고지는 Libraries에, Assimp 원본과 고지는 _Local/Libraries/Assimp에 보존했다. 외부 pugixml/LICENSE.md는 Markdown 정책의 보존 예외다. 런타임은 D3D11·DXGI·User32·D3DCompiler·WindowsCodecs·Ole32·Shell32·BCrypt·XAudio2를 링크한다.
 

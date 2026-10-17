@@ -268,6 +268,12 @@ namespace Client
             Engine::Log::Write("LastFieldApp terrain: " + error);
             return false;
         }
+        const auto terrainDesc = _terrain->Description();
+        const float terrainWidth = static_cast<float>(terrainDesc.width - 1) * terrainDesc.cellSize;
+        const float terrainDepth = static_cast<float>(terrainDesc.height - 1) * terrainDesc.cellSize;
+        // Keep the outer sixth for solid scenery; upper canopies may overhang the arena.
+        _playBounds = {{terrainDesc.origin.x + terrainWidth / 6, terrainDesc.origin.z + terrainDepth / 6},
+                       {terrainDesc.origin.x + terrainWidth * 5 / 6, terrainDesc.origin.z + terrainDepth * 5 / 6}};
         const float sourceHeight = character->BoundsMax().y - character->BoundsMin().y;
         const auto spawnSurface = _terrain->Sample({0, 0});
         if (!std::isfinite(sourceHeight) || sourceHeight <= 0.0f || !spawnSurface ||
@@ -585,6 +591,9 @@ namespace Client
             }
         }
         Engine::Log::Write("LastFieldApp: character/texture loaded; Terrain 65x65 and two-material blend; camera pitch=60 distance=18 fov=45; WASD/P/F2/F3/F4/F5/F6/Escape");
+        Engine::Log::Write("LastFieldApp: terrain span=" + std::to_string(terrainWidth) + "x" + std::to_string(terrainDepth) +
+                           "m; playable span=" + std::to_string(_playBounds.max.x - _playBounds.min.x) + "x" +
+                           std::to_string(_playBounds.max.y - _playBounds.min.y) + "m; solid scenery stays outside movement bounds");
         Engine::Log::Write("LastFieldApp: LF07 enemy/projectile/drop pools ready; storage/generation/RunEpoch validation; F4 trial display, F5 recycle, F6 new run");
         Engine::Log::Write("LastFieldApp: LF08 grounded movement/grid/nearest/melee/swept projectile ready; F7 collision trial, Space fire, Q melee");
         Engine::Log::Write("LastFieldApp: game definitions loaded; F8 game mode, Enter start/next wave, F9 automatic attacks, F6 new run");
@@ -601,6 +610,7 @@ namespace Client
         }
         auto next = std::make_unique<LastFieldRun>(_nextRunEpoch, *_terrain);
         RunConfig config;
+        config.playBounds = _playBounds;
         config.maxSlopeDegrees = std::acos(std::clamp(_minimumNormalY, -1.0f, 1.0f)) * 180 / DirectX::XM_PI;
         _trialMelee.hitTargets.reserve(config.enemyCapacity);
         if (!next->Initialize(config) || !next->SetPlayerPosition(_characterTransform.Position()) ||
@@ -638,6 +648,7 @@ namespace Client
         }
         auto next = std::make_unique<LastFieldRun>(_nextRunEpoch, *_terrain);
         RunConfig config;
+        config.playBounds = _playBounds;
         config.enemyCapacity = _definitions->enemyCapacity;
         config.projectileCapacity = _definitions->projectileCapacity;
         config.dropCapacity = _definitions->dropCapacity;
@@ -1675,10 +1686,15 @@ namespace Client
         {
             out.clearColor = {.08f, .095f, .10f, 1.0f};
             out.shadow.enabled = _shadows;
+            const auto terrainDesc = _terrain->Description();
+            const float shadowScale = std::max(1.0f, static_cast<float>(std::max(terrainDesc.width, terrainDesc.height) - 1) *
+                                                        terrainDesc.cellSize / 24.0f);
             const auto view =
-                DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(12, 24, -16, 1), DirectX::XMVectorSet(0, 0, 0, 1),
+                DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(12 * shadowScale, 24 * shadowScale, -16 * shadowScale, 1),
+                                          DirectX::XMVectorSet(0, 0, 0, 1),
                                           DirectX::XMVectorSet(0, 1, 0, 0));
-            DirectX::XMStoreFloat4x4(&out.shadow.viewProjection, view * DirectX::XMMatrixOrthographicLH(34, 34, 1, 65));
+            DirectX::XMStoreFloat4x4(&out.shadow.viewProjection,
+                                     view * DirectX::XMMatrixOrthographicLH(34 * shadowScale, 34 * shadowScale, 1, 65 * shadowScale));
             out.light.direction = {-12, -24, 16};
             out.light.ambient = 0.38f;
             out.light.color = {.82f, .86f, .88f};

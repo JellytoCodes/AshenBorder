@@ -7,15 +7,15 @@
     "move": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/walk.clip"
   },
   "terrain": {
-    "modelPath": "Generated/ashen-terrain/0ebf8f5ff121c2b8d423c85e6361b1510056625d62c973bf6c5c50016266aaff/terrain.mesh",
+    "modelPath": "Generated/ashen-terrain/3e185bf8207b2783653b79522459990de8b1f04632aeb0e232d5d805750c6506/terrain.mesh",
     "width": 65,
     "height": 65,
     "origin": [
-      -12.0,
+      -24.0,
       0.0,
-      -12.0
+      -24.0
     ],
-    "cellSize": 0.375,
+    "cellSize": 0.75,
     "heightScale": 2.4,
     "uvMeters": 2.0,
     "blendStartHeight": 0.65,
