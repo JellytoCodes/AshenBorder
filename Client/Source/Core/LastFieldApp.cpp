@@ -593,7 +593,10 @@ namespace Client
         Engine::Log::Write("LastFieldApp: character/texture loaded; Terrain 65x65 and two-material blend; camera pitch=60 distance=18 fov=45; WASD/P/F2/F3/F4/F5/F6/Escape");
         Engine::Log::Write("LastFieldApp: terrain span=" + std::to_string(terrainWidth) + "x" + std::to_string(terrainDepth) +
                            "m; playable span=" + std::to_string(_playBounds.max.x - _playBounds.min.x) + "x" +
-                           std::to_string(_playBounds.max.y - _playBounds.min.y) + "m; solid scenery stays outside movement bounds");
+                           std::to_string(_playBounds.max.y - _playBounds.min.y) + "m");
+        Engine::Log::Write("LastFieldApp: environment collision ready; trunk cylinders=" +
+                           std::to_string(_environment.SolidCylinders().size()) + ", wall boxes=" +
+                           std::to_string(_environment.SolidBoxes().size()) + "; canopy remains walkable");
         Engine::Log::Write("LastFieldApp: LF07 enemy/projectile/drop pools ready; storage/generation/RunEpoch validation; F4 trial display, F5 recycle, F6 new run");
         Engine::Log::Write("LastFieldApp: LF08 grounded movement/grid/nearest/melee/swept projectile ready; F7 collision trial, Space fire, Q melee");
         Engine::Log::Write("LastFieldApp: game definitions loaded; F8 game mode, Enter start/next wave, F9 automatic attacks, F6 new run");
@@ -650,6 +653,8 @@ namespace Client
         RunConfig config;
         config.playBounds = _playBounds;
         config.enemyCapacity = _definitions->enemyCapacity;
+        config.staticCylinders = _environment.SolidCylinders();
+        config.staticBoxes = _environment.SolidBoxes();
         config.projectileCapacity = _definitions->projectileCapacity;
         config.dropCapacity = _definitions->dropCapacity;
         config.maxSlopeDegrees = std::acos(std::clamp(_minimumNormalY, -1.0f, 1.0f)) * 180 / DirectX::XM_PI;

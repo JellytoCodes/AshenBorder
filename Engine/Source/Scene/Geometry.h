@@ -26,6 +26,16 @@ namespace Engine
         float height = 0.0f;
     };
 
+    struct UprightBox
+    {
+        // XZ center/minimum Y, local XZ half extents, and the vertical interval [base.y, base.y + height].
+        // Yaw follows RotationY: world X = local X * cos(yaw) + local Z * sin(yaw).
+        Vector3 base = {0.0f, 0.0f, 0.0f};
+        Vector2 halfExtents = {0.0f, 0.0f};
+        float height = 0.0f;
+        float yaw = 0.0f;
+    };
+
     struct GeometryHit
     {
         // Moving base at fraction; unlike Terrain SurfaceHit, this is not a surface contact point.
@@ -40,6 +50,12 @@ namespace Engine
     bool Overlaps(const Cylinder& first, const Cylinder& second) noexcept;
     std::optional<GeometryHit> SweepCylinder(const Segment& baseMotion, float movingRadius,
         float movingHeight, const Cylinder& target) noexcept;
+
+    // Cylinder/box contact uses rounded XZ corners, not an expanded rectangular approximation.
+    bool IsValid(const UprightBox& box) noexcept;
+    bool Overlaps(const Cylinder& cylinder, const UprightBox& box) noexcept;
+    std::optional<GeometryHit> SweepCylinder(const Segment& baseMotion, float movingRadius,
+        float movingHeight, const UprightBox& target) noexcept;
 
     // Closed filled sector, vertical [origin.y, origin.y + height], half angle in [0, pi].
     // forward is an XZ direction (x, z); a zero/nonfinite direction is invalid.

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <initializer_list>
 #include <limits>
 #include <numbers>
 
@@ -48,6 +49,59 @@ namespace
             }
         }
         return hit;
+    }
+
+    bool ClipRange(double start, double delta, double low, double high,
+        double& first, double& last) noexcept
+    {
+        if (delta == 0.0)
+        {
+            return start >= low && start <= high;
+        }
+        const double a = (low - start) / delta;
+        const double b = (high - start) / delta;
+        first = std::max(first, std::min(a, b));
+        last = std::min(last, std::max(a, b));
+        return first <= last;
+    }
+
+    Engine::Vector3 BoxNormal(double x, double z, double halfX, double halfZ,
+        double cosine, double sine) noexcept
+    {
+        double normalX = x - std::clamp(x, -halfX, halfX);
+        double normalZ = z - std::clamp(z, -halfZ, halfZ);
+        const double length = std::hypot(normalX, normalZ);
+        if (length > 0.0)
+        {
+            normalX /= length;
+            normalZ /= length;
+        }
+        else
+        {
+            // An initial overlap needs an outward escape normal, including points inside the box.
+            // Equal face distances choose +X, matching the concentric cylinder fallback.
+            double nearest = halfX - x;
+            normalX = 1.0;
+            normalZ = 0.0;
+            if (halfX + x < nearest)
+            {
+                nearest = halfX + x;
+                normalX = -1.0;
+            }
+            if (halfZ - z < nearest)
+            {
+                nearest = halfZ - z;
+                normalX = 0.0;
+                normalZ = 1.0;
+            }
+            if (halfZ + z < nearest)
+            {
+                normalX = 0.0;
+                normalZ = -1.0;
+            }
+        }
+        return {static_cast<float>(normalX * cosine + normalZ * sine), 0.0f,
+            static_cast<float>(normalZ * cosine - normalX * sine)};
     }
 
     double DistanceToSegment(double x, double z, double endX, double endZ) noexcept
@@ -154,6 +208,131 @@ namespace Engine
         }
         const bool verticalEntry = first > 0.0 && verticalFirst > horizontalFirst;
         return HitAt(baseMotion, target, first, verticalEntry, deltaY);
+    }
+
+    bool IsValid(const UprightBox& box) noexcept
+    {
+        return Finite(box.base) && Nonnegative(box.halfExtents.x) && Nonnegative(box.halfExtents.y)
+            && Nonnegative(box.height) && std::isfinite(box.yaw);
+    }
+
+    bool Overlaps(const Cylinder& cylinder, const UprightBox& box) noexcept
+    {
+        if (!IsValid(cylinder) || !IsValid(box)
+            || !HeightOverlap(cylinder.base.y, cylinder.height, box.base.y, box.height))
+        {
+            return false;
+        }
+        const double cosine = std::cos(static_cast<double>(box.yaw));
+        const double sine = std::sin(static_cast<double>(box.yaw));
+        const double offsetX = static_cast<double>(cylinder.base.x) - box.base.x;
+        const double offsetZ = static_cast<double>(cylinder.base.z) - box.base.z;
+        const double x = offsetX * cosine - offsetZ * sine;
+        const double z = offsetX * sine + offsetZ * cosine;
+        const double nearestX = std::max(0.0, std::abs(x) - box.halfExtents.x);
+        const double nearestZ = std::max(0.0, std::abs(z) - box.halfExtents.y);
+        return std::hypot(nearestX, nearestZ) <= cylinder.radius;
+    }
+
+    std::optional<GeometryHit> SweepCylinder(const Segment& baseMotion, float movingRadius,
+        float movingHeight, const UprightBox& target) noexcept
+    {
+        if (!Finite(baseMotion.start) || !Finite(baseMotion.end) || !Nonnegative(movingRadius)
+            || !Nonnegative(movingHeight) || !IsValid(target))
+        {
+            return std::nullopt;
+        }
+        const double cosine = std::cos(static_cast<double>(target.yaw));
+        const double sine = std::sin(static_cast<double>(target.yaw));
+        const double offsetX = static_cast<double>(baseMotion.start.x) - target.base.x;
+        const double offsetZ = static_cast<double>(baseMotion.start.z) - target.base.z;
+        const double worldDeltaX = static_cast<double>(baseMotion.end.x) - baseMotion.start.x;
+        const double deltaY = static_cast<double>(baseMotion.end.y) - baseMotion.start.y;
+        const double worldDeltaZ = static_cast<double>(baseMotion.end.z) - baseMotion.start.z;
+        const double x = offsetX * cosine - offsetZ * sine;
+        const double z = offsetX * sine + offsetZ * cosine;
+        const double deltaX = worldDeltaX * cosine - worldDeltaZ * sine;
+        const double deltaZ = worldDeltaX * sine + worldDeltaZ * cosine;
+        const double halfX = target.halfExtents.x;
+        const double halfZ = target.halfExtents.y;
+        const double radius = movingRadius;
+        if (HeightOverlap(baseMotion.start.y, movingHeight, target.base.y, target.height)
+            && std::hypot(std::max(0.0, std::abs(x) - halfX), std::max(0.0, std::abs(z) - halfZ)) <= radius)
+        {
+            return GeometryHit{baseMotion.start, BoxNormal(x, z, halfX, halfZ, cosine, sine), 0.0f};
+        }
+        const double infinity = std::numeric_limits<double>::infinity();
+        double verticalFirst = -infinity;
+        double verticalLast = infinity;
+        if (!ClipRange(baseMotion.start.y, deltaY, static_cast<double>(target.base.y) - movingHeight,
+            static_cast<double>(target.base.y) + target.height, verticalFirst, verticalLast))
+        {
+            return std::nullopt;
+        }
+
+        double fraction = infinity;
+        bool verticalEntry = false;
+        const auto consider = [&](double horizontalFirst, double horizontalLast)
+        {
+            const double first = std::max({0.0, horizontalFirst, verticalFirst});
+            const double last = std::min({1.0, horizontalLast, verticalLast});
+            if (first <= last && first < fraction)
+            {
+                fraction = first;
+                verticalEntry = first > 0.0 && verticalFirst > horizontalFirst;
+            }
+        };
+        const auto rectangle = [&](double lowX, double highX, double lowZ, double highZ)
+        {
+            double first = -infinity;
+            double last = infinity;
+            if (ClipRange(x, deltaX, lowX, highX, first, last)
+                && ClipRange(z, deltaZ, lowZ, highZ, first, last))
+            {
+                consider(first, last);
+            }
+        };
+        // The exact disc-expanded rectangle is the union of two strips and four corner discs.
+        // Expanding both slab axes by radius alone would block empty space near each corner.
+        rectangle(-halfX - radius, halfX + radius, -halfZ, halfZ);
+        rectangle(-halfX, halfX, -halfZ - radius, halfZ + radius);
+        const double speedXZ = std::hypot(deltaX, deltaZ);
+        for (int sideX : {-1, 1})
+        {
+            for (int sideZ : {-1, 1})
+            {
+                const double cornerX = x - sideX * halfX;
+                const double cornerZ = z - sideZ * halfZ;
+                if (speedXZ == 0.0)
+                {
+                    if (std::hypot(cornerX, cornerZ) <= radius)
+                    {
+                        consider(-infinity, infinity);
+                    }
+                    continue;
+                }
+                const double perpendicular = std::abs(std::fma(cornerX, deltaZ, -cornerZ * deltaX) / speedXZ);
+                if (perpendicular <= radius)
+                {
+                    const double along = std::fma(cornerX, deltaX, cornerZ * deltaZ) / speedXZ;
+                    const double extent = std::sqrt(std::max(0.0, (radius - perpendicular) * (radius + perpendicular)));
+                    consider((-along - extent) / speedXZ, (-along + extent) / speedXZ);
+                }
+            }
+        }
+        if (!std::isfinite(fraction))
+        {
+            return std::nullopt;
+        }
+        GeometryHit hit;
+        hit.position = {
+            static_cast<float>(std::lerp(static_cast<double>(baseMotion.start.x), static_cast<double>(baseMotion.end.x), fraction)),
+            static_cast<float>(std::lerp(static_cast<double>(baseMotion.start.y), static_cast<double>(baseMotion.end.y), fraction)),
+            static_cast<float>(std::lerp(static_cast<double>(baseMotion.start.z), static_cast<double>(baseMotion.end.z), fraction))};
+        hit.fraction = static_cast<float>(fraction);
+        hit.normal = verticalEntry ? Vector3{0.0f, deltaY > 0.0 ? -1.0f : 1.0f, 0.0f}
+            : BoxNormal(std::fma(deltaX, fraction, x), std::fma(deltaZ, fraction, z), halfX, halfZ, cosine, sine);
+        return hit;
     }
 
     bool IntersectsSector(const Cylinder& target, Vector3 origin, Vector2 forward,

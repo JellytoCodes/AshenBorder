@@ -50,6 +50,15 @@ namespace Client
         {
             return false;
         }
+        if (config.staticCylinders.size() > 256 || config.staticBoxes.size() > 256 ||
+            config.staticCylinders.size() + config.staticBoxes.size() > 256 ||
+            std::any_of(config.staticCylinders.begin(), config.staticCylinders.end(),
+                [](const auto& shape) { return !Engine::IsValid(shape); }) ||
+            std::any_of(config.staticBoxes.begin(), config.staticBoxes.end(),
+                [](const auto& shape) { return !Engine::IsValid(shape); }))
+        {
+            return false;
+        }
         const auto terrain = _terrain.Description();
         const Engine::BoundsXZ gridBounds{ {terrain.origin.x, terrain.origin.z},
             {static_cast<float>(static_cast<double>(terrain.origin.x) + (terrain.width - 1) * static_cast<double>(terrain.cellSize)),
@@ -70,6 +79,8 @@ namespace Client
             _dropReservation.reserve(1);
             _candidates.reserve(config.enemyCapacity);
             _bodies.reserve(config.enemyCapacity);
+            _staticCylinders.assign(config.staticCylinders.begin(), config.staticCylinders.end());
+            _staticBoxes.assign(config.staticBoxes.begin(), config.staticBoxes.end());
             _hits.reserve(static_cast<std::size_t>(config.enemyCapacity) + config.projectileCapacity);
             _newMeleeHits.reserve(config.enemyCapacity);
         }
@@ -120,7 +131,8 @@ namespace Client
             return {};
         }
         const auto ground = _terrain.Sample({spawn.position.x, spawn.position.z});
-        if (!ground || !_enemies.Reserve(1, _enemyReservation))
+        if (!ground || OverlapsEnvironment({ground->position, spawn.radius, spawn.height}) ||
+            !_enemies.Reserve(1, _enemyReservation))
         {
             return {};
         }
@@ -465,7 +477,8 @@ namespace Client
             return false;
         }
         const auto surface = _terrain.Sample({position.x, position.z});
-        if (!surface || surface->normal.y < _minimumNormalY)
+        if (!surface || surface->normal.y < _minimumNormalY ||
+            OverlapsEnvironment({surface->position, _player.radius, _player.height}))
         {
             return false;
         }
@@ -625,6 +638,14 @@ namespace Client
         }
         SortHits();
         return true;
+    }
+
+    bool LastFieldRun::OverlapsEnvironment(const Engine::Cylinder& body) const noexcept
+    {
+        return std::any_of(_staticCylinders.begin(), _staticCylinders.end(),
+                   [&](const auto& shape) { return Engine::Overlaps(body, shape); }) ||
+               std::any_of(_staticBoxes.begin(), _staticBoxes.end(),
+                   [&](const auto& shape) { return Engine::Overlaps(body, shape); });
     }
 
     Engine::Vector3 LastFieldRun::MoveBody(Engine::Cylinder body, Engine::Vector2 displacement,
@@ -817,7 +838,7 @@ namespace Client
                 break;
             }
             std::optional<Engine::GeometryHit> first;
-            const auto consider = [&](const Engine::Cylinder& target)
+            const auto consider = [&](const auto& target)
             {
                 const auto hit = Engine::SweepCylinder({current, destination}, body.radius, body.height, target);
                 if (!hit)
@@ -845,6 +866,14 @@ namespace Client
                 {
                     consider(entry.body);
                 }
+            }
+            for (const auto& shape : _staticCylinders)
+            {
+                consider(shape);
+            }
+            for (const auto& shape : _staticBoxes)
+            {
+                consider(shape);
             }
             if (!first)
             {
@@ -1060,6 +1089,10 @@ namespace Client
         if (loadout.empty())
         {
             loadout = definitions->loadout;
+        }
+        if (OverlapsEnvironment({_player.base, definitions->player.radius, definitions->player.height}))
+        {
+            return false;
         }
         if (loadout.empty() || loadout.size() > definitions->slotLimit ||
             std::any_of(loadout.begin(), loadout.end(),

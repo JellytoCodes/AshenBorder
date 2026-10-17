@@ -128,9 +128,82 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
         if (!config.at("schemaVersion").is_number_unsigned() || config.at("schemaVersion") != 1 ||
             !config.at("trees").is_array() || !config.at("models").is_object() ||
             (config.contains("props") && !config["props"].is_array()) ||
+            (config.contains("colliders") && !config["colliders"].is_object()) ||
             config["trees"].size() + (config.contains("props") ? config["props"].size() : 0) > 128)
         {
             throw std::runtime_error("Invalid presentation environment");
+        }
+        std::map<std::string, std::vector<Engine::Cylinder>> localCylinders;
+        std::map<std::string, std::vector<Engine::UprightBox>> localBoxes;
+        std::size_t localShapeCount = 0;
+        const auto number = [](const nlohmann::json& value)
+        {
+            if (!value.is_number() || !std::isfinite(value.get<double>()))
+            {
+                throw std::runtime_error("Environment collider requires finite numeric values");
+            }
+            const float result = value.get<float>();
+            if (!std::isfinite(result))
+            {
+                throw std::runtime_error("Environment collider value exceeds float range");
+            }
+            return result;
+        };
+        const auto vector3 = [&](const nlohmann::json& value)
+        {
+            if (!value.is_array() || value.size() != 3)
+            {
+                throw std::runtime_error("Environment collider base requires three coordinates");
+            }
+            return Engine::Vector3{number(value[0]), number(value[1]), number(value[2])};
+        };
+        if (config.contains("colliders"))
+        {
+            for (const auto& [role, shapes] : config["colliders"].items())
+            {
+                if (!config["models"].contains(role) || !shapes.is_array())
+                {
+                    throw std::runtime_error("Environment colliders require an existing model role and shape array");
+                }
+                for (const auto& shape : shapes)
+                {
+                    if (++localShapeCount > 256 || !shape.is_object() || !shape.at("shape").is_string())
+                    {
+                        throw std::runtime_error("Invalid environment collider or shape capacity exceeded");
+                    }
+                    const auto kind = shape.at("shape").get<std::string>();
+                    if (kind == "cylinder")
+                    {
+                        Engine::Cylinder cylinder{vector3(shape.at("base")), number(shape.at("radius")),
+                            number(shape.at("height"))};
+                        if (!Engine::IsValid(cylinder) || cylinder.radius <= 0 || cylinder.height <= 0)
+                        {
+                            throw std::runtime_error("Environment cylinder requires positive radius and height");
+                        }
+                        localCylinders[role].push_back(cylinder);
+                    }
+                    else if (kind == "box")
+                    {
+                        const auto& halfExtents = shape.at("halfExtents");
+                        if (!halfExtents.is_array() || halfExtents.size() != 2)
+                        {
+                            throw std::runtime_error("Environment box requires two XZ half extents");
+                        }
+                        Engine::UprightBox box{vector3(shape.at("base")),
+                            {number(halfExtents[0]), number(halfExtents[1])}, number(shape.at("height")),
+                            shape.contains("yaw") ? number(shape.at("yaw")) : 0};
+                        if (!Engine::IsValid(box) || box.halfExtents.x <= 0 || box.halfExtents.y <= 0 || box.height <= 0)
+                        {
+                            throw std::runtime_error("Environment box requires positive extents and height");
+                        }
+                        localBoxes[role].push_back(box);
+                    }
+                    else
+                    {
+                        throw std::runtime_error("Unknown environment collider shape");
+                    }
+                }
+            }
         }
         std::map<std::string, std::shared_ptr<const Engine::Model>> models;
         const auto loadModel = [&](const std::string& role) -> std::shared_ptr<const Engine::Model>
@@ -183,6 +256,47 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
             }
             return prop;
         };
+        std::vector<Engine::Cylinder> solidCylinders;
+        std::vector<Engine::UprightBox> solidBoxes;
+        const auto placeColliders = [&](const std::string& role, const EnvironmentProp& prop, float scale, float yaw)
+        {
+            const auto transformBase = [&](Engine::Vector3 base)
+            {
+                Engine::Vector3 result;
+                DirectX::XMStoreFloat3(&result, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&base),
+                    DirectX::XMLoadFloat4x4(&prop.world)));
+                return result;
+            };
+            const auto cylinders = localCylinders.find(role);
+            if (cylinders != localCylinders.end())
+            {
+                for (const auto& local : cylinders->second)
+                {
+                    Engine::Cylinder world{transformBase(local.base), local.radius * scale, local.height * scale};
+                    if (!Engine::IsValid(world) || world.radius <= 0 || world.height <= 0 ||
+                        solidCylinders.size() + solidBoxes.size() >= 256)
+                    {
+                        throw std::runtime_error("Invalid transformed environment cylinder or solid capacity exceeded");
+                    }
+                    solidCylinders.push_back(world);
+                }
+            }
+            const auto boxes = localBoxes.find(role);
+            if (boxes != localBoxes.end())
+            {
+                for (const auto& local : boxes->second)
+                {
+                    Engine::UprightBox world{transformBase(local.base),
+                        {local.halfExtents.x * scale, local.halfExtents.y * scale}, local.height * scale, local.yaw + yaw};
+                    if (!Engine::IsValid(world) || world.halfExtents.x <= 0 || world.halfExtents.y <= 0 || world.height <= 0 ||
+                        solidCylinders.size() + solidBoxes.size() >= 256)
+                    {
+                        throw std::runtime_error("Invalid transformed environment box or solid capacity exceeded");
+                    }
+                    solidBoxes.push_back(world);
+                }
+            }
+        };
         std::vector<EnvironmentProp> props;
         props.reserve(config["trees"].size());
         for (const auto& entry : config["trees"])
@@ -199,6 +313,7 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
             const float x = entry[0].get<float>(), z = entry[1].get<float>(), scale = entry[2].get<float>(),
                         yaw = entry[3].get<float>();
             props.push_back(place(tree, x, z, scale, yaw));
+            placeColliders("tree", props.back(), scale, yaw);
         }
         std::vector<EnvironmentDecoration> decorations;
         if (config.contains("props"))
@@ -223,12 +338,15 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
                 decoration.occludes = entry.at("occludes").get<bool>();
                 decoration.placement = place(decoration.model, entry.at("x").get<float>(), entry.at("z").get<float>(),
                     entry.at("scale").get<float>(), entry.at("yaw").get<float>());
+                placeColliders(decoration.role, decoration.placement, entry.at("scale").get<float>(), entry.at("yaw").get<float>());
                 decorations.push_back(std::move(decoration));
             }
         }
         _tree = tree;
         _props = std::move(props);
         _decorations = std::move(decorations);
+        _solidCylinders = std::move(solidCylinders);
+        _solidBoxes = std::move(solidBoxes);
         _runEpoch = 0;
         error.clear();
         return true;
@@ -308,6 +426,8 @@ void Environment::Clear() noexcept
 {
     _props.clear();
     _decorations.clear();
+    _solidCylinders.clear();
+    _solidBoxes.clear();
     _tree.reset();
     _runEpoch = 0;
 }
@@ -320,5 +440,15 @@ const std::vector<EnvironmentProp>& Environment::Props() const noexcept
 const std::vector<EnvironmentDecoration>& Environment::Decorations() const noexcept
 {
     return _decorations;
+}
+
+std::span<const Engine::Cylinder> Environment::SolidCylinders() const noexcept
+{
+    return _solidCylinders;
+}
+
+std::span<const Engine::UprightBox> Environment::SolidBoxes() const noexcept
+{
+    return _solidBoxes;
 }
 } // namespace Client

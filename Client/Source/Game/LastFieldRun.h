@@ -29,6 +29,8 @@ namespace Client
         Engine::BoundsXZ playBounds{{-8, -8}, {8, 8}};
         float cellSize = 2;
         float maxSlopeDegrees = 30;
+        std::span<const Engine::Cylinder> staticCylinders;
+        std::span<const Engine::UprightBox> staticBoxes;
     };
 
     struct EnemySpawn
@@ -134,6 +136,7 @@ namespace Client
         bool NextEligibleTick(std::uint64_t& out) const noexcept;
         bool RebuildGrid();
         bool GatherCircle(Engine::Vector3 center, float range, bool useGrid);
+        bool OverlapsEnvironment(const Engine::Cylinder& body) const noexcept;
         Engine::Vector3 MoveBody(Engine::Cylinder body, Engine::Vector2 displacement,
             const std::optional<EntityRef>& ignored, bool collideWithPlayer);
         void MoveActors(float dt, Engine::Vector2 movement);
@@ -174,6 +177,8 @@ namespace Client
         Engine::SpatialGrid<EntityRef> _grid;
         std::vector<EntityRef> _candidates;
         std::vector<BodyEntry> _bodies;
+        std::vector<Engine::Cylinder> _staticCylinders;
+        std::vector<Engine::UprightBox> _staticBoxes;
         std::vector<HitEvent> _hits;
         std::vector<HitEvent> _newMeleeHits;
         struct PendingShot
