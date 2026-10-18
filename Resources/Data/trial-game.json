@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "player": {
     "maxHp": 100,
     "speed": 5,
@@ -60,6 +60,19 @@
       "knockback": 3,
       "xp": 5,
       "currency": 2
+    },
+    {
+      "id": 4,
+      "hp": 900,
+      "speed": 1.2,
+      "armor": 3,
+      "radius": 0.85,
+      "height": 2.8,
+      "contactDamage": 18,
+      "contactInterval": 1.2,
+      "knockback": 4,
+      "xp": 40,
+      "currency": 20
     }
   ],
   "weapons": [
@@ -102,9 +115,9 @@
   "waves": [
     {
       "id": 1,
-      "duration": 12,
+      "duration": 45,
       "maxAlive": 16,
-      "spawnPerSecond": 2,
+      "spawnPerSecond": 0.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -125,9 +138,55 @@
     },
     {
       "id": 2,
-      "duration": 12,
+      "duration": 45,
+      "maxAlive": 20,
+      "spawnPerSecond": 1.2,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "duration": 45,
       "maxAlive": 24,
-      "spawnPerSecond": 3,
+      "spawnPerSecond": 1.6,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 5
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "duration": 60,
+      "maxAlive": 28,
+      "spawnPerSecond": 2.75,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -145,6 +204,148 @@
           "weight": 2
         }
       ]
+    },
+    {
+      "id": 5,
+      "duration": 60,
+      "maxAlive": 32,
+      "spawnPerSecond": 3,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 4
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "duration": 60,
+      "maxAlive": 36,
+      "spawnPerSecond": 3.5,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 3
+        },
+        {
+          "enemyId": 2,
+          "weight": 4
+        },
+        {
+          "enemyId": 3,
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "duration": 75,
+      "maxAlive": 40,
+      "spawnPerSecond": 4,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 3
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "duration": 75,
+      "maxAlive": 44,
+      "spawnPerSecond": 4.5,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 2
+        },
+        {
+          "enemyId": 2,
+          "weight": 4
+        },
+        {
+          "enemyId": 3,
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "duration": 75,
+      "maxAlive": 48,
+      "spawnPerSecond": 5,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 2
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "duration": 90,
+      "maxAlive": 32,
+      "spawnPerSecond": 3.5,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 3
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 4
+        }
+      ],
+      "boss": {
+        "enemyId": 4,
+        "name": "잿빛 수비대장"
+      }
     }
   ],
   "loadout": [

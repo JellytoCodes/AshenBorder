@@ -130,6 +130,11 @@ namespace Client
         {
             return {};
         }
+        if (_definitions && spawn.definitionId == _definitions->waves.back().bossEnemyId &&
+            (spawn.definitionId != _wave.bossEnemyId || _wave.bossSpawned))
+        {
+            return {};
+        }
         const auto ground = _terrain.Sample({spawn.position.x, spawn.position.z});
         if (!ground || OverlapsEnvironment({ground->position, spawn.radius, spawn.height}) ||
             !_enemies.Reserve(1, _enemyReservation))
@@ -150,6 +155,12 @@ namespace Client
             enemy->Reset();
             _enemies.Cancel(_enemyReservation);
             return {};
+        }
+        if (_definitions && spawn.definitionId == _wave.bossEnemyId)
+        {
+            _boss = result;
+            _wave.bossSpawned = true;
+            _wave.bossHp = _wave.bossMaxHp = spawn.hp;
         }
         return result;
     }
@@ -331,7 +342,7 @@ namespace Client
 
     bool LastFieldRun::RequestRelease(const EntityRef& ref)
     {
-        if (!IsValid(ref) || !ref.handle)
+        if (!IsValid(ref) || !ref.handle || (_boss && ref == *_boss && _wave.phase == WavePhase::Combat))
         {
             return false;
         }
@@ -423,6 +434,7 @@ namespace Client
             _playerState = {};
             _rewards = {};
             _wave = {};
+            _boss.reset();
             _inGameTick = false;
         }
         return cleared;
@@ -1405,6 +1417,13 @@ namespace Client
         _wave.elapsed = 0;
         _wave.remaining = _definitions->waves[_wave.waveIndex].duration;
         _wave.spawnBudget = 0;
+        const auto& definition = _definitions->waves[_wave.waveIndex];
+        _wave.bossEnemyId = definition.bossEnemyId;
+        _wave.bossHp = 0;
+        _wave.bossMaxHp = definition.bossEnemyId == 0 ? 0 : _definitions->FindEnemy(definition.bossEnemyId)->hp;
+        _wave.bossSpawned = false;
+        _wave.bossDefeated = false;
+        _boss.reset();
         _events.clear();
         GameEvent event;
         event.kind = GameEventKind::WaveStarted;
@@ -1425,6 +1444,10 @@ namespace Client
         _wave.elapsed = 0;
         _wave.remaining = _definitions->waves[_wave.waveIndex].duration;
         _wave.spawnBudget = 0;
+        _wave.bossEnemyId = 0;
+        _wave.bossHp = _wave.bossMaxHp = 0;
+        _wave.bossSpawned = _wave.bossDefeated = false;
+        _boss.reset();
         return true;
     }
 
@@ -1942,6 +1965,11 @@ namespace Client
                     reward(DropKind::Currency, definition->currency);
                     enemy.rewardIssued = true;
                     enemy.deathFinalized = true;
+                    if (_boss && *_boss == Ref(EntityKind::Enemy, handle))
+                    {
+                        _wave.bossHp = 0;
+                        _wave.bossDefeated = true;
+                    }
                     ++_rewards.kills;
                     GameEvent event;
                     event.kind = GameEventKind::EnemyDied;
@@ -2047,6 +2075,53 @@ namespace Client
         return static_cast<std::uint32_t>((_randomState * 2685821657736338717ULL) >> 32);
     }
 
+    std::optional<EntityRef> LastFieldRun::TrySpawnWaveEnemy(const EnemyDefinition& definition,
+        const WaveDefinition& wave)
+    {
+        for (std::uint32_t attempt = 0; attempt < wave.maxSpawnAttempts; ++attempt)
+        {
+            ++_wave.spawnAttempts;
+            const double angle = RandomU32() / 4294967296.0 * DirectX::XM_2PI;
+            const double u = RandomU32() / 4294967296.0;
+            const double radius =
+                std::sqrt(static_cast<double>(wave.minSpawnDistance) * wave.minSpawnDistance +
+                    u * (static_cast<double>(wave.maxSpawnDistance) * wave.maxSpawnDistance -
+                        static_cast<double>(wave.minSpawnDistance) * wave.minSpawnDistance));
+            Engine::Vector3 point{static_cast<float>(_player.base.x + std::cos(angle) * radius), 0,
+                static_cast<float>(_player.base.z + std::sin(angle) * radius)};
+            if (point.x < _playBounds.min.x || point.x > _playBounds.max.x || point.z < _playBounds.min.y ||
+                point.z > _playBounds.max.y)
+            {
+                continue;
+            }
+            const auto ground = _terrain.Sample({point.x, point.z});
+            if (!ground || ground->normal.y < _minimumNormalY)
+            {
+                continue;
+            }
+            point.y = ground->position.y;
+            const Engine::Cylinder candidate{point, definition.radius, definition.height};
+            bool clear = !Engine::Overlaps(candidate, _player);
+            if (!_enemies.ForEachActive(
+                    [&](Engine::PoolHandle, const Enemy& enemy)
+                    {
+                        clear = clear && !Engine::Overlaps(candidate, {enemy.position, enemy.radius, enemy.height});
+                    }))
+            {
+                throw std::runtime_error("Wave spawn overlap query failed");
+            }
+            if (clear)
+            {
+                const auto spawned = SpawnEnemy({point, definition.id, definition.hp, definition.radius, definition.height});
+                if (spawned)
+                {
+                    return spawned;
+                }
+            }
+        }
+        return {};
+    }
+
     void LastFieldRun::SpawnWaveEnemies(float dt)
     {
         if (dt <= 0)
@@ -2054,6 +2129,25 @@ namespace Client
             return;
         }
         const auto& wave = _definitions->waves[_wave.waveIndex];
+        std::uint32_t spawned = 0;
+        if (wave.bossEnemyId != 0 && !_wave.bossSpawned)
+        {
+            if (_enemies.GetStats().active >= wave.maxAlive)
+            {
+                return;
+            }
+            if (!TrySpawnWaveEnemy(*_definitions->FindEnemy(wave.bossEnemyId), wave))
+            {
+                ++_wave.spawnFailures;
+                return;
+            }
+            ++spawned;
+        }
+        if (_wave.remaining <= 0)
+        {
+            _wave.spawnBudget = 0;
+            return;
+        }
         _wave.spawnBudget =
             std::min(static_cast<double>(_definitions->maxSpawnsPerTick), _wave.spawnBudget + dt * wave.spawnPerSecond);
         double weightSum = 0;
@@ -2061,7 +2155,7 @@ namespace Client
         {
             weightSum += weight.weight;
         }
-        for (std::uint32_t spawned = 0; spawned < _definitions->maxSpawnsPerTick && _wave.spawnBudget >= 1; ++spawned)
+        for (; spawned < _definitions->maxSpawnsPerTick && _wave.spawnBudget >= 1; ++spawned)
         {
             if (_enemies.GetStats().active >= wave.maxAlive)
             {
@@ -2084,46 +2178,7 @@ namespace Client
             {
                 throw std::runtime_error("Wave weight selection failed");
             }
-            bool accepted = false;
-            for (std::uint32_t attempt = 0; attempt < wave.maxSpawnAttempts; ++attempt)
-            {
-                ++_wave.spawnAttempts;
-                const double angle = RandomU32() / 4294967296.0 * DirectX::XM_2PI;
-                const double u = RandomU32() / 4294967296.0;
-                const double radius =
-                    std::sqrt(static_cast<double>(wave.minSpawnDistance) * wave.minSpawnDistance +
-                              u * (static_cast<double>(wave.maxSpawnDistance) * wave.maxSpawnDistance -
-                                   static_cast<double>(wave.minSpawnDistance) * wave.minSpawnDistance));
-                Engine::Vector3 point{static_cast<float>(_player.base.x + std::cos(angle) * radius), 0,
-                                      static_cast<float>(_player.base.z + std::sin(angle) * radius)};
-                if (point.x < _playBounds.min.x || point.x > _playBounds.max.x || point.z < _playBounds.min.y ||
-                    point.z > _playBounds.max.y)
-                {
-                    continue;
-                }
-                const auto ground = _terrain.Sample({point.x, point.z});
-                if (!ground || ground->normal.y < _minimumNormalY)
-                {
-                    continue;
-                }
-                point.y = ground->position.y;
-                const Engine::Cylinder candidate{point, definition->radius, definition->height};
-                bool clear = !Engine::Overlaps(candidate, _player);
-                if (!_enemies.ForEachActive(
-                        [&](Engine::PoolHandle, const Enemy& enemy)
-                        {
-                            clear = clear && !Engine::Overlaps(candidate, {enemy.position, enemy.radius, enemy.height});
-                        }))
-                {
-                    throw std::runtime_error("Wave spawn overlap query failed");
-                }
-                if (clear &&
-                    SpawnEnemy({point, definition->id, definition->hp, definition->radius, definition->height}))
-                {
-                    accepted = true;
-                    break;
-                }
-            }
+            const bool accepted = TrySpawnWaveEnemy(*definition, wave).has_value();
             _wave.spawnBudget -= 1;
             if (!accepted)
             {
@@ -2147,9 +2202,10 @@ namespace Client
         try
         {
             const auto& definition = _definitions->waves[_wave.waveIndex];
-            const double exactSeconds = std::min(static_cast<double>(dt), _wave.remaining);
+            const bool bossWave = definition.bossEnemyId != 0;
+            const double exactSeconds = bossWave ? static_cast<double>(dt) : std::min(static_cast<double>(dt), _wave.remaining);
             const float seconds = static_cast<float>(exactSeconds);
-            const bool expires = static_cast<double>(dt) >= _wave.remaining;
+            const bool expires = !bossWave && static_cast<double>(dt) >= _wave.remaining;
             _appliedThisTick.clear();
             _hitProjectiles.clear();
             _playerState.invulnerability = std::max(0.0, _playerState.invulnerability - seconds);
@@ -2182,13 +2238,18 @@ namespace Client
             }
             CollectDrops(false);
             FinalizeDeaths(!_playerState.dead && !expires);
+            if (_boss && !_wave.bossDefeated)
+            {
+                const auto* boss = TryEnemy(*_boss);
+                _wave.bossHp = boss ? std::max(0.0f, boss->hp) : 0;
+            }
             for (const auto handle : _hitProjectiles)
             {
                 _projectiles.RequestRelease(handle);
             }
-            _wave.elapsed = std::min(definition.duration, _wave.elapsed + exactSeconds);
+            _wave.elapsed = bossWave ? _wave.elapsed + exactSeconds : std::min(definition.duration, _wave.elapsed + exactSeconds);
             _wave.remaining = std::max(0.0, definition.duration - _wave.elapsed);
-            if (_playerState.dead || expires)
+            if (_playerState.dead || expires || (bossWave && _wave.bossDefeated))
             {
                 FinishWave(_playerState.dead);
             }

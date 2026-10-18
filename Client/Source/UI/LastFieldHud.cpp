@@ -276,7 +276,10 @@ namespace Client
             Panel(frame, canvas, {{240, 154}, {800, 360}, kPanel});
             Label(frame, canvas, 640, 184, 48, "SAVE MYSELF", kGold, 704, Alignment::Center);
             Label(frame, canvas, 640, 242, 28, "ASHEN BORDER", kTeal, 704, Alignment::Center);
-            Label(frame, canvas, 640, 294, 22, "몰려오는 잔재를 막아내고 끝까지 버티세요", kWhite, 704, Alignment::Center);
+            const std::string stages = snapshot.definitions ?
+                std::to_string(snapshot.definitions->waves.size()) + "개 스테이지를 돌파하고 초소를 지켜내세요" :
+                "몰려오는 잔재를 막아내고 초소를 지켜내세요";
+            Label(frame, canvas, 640, 294, 22, stages, kWhite, 704, Alignment::Center);
             Label(frame, canvas, 640, 342, 20, "WASD 이동  ·  자동 공격", kDim, 704, Alignment::Center);
             Label(frame, canvas, 640, 374, 18, "전투 중 P 일시정지  ·  M 음소거", kDim, 704, Alignment::Center);
             Button(frame, canvas, PrimaryButton(), "시작하기 [Enter]", true, 23);
@@ -285,9 +288,11 @@ namespace Client
         }
 
         Panel(frame, canvas, {{24, 16}, {1232, 112}, kPanel});
-        Label(frame, canvas, 48, 32, 22, "웨이브 " + std::to_string(snapshot.wave.waveIndex + 1) +
+        const bool bossStage = snapshot.wave.bossEnemyId != 0;
+        Label(frame, canvas, 48, 32, 22, "스테이지 " + std::to_string(snapshot.wave.waveIndex + 1) +
             " / " + std::to_string(snapshot.wave.waveCount) + "  ·  " + PhaseName(snapshot.wave.phase), kGold, 420);
-        Label(frame, canvas, 640, 34, 20, "남은 시간 " + Number(snapshot.wave.remaining) + "초", kWhite, 260, Alignment::Center);
+        Label(frame, canvas, 640, 34, 20, bossStage ? "수비대장을 쓰러뜨리세요" :
+            "남은 시간 " + Number(snapshot.wave.remaining) + "초", kWhite, 260, Alignment::Center);
         Label(frame, canvas, 1232, 32, 22, "보급품 " + std::to_string(snapshot.progression.balance), kGold, 380, Alignment::Right);
         Label(frame, canvas, 48, 72, 20, "체력 " + Number(snapshot.player.hp) + " / " + Number(snapshot.playerStats.maxHp), kWhite, 340);
         Panel(frame, canvas, {{48, 105}, {340, 8}, kTrack});
@@ -336,6 +341,21 @@ namespace Client
             Label(frame, canvas, 48, 152, 20, "보유 장비 없음", kDim, 1120);
         }
 
+        if (bossStage && snapshot.wave.bossSpawned && !snapshot.wave.bossDefeated && !snapshot.paused &&
+            snapshot.wave.phase == WavePhase::Combat && snapshot.wave.outcome == RunOutcome::Playing &&
+            snapshot.progression.phase == ProgressionPhase::Done)
+        {
+            const std::string name = snapshot.definitions && snapshot.wave.waveIndex < snapshot.definitions->waves.size() ?
+                snapshot.definitions->waves[snapshot.wave.waveIndex].bossName : "수비대장";
+            Panel(frame, canvas, {{340, 464}, {600, 64}, kPanel});
+            Label(frame, canvas, 360, 472, 22, name, kGold, 350);
+            Label(frame, canvas, 920, 475, 18, Number(snapshot.wave.bossHp) + " / " +
+                Number(snapshot.wave.bossMaxHp), kWhite, 190, Alignment::Right);
+            Panel(frame, canvas, {{360, 506}, {560, 10}, kTrack});
+            Panel(frame, canvas, {{360, 506}, {560 * Ratio(snapshot.wave.bossHp, snapshot.wave.bossMaxHp), 10},
+                {0.85f, 0.22f, 0.18f, 1}});
+        }
+
         Panel(frame, canvas, {{24, 562}, {1232, 34}, kPanel});
         const std::string stats[] = {"이동 " + Number(snapshot.playerStats.speed) + "m/s",
             "방어력 " + Number(snapshot.playerStats.armor), "피해 배율 ×" + Number(snapshot.playerStats.damageMultiplier),
@@ -380,7 +400,7 @@ namespace Client
                     "WASD 이동  ·  자동 공격", kWhite, 560, Alignment::Center);
             }
             Button(frame, canvas, PrimaryButton(), snapshot.paused ? "계속하기 [P]" : ended ?
-                "다시 시작 [Enter]" : "다음 웨이브 [Enter]", true, 23);
+                "다시 시작 [Enter]" : "다음 스테이지 [Enter]", true, 23);
         }
         else if (snapshot.progression.phase == ProgressionPhase::Selection)
         {
@@ -454,7 +474,7 @@ namespace Client
             const uint64_t cost = snapshot.definitions ? snapshot.definitions->shop.rerollCost : 0;
             Button(frame, canvas, RerollButton(), "다른 물품 [R]  ·  보급품 " + std::to_string(cost),
                 snapshot.definitions && snapshot.progression.balance >= cost);
-            Button(frame, canvas, AdvanceButton(), "다음 웨이브 [Enter]");
+            Button(frame, canvas, AdvanceButton(), "다음 스테이지 [Enter]");
         }
         out = std::move(frame);
     }

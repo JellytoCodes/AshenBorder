@@ -183,6 +183,9 @@ namespace Client
         std::uint32_t waveIndex = 0, waveCount = 0;
         double elapsed = 0, remaining = 0, spawnBudget = 0;
         std::uint64_t spawnAttempts = 0, spawnFailures = 0, settlements = 0;
+        std::uint32_t bossEnemyId = 0;
+        float bossHp = 0, bossMaxHp = 0;
+        bool bossSpawned = false, bossDefeated = false;
     };
 
     enum class GameEventKind

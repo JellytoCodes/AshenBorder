@@ -154,6 +154,7 @@ namespace Client
         void CollectDrops(bool all);
         void FinishWave(bool defeated);
         void SpawnWaveEnemies(float dt);
+        std::optional<EntityRef> TrySpawnWaveEnemy(const EnemyDefinition& enemy, const WaveDefinition& wave);
         void FlushReturns();
         void RecordHit(const HitEvent& hit);
         void Emit(GameEvent event);
@@ -201,6 +202,7 @@ namespace Client
         PlayerState _playerState;
         RewardTotals _rewards;
         WaveSnapshot _wave;
+        std::optional<EntityRef> _boss;
         std::uint64_t _randomState = 42, _eventSequence = 1;
         bool _autoAttack = true, _inGameTick = false;
         bool _queryGridReady = false;

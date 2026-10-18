@@ -34,7 +34,7 @@ namespace Client
         try
         {
             std::string error;
-            if (!definitions || runEpoch == 0 || definitions->schemaVersion != 2 ||
+            if (!definitions || runEpoch == 0 || definitions->schemaVersion < 2 ||
                 !ValidateGameDefinitions(*definitions, error))
             {
                 return false;

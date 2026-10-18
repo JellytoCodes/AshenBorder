@@ -52,6 +52,16 @@
         "idle": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/idle.clip",
         "move": "Generated/ashen-heavy/186ee43ca1f3a6eab2b5d305a601d510621b8302c9dd64f87b69ded56ffdb6fd/walk.clip"
       }
+    },
+    {
+      "modelPath": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/character.mesh",
+      "definitionId": 4,
+      "animationSlots": {
+        "attack": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/attack.clip",
+        "death": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/death.clip",
+        "idle": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/idle.clip",
+        "move": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/walk.clip"
+      }
     }
   ],
   "weaponAttackSlots": {

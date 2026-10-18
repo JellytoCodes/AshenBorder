@@ -4,9 +4,9 @@ Windows C++/Direct3D 11 자체 엔진의 싱글플레이 3D 탑다운 아레나 
 
 ## 배포본 실행
 
-[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261017-collision)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
+[LF17 Windows x64 검증용 ZIP](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261018-stages)을 받아 전체 압축을 풀고 `AshenBorder.exe`를 실행한다. Windows 10/11 x64·D3D11 기능 수준 11.0 이상·맑은 고딕이 필요하다. 동봉된 DLL과 Resources·Engine 폴더를 함께 둔다. 로그는 `%LOCALAPPDATA%/AshenBorder/Saved/AshenBorder.log`에 남는다.
 
-2026-10-17 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인했다. 선택 에셋 19묶음·배포 파일 122개이며 MSVC Release DLL 3개를 동봉한다. 첫 LF17 후보는 사용자가 노트북의 Intel Arc 140T에서 초기화·일시정지/재개·정상 종료한 로그를 제공했다. 내부 나무와 줄기·벽 충돌을 반영한 수정본의 새 PC 전체 플레이·승패·재시작은 확인 대기다.
+2026-10-18 수정본은 선택 에셋 20묶음·배포 파일 130개이며 MSVC Release DLL 3개를 동봉한다. 같은 PC에서 한글·공백 경로, 무관한 작업 폴더, 실제 NTFS 쓰기 차단 상태의 실행과 필수 파일 누락 3건을 확인한다. 첫 LF17 후보는 사용자가 노트북의 Intel Arc 140T에서 초기화·일시정지/재개·정상 종료한 로그를 제공했다. 10스테이지와 보스를 반영한 수정본의 새 PC 전체 플레이·승패·재시작은 확인 대기다.
 
 ## 빌드와 실행
 
@@ -19,7 +19,7 @@ msbuild .\AshenBorder.sln /m /p:Configuration=Release /p:Platform=x64
 & .\_Local\Binaries\x64\Release\AshenBorder.exe
 ```
 
-Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 공격, 웨이브 종료 후 1~3으로 성장 선택, 1~4로 상점 구매, R로 재추첨, Enter로 다음 웨이브다. 버튼 클릭도 같은 명령을 전달한다. 마지막 웨이브를 버티면 “초소 방어 성공”, 체력이 0이 되면 “전사”가 표시되며 Enter로 다시 시작한다.
+Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 공격, 스테이지 종료 후 1~3으로 성장 선택, 1~4로 상점 구매, R로 재추첨, Enter로 다음 스테이지다. 버튼 클릭도 같은 명령을 전달한다. 10스테이지의 보스를 쓰러뜨리면 “초소 방어 성공”, 체력이 0이 되면 “전사”가 표시되며 Enter로 다시 시작한다.
 
 단검은 평소 오른손에 들고 다른 무기 공격 중에는 숨긴다. 활은 등에 메고 활 공격 중에만 왼손으로 옮긴다. 투척칼은 몸 주변에 표시하지 않으며, 기존 128슬롯 풀에서 발사된 탄만 그린다. 같은 종류의 여러 슬롯은 장착 외형 하나를 공유하고 공격 규칙은 유지한다.
 
@@ -27,9 +27,13 @@ Enter 또는 “시작하기” 버튼으로 시작한다. WASD 이동·자동 �
 
 ## 현재 상태
 
-2026-10-14 구현을 시작했고 사용자가 LF02 실행을 확인했다. Terrain·스키닝·풀·충돌·자동 전투·웨이브·성장/상점·그림자·가림·HUD와 승패/재시작을 연결했다. 시험 설정은 적 3종·무기 3종·패시브 정의 6종·활성 4종·12초 웨이브 2개다. 자체 제작 캐릭터 4종과 단검·활·투척칼, 초소 환경·무기별 동작·음향을 쓴다. UI 제목은 SAVE MYSELF / ASHEN BORDER, 성장·상점·재화 표시는 “생존 준비”·“야전 정비”·“보급품”이다. 시작 장비는 군용 단검 1개다. 사냥활·투척칼은 상점에서 추가한다. 게임 ID·전투 규칙은 유지한다.
+2026-10-14 구현을 시작했고 사용자가 LF02 실행을 확인했다. Terrain·스키닝·풀·충돌·자동 전투·스테이지·성장/상점·그림자·가림·HUD와 승패/재시작을 연결했다. 현재 일반 적 3종·보스 1종·무기 3종·패시브 정의 6종·활성 4종·10스테이지다. 자체 제작 캐릭터 5종과 단검·활·투척칼, 초소 환경·무기별 동작·음향을 쓴다. UI 제목은 SAVE MYSELF / ASHEN BORDER, 성장·상점·재화 표시는 “생존 준비”·“야전 정비”·“보급품”이다. 시작 장비는 군용 단검 1개다. 사냥활·투척칼은 상점에서 추가한다.
 
-현재 Debug **2,831개**·Release **2,829개**와 각 90프레임 숨김 실행을 통과했다. 내부 나무·줄기와 벽 충돌·수관 통행과 가림은 기준서 5.1.19, 이전 맵 확장은 5.1.18, 무기 손·등 부착은 5.1.17에 기록한다. 별도 `--balance`는 고정 seed의 62사례·63개 검사를 통과했으며 정지 승리도 남는다. 에이전트의 실제 Windows 창 3런 관찰은 사용자 T09 수락과 구분한다. 근거는 기준서 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
+1~3스테이지는 각 45초, 4~6은 60초, 7~9는 75초로 일반 전투 합계는 9분이다. 10스테이지에는 잿빛 수비대장이 한 번 등장하며 추격·접촉 공격과 전용 체력 바, 공격·사망 동작을 사용한다. 지원병은 최대 90초까지 추가한다. 보스를 먼저 처치하면 즉시 승리하고, 90초가 지나도 살아 있으면 기존 적과 전투를 계속한다. 초반 생성률은 초당 0.8·1.2·1.6으로 조정했다. 기존 플레이어·일반 적·무기·패시브·가격·경험치 정의는 유지했다.
+
+현재 Debug **3,015개**·Release **3,013개**와 각 90프레임 숨김 실행을 통과했다. 원본 설정·1/60초 tick의 자동 조작으로 승리 557.95초→패배→재시작 승리 556.12초를 확인했다. 상점·성장 선택과 정상 획득 재화만 사용했으며 Run·HP·위치를 직접 수정하지 않았다. Character 130·Action 185·Presentation 475 검사와 실제 10/10스테이지의 GPU 이미지도 확인했다. 검사용 이동 제어기의 완주 결과이므로 사람의 난도·승률이나 실제 Windows 입력 수락을 뜻하지 않는다. 기존 성장 상한 7과 상점 가격을 유지해 자동 완주의 남은 보급품은 2,151~2,161이었다. 후반 성장·소비 균형은 아직 조정하지 않았다.
+
+10스테이지·보스는 기준서 5.1.20과 _Local/Saved/Verification/StageBoss-20261018T005610859Z에 기록한다. v0.30의 Debug **2,831개**·Release **2,829개**, 내부 나무·줄기와 벽 충돌·수관 통행과 가림은 5.1.19, 이전 맵 확장은 5.1.18, 무기 손·등 부착은 5.1.17에 보존한다. 당시 `--balance` 62사례·63개와 실제 Windows 창 3런 관찰은 12초 웨이브 2개 설정의 기록이다. 사용자 T09 수락과 구분한다. 근거는 5.1.15·_Local/Saved/Verification/PlayBalance.json, 복사 실행은 SourceFree-PlayBalance.json이다.
 
 v0.23 당시 Debug **2,578개**·Release **2,576개**와 각 90프레임 숨김 실행을 통과했다. Environment 92·Action 122·Character 109·Presentation 392(오디오 72 포함)와 Engine 53파일 보존은 기준서 5.1.14·_Local/Saved/Verification/OutpostPolish.json을 따른다. v0.22의 **2,420/2,418개**, v0.21의 **2,145/2,143개**, v0.20의 **2,026/2,024개**·캐릭터 67개, LF15/16의 **1,920/1,918개**, LF11~LF14의 **1,736/1,734개**는 당시 기록으로 보존한다. 새 초소·무기 동작의 GPU 결과는 _Local/Saved/Verification/OutpostPolish-20261016에 보존한다. [실행 화면](https://chatgpt.com/space/page_22bac242ee888191a06de68f62d05b5c)에 초소 이미지 2장·무기 GIF 3개·음향 미리듣기를 반영했다.
 
@@ -82,10 +86,10 @@ _Local/
 
 ## 캐릭터와 시험 자산
 
-보급병·배회병·척후병·중갑병은 직접 만든 로우폴리 4종이다. 현재 _Local/SourceAssets/ashen-characters/v003은 공통 17본과 v002의 메시·palette·idle/move/attack/death 바이트를 보존하고 플레이어에 무기별 공격 3개를 추가했다. 승인 Fired에서 local SRT × 현재 pose.nodeWorld × characterWorld로 손에 붙이며 판정·발사를 늦추지 않는다. 이전 v001/v002와 [Kenney CC0 원본](https://kenney.nl/assets/mini-characters)은 회귀용으로 보존한다.
+보급병·배회병·척후병·중갑병·잿빛 수비대장은 직접 만든 로우폴리 5종이다. 기존 _Local/SourceAssets/ashen-characters/v003은 공통 17본과 v002의 메시·palette·idle/move/attack/death 바이트를 보존하고 플레이어에 무기별 공격 3개를 추가했다. v004에는 1,552삼각형의 보스만 별도 generation으로 추가했다. 망토·금빛 견장·높은 투구 표식으로 일반 중갑병과 구분한다. 승인 Fired에서 local SRT × 현재 pose.nodeWorld × characterWorld로 손에 붙이며 판정·발사를 늦추지 않는다. 이전 v001/v002와 [Kenney CC0 원본](https://kenney.nl/assets/mini-characters)은 회귀용으로 보존한다.
 
 - Resources/Generated는 덮어쓰지 않는 generation별 완성 묶음이다. EMSH v1 정적 데이터·EMSH v2 스킨·ECLP v1 클립·텍스처·고지·asset.meta.json을 관리한다.
-- Resources/Data/trial-scene.json은 모델·행동/무기별 클립·손 부착·Terrain, trial-game.json schema 2는 전투·웨이브·성장·상점, presentation-scene.json은 표현 모델·음향·나무/장식 배치와 모델 역할별 local 충돌 형상을 지정한다.
+- Resources/Data/trial-scene.json은 모델·행동/무기별 클립·손 부착·Terrain, trial-game.json schema 3은 전투·스테이지·보스·성장·상점, presentation-scene.json은 표현 모델·음향·나무/장식 배치와 모델 역할별 local 충돌 형상을 지정한다. 게임 정의 파서는 기존 schema 1·2도 지원한다.
 - Engine은 모델 묶음의 해시·버전·호환 정보를 확인한다. AudioClip::LoadWav는 RIFF를 검사하며 음향 sidecar/hash는 오프라인·자동 검사에서 대조한다. Client는 실행 중 변환이나 최신 폴더 탐색을 하지 않는다.
 
 에셋 제작 명령에는 `_Local/`의 SourceAssets·Scripts·Tools가 필요하다. 공개된 generation의 파일과 과거 검증 기록은 그대로 보존한다. 정적 OBJ는 BuildTrialAssets.py, Terrain은 BuildTrialTerrainAssets.py, 표현 자산은 BuildPresentationAssets.py로 오프라인 변환한다. 기존 Kenney 원본의 스켈레탈 변환은 _Local/Tools/AssetConverter/AssetConverter.vcxproj를 별도로 빌드한 뒤 Python 3.10 이상에서 다음 명령을 사용한다. 검증된 새 generation을 출력하며 Client 경로는 자동 변경하지 않는다.
@@ -98,6 +102,7 @@ _Local/
 
 ```powershell
 python .\_Local\Scripts\BuildAshenCharacters.py --configuration Release --revision v003
+python .\_Local\Scripts\BuildAshenCharacters.py --configuration Release --revision v004 --boss-only
 python .\_Local\Scripts\BuildAshenOutpost.py --revision v002
 python .\_Local\Scripts\BuildAshenMap.py
 python .\_Local\Scripts\BuildAshenAudio.py
@@ -113,4 +118,4 @@ JSON은 nlohmann/json 3.12.0 MIT, 오프라인 임포터는 Assimp 6.0.4 BSD-3-C
 
 LF17 배포 후보와 같은 PC의 배포·Engine 재사용 검증을 마쳤다. 다음은 **사용자 새 PC 전체 플레이·승패·재시작 확인**이다. 사용자 T09·외형·가독성·음향 실청 수락과 새 아트 성능은 별도로 남아 있다. 14일은 목표 기간이며 소요 시간을 보장하지 않는다.
 
-- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.28 — 무기 장착·투척 풀 표시 5.1.17, 배포·Engine 독립 실행 5.1.16, 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.
+- 로컬 개발 기준서: `_Local/Docs/AshenBorder_개발_기준서.docx` (Git 제외) v0.31 — 10스테이지·보스 5.1.20, 내부 나무·환경 충돌 5.1.19, 맵 확장 5.1.18, 무기 장착·투척 풀 표시 5.1.17, 배포·Engine 독립 실행 5.1.16, 로컬 관리 폴더·기본 빌드 2.4, 실제 창 조작·밸런스 5.1.15, 제작 1.5·환경 2.7·무기 동작 2.10·UI/PCM 2.15.2. v0.23은 5.1.14, v0.20~v0.22는 5.1.11~5.1.13, LF15/16은 5.1.10·5.9.2·5.10.4~5.10.6에 보존한다.

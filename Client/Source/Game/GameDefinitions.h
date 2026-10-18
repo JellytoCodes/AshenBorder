@@ -56,6 +56,8 @@ namespace Client
         float minSpawnDistance = 4, maxSpawnDistance = 7;
         std::uint32_t maxSpawnAttempts = 12;
         std::vector<EnemyWeight> enemyWeights;
+        std::uint32_t bossEnemyId = 0;
+        std::string bossName;
     };
 
     enum class StatKind

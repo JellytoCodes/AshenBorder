@@ -279,10 +279,19 @@ namespace
         return result;
     }
 
-    Client::WaveDefinition ParseWave(const Json& value)
+    Client::WaveDefinition ParseWave(const Json& value, std::uint32_t schemaVersion)
     {
-        Fields(value, {"id", "duration", "maxAlive", "spawnPerSecond", "minSpawnDistance",
-            "maxSpawnDistance", "maxSpawnAttempts", "enemyWeights"}, "wave");
+        const bool hasBoss = schemaVersion == 3 && value.contains("boss");
+        if (hasBoss)
+        {
+            Fields(value, {"id", "duration", "maxAlive", "spawnPerSecond", "minSpawnDistance",
+                "maxSpawnDistance", "maxSpawnAttempts", "enemyWeights", "boss"}, "wave");
+        }
+        else
+        {
+            Fields(value, {"id", "duration", "maxAlive", "spawnPerSecond", "minSpawnDistance",
+                "maxSpawnDistance", "maxSpawnAttempts", "enemyWeights"}, "wave");
+        }
         Client::WaveDefinition result;
         result.id = Unsigned(value, "id");
         result.duration = Number(value, "duration");
@@ -295,6 +304,17 @@ namespace
         {
             Fields(weight, {"enemyId", "weight"}, "enemy weight");
             result.enemyWeights.push_back({Unsigned(weight, "enemyId"), Scalar(weight, "weight")});
+        }
+        if (hasBoss)
+        {
+            const auto& boss = value.at("boss");
+            Fields(boss, {"enemyId", "name"}, "wave boss");
+            result.bossEnemyId = Unsigned(boss, "enemyId");
+            if (result.bossEnemyId == 0 || !boss.at("name").is_string())
+            {
+                throw std::runtime_error("A wave boss requires a nonzero enemy ID and a name string");
+            }
+            result.bossName = boss.at("name").get<std::string>();
         }
         return result;
     }
@@ -333,7 +353,7 @@ namespace Client
     {
         try
         {
-            if (definitions.schemaVersion != 1 && definitions.schemaVersion != 2)
+            if (definitions.schemaVersion != 1 && definitions.schemaVersion != 2 && definitions.schemaVersion != 3)
             {
                 return Reject(error, "Unsupported game definitions schemaVersion");
             }
@@ -425,6 +445,22 @@ namespace Client
             std::unordered_set<std::uint32_t> waveIds;
             for (const auto& wave : definitions.waves)
             {
+                if (wave.bossEnemyId != 0)
+                {
+                    if (definitions.schemaVersion != 3 || &wave != &definitions.waves.back() ||
+                        !enemyIds.contains(wave.bossEnemyId) || wave.bossName.empty() || wave.bossName.size() > 128 ||
+                        std::any_of(wave.bossName.begin(), wave.bossName.end(), [](unsigned char value)
+                        {
+                            return value < 0x20 || value == 0x7f;
+                        }))
+                    {
+                        return Reject(error, "A named, known boss is supported only in the final schema 3 wave");
+                    }
+                }
+                else if (!wave.bossName.empty())
+                {
+                    return Reject(error, "A boss name requires its enemy ID");
+                }
                 if (wave.id == 0 || !waveIds.insert(wave.id).second)
                 {
                     return Reject(error, "Wave IDs must be nonzero and unique within the wave catalog");
@@ -442,7 +478,8 @@ namespace Client
                 std::unordered_set<std::uint32_t> weightedEnemies;
                 for (const auto& weight : wave.enemyWeights)
                 {
-                    if (!enemyIds.contains(weight.enemyId) || !weightedEnemies.insert(weight.enemyId).second ||
+                    if (weight.enemyId == definitions.waves.back().bossEnemyId ||
+                        !enemyIds.contains(weight.enemyId) || !weightedEnemies.insert(weight.enemyId).second ||
                         !std::isfinite(weight.weight) || weight.weight < 0)
                     {
                         return Reject(error, "Wave weights require unique known enemy IDs and finite nonnegative weights");
@@ -454,7 +491,7 @@ namespace Client
                     return Reject(error, "Wave enemy weights must have a positive finite sum");
                 }
             }
-            if (definitions.schemaVersion == 2)
+            if (definitions.schemaVersion >= 2)
             {
                 if (definitions.passives.empty() || definitions.passives.size() > 256 ||
                     definitions.progression.cumulativeXp.empty() || definitions.progression.cumulativeXp.size() > 1024 ||
@@ -462,7 +499,7 @@ namespace Client
                     definitions.shop.offerCount < 1 || definitions.shop.offerCount > 8 ||
                     definitions.shop.items.empty() || definitions.shop.items.size() > 256)
                 {
-                    return Reject(error, "Schema 2 requires bounded passive, XP, choice and shop catalogs");
+                    return Reject(error, "Schema 2 and 3 require bounded passive, XP, choice and shop catalogs");
                 }
                 std::uint64_t previousXp = 0;
                 for (const auto xp : definitions.progression.cumulativeXp)
@@ -576,14 +613,14 @@ namespace Client
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout"}, "game definitions");
             }
-            else if (schemaVersion == 2)
+            else if (schemaVersion == 2 || schemaVersion == 3)
             {
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout", "passives", "progression", "shop"}, "game definitions");
             }
             else
             {
-                return Reject(error, "Unsupported game definitions schemaVersion; expected 1 or 2");
+                return Reject(error, "Unsupported game definitions schemaVersion; expected 1, 2 or 3");
             }
             GameDefinitions candidate;
             candidate.schemaVersion = schemaVersion;
@@ -607,13 +644,13 @@ namespace Client
             }
             for (const auto& value : Array(root, "waves"))
             {
-                candidate.waves.push_back(ParseWave(value));
+                candidate.waves.push_back(ParseWave(value, schemaVersion));
             }
             for (const auto& value : Array(root, "loadout"))
             {
                 candidate.loadout.push_back(Unsigned(value, std::string_view("loadout ID")));
             }
-            if (schemaVersion == 2)
+            if (schemaVersion >= 2)
             {
                 for (const auto& value : Array(root, "passives"))
                 {
