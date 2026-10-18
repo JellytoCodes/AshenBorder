@@ -22,10 +22,10 @@ namespace Engine
         GraphicsDevice(GraphicsDevice&&) = delete;
         GraphicsDevice& operator=(GraphicsDevice&&) = delete;
 
-        bool Initialize(const Window& window);
+        bool Initialize(const Window& window, uint32_t maximumFrameLatency = 0);
         bool Resize(uint32_t width, uint32_t height);
         bool Clear(const std::array<float, 4>& color);
-        bool Present();
+        bool Present(uint32_t syncInterval = 0);
         float ViewportAspect() const;
         void Shutdown();
 

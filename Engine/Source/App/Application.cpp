@@ -22,7 +22,7 @@ namespace Engine
             desc.fixedSeconds <= 0.0 ||
             desc.fixedSeconds > static_cast<double>(std::numeric_limits<float>::max()) ||
             !std::isfinite(static_cast<float>(desc.fixedSeconds)) ||
-            static_cast<float>(desc.fixedSeconds) <= 0.0f || desc.maxCatchUp == 0)
+            static_cast<float>(desc.fixedSeconds) <= 0.0f || desc.maxCatchUp == 0 || desc.maximumFrameLatency > 16)
         {
             Log::Write("Application: invalid initialization arguments or already initialized");
             return false;
@@ -44,7 +44,29 @@ namespace Engine
                 _exitRequested = false;
                 _simulationPaused = false;
 
-                if (!_window.Create(_desc) || !_graphics.Initialize(_window) ||
+                if (_desc.maxFramesPerSecond != 0 || _desc.backgroundFramesPerSecond != 0)
+                {
+                    LARGE_INTEGER frequency{};
+                    if (!QueryPerformanceFrequency(&frequency) || frequency.QuadPart <= 0)
+                    {
+                        Log::Write("Application: frame pacing frequency failed");
+                        return false;
+                    }
+                    _frameCounterFrequency = frequency.QuadPart;
+                    _frameTimer = CreateWaitableTimerExW(nullptr, nullptr, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION,
+                        TIMER_MODIFY_STATE | SYNCHRONIZE);
+                    if (_frameTimer == nullptr && GetLastError() == ERROR_INVALID_PARAMETER)
+                    {
+                        _frameTimer = CreateWaitableTimerExW(nullptr, nullptr, 0, TIMER_MODIFY_STATE | SYNCHRONIZE);
+                    }
+                    if (_frameTimer == nullptr)
+                    {
+                        Log::Error("Application: create frame timer", static_cast<long>(GetLastError()));
+                        return false;
+                    }
+                }
+
+                if (!_window.Create(_desc) || !_graphics.Initialize(_window, _desc.maximumFrameLatency) ||
                     !_clock.Configure(_desc.fixedSeconds, _desc.maxCatchUp))
                 {
                     return false;
@@ -66,6 +88,10 @@ namespace Engine
 
                 _clock.Reset();
                 _initialized = true;
+                Log::Write("Application: frame limits active=" + std::to_string(_desc.maxFramesPerSecond) +
+                    ", background=" + std::to_string(_desc.backgroundFramesPerSecond) +
+                    ", vsync=" + std::to_string(_desc.vsync) +
+                    ", maximum frame latency=" + std::to_string(_desc.maximumFrameLatency));
                 Log::Write("Application: initialized");
                 return true;
             }();
@@ -97,12 +123,67 @@ namespace Engine
         _running = true;
         int result = 0;
         bool wasInactive = !_window.IsFocused() || _window.IsMinimized();
+        std::int64_t lastFrameStart = 0;
         try
         {
             while (!_exitRequested)
             {
                 _input.BeginFrame();
-                if (!_window.PumpEvents(_input))
+                bool inactive = wasInactive;
+                for (;;)
+                {
+                    if (!_window.PumpEvents(_input))
+                    {
+                        RequestExit();
+                        break;
+                    }
+                    inactive = !_window.IsFocused() || _window.IsMinimized();
+                    if (inactive != wasInactive)
+                    {
+                        _input.Clear();
+                        _clock.Reset();
+                        wasInactive = inactive;
+                    }
+                    if (_frameTimer == nullptr)
+                    {
+                        break;
+                    }
+                    LARGE_INTEGER now{};
+                    if (!QueryPerformanceCounter(&now))
+                    {
+                        Log::Write("Application: frame pacing counter failed");
+                        result = 1;
+                        RequestExit();
+                        break;
+                    }
+                    const auto rate = inactive ? _desc.backgroundFramesPerSecond : _desc.maxFramesPerSecond;
+                    const auto period = rate == 0 ? 0 : _frameCounterFrequency / rate + (_frameCounterFrequency % rate != 0);
+                    const auto remaining = period - (now.QuadPart - lastFrameStart);
+                    if (rate == 0 || lastFrameStart == 0 || remaining <= 0)
+                    {
+                        lastFrameStart = now.QuadPart;
+                        break;
+                    }
+                    // Keep input edges across wake-ups; messages do not authorize an early frame.
+                    LARGE_INTEGER due{};
+                    due.QuadPart = -static_cast<LONGLONG>(std::ceil(
+                        static_cast<double>(remaining) * 10000000.0 / _frameCounterFrequency));
+                    if (!SetWaitableTimer(_frameTimer, &due, 0, nullptr, nullptr, FALSE))
+                    {
+                        Log::Error("Application: set frame timer", static_cast<long>(GetLastError()));
+                        result = 1;
+                        RequestExit();
+                        break;
+                    }
+                    if (MsgWaitForMultipleObjectsEx(1, &_frameTimer, INFINITE, QS_ALLINPUT, MWMO_INPUTAVAILABLE) == WAIT_FAILED)
+                    {
+                        Log::Error("Application: wait for frame or input", static_cast<long>(GetLastError()));
+                        result = 1;
+                        RequestExit();
+                        break;
+                    }
+                }
+                if (_exitRequested)
                 {
                     break;
                 }
@@ -116,14 +197,6 @@ namespace Engine
                         result = 1;
                         break;
                     }
-                }
-
-                const bool inactive = !_window.IsFocused() || _window.IsMinimized();
-                if (inactive != wasInactive)
-                {
-                    _input.Clear();
-                    _clock.Reset();
-                    wasInactive = inactive;
                 }
 
                 const float measuredDt = _clock.BeginFrame();
@@ -181,21 +254,21 @@ namespace Engine
                     break;
                 }
 
-                _frame.Clear();
-                _app->BuildRenderFrame(_frame);
-                if (_exitRequested)
-                {
-                    break;
-                }
                 if (!_window.IsMinimized() && _window.Width() > 0 && _window.Height() > 0)
                 {
-                    if (!_renderer->Render(_frame) || !_graphics.Present())
+                    _frame.Clear();
+                    _app->BuildRenderFrame(_frame);
+                    if (_exitRequested)
+                    {
+                        break;
+                    }
+                    if (!_renderer->Render(_frame) || !_graphics.Present(_desc.vsync ? 1 : 0))
                     {
                         result = 1;
                         break;
                     }
                 }
-                if (inactive)
+                if (inactive && _desc.backgroundFramesPerSecond == 0)
                 {
                     Sleep(8);
                 }
@@ -247,6 +320,15 @@ namespace Engine
         }
         _input.Clear();
         _clock.Reset();
+        if (_frameTimer != nullptr)
+        {
+            if (!CloseHandle(_frameTimer))
+            {
+                Log::Error("Application: close frame timer", static_cast<long>(GetLastError()));
+            }
+            _frameTimer = nullptr;
+        }
+        _frameCounterFrequency = 0;
         _graphics.Shutdown();
         _window.Destroy();
         if (_logOpened)

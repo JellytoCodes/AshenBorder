@@ -54,6 +54,7 @@ namespace Client
             State candidate;
             candidate.loadout.assign(loadout.begin(), loadout.end());
             candidate.finalPlayer = definitions->player;
+            candidate.currentRerollCost = definitions->shop.rerollCost;
             candidate.rngState = seed;
             _definitions = std::move(definitions);
             _runEpoch = runEpoch;
@@ -163,18 +164,32 @@ namespace Client
         return true;
     }
 
+    std::uint32_t RunProgression::PricePercent(const State& state) const noexcept
+    {
+        const auto& percentages = _definitions->shop.stagePricePercent;
+        return percentages.empty() ? 100 : percentages[std::min<std::size_t>(
+            state.intermissionIndex > 0 ? state.intermissionIndex - 1 : 0, percentages.size() - 1)];
+    }
+
     bool RunProgression::PrepareShop(State& state) const
     {
-        const auto count = _definitions->shop.offerCount;
+        std::vector<const ShopItemDefinition*> candidates;
+        double sum = 0;
+        for (const auto& item : _definitions->shop.items)
+        {
+            const bool capacity = item.kind == ShopItemKind::Weapon ? state.loadout.size() < _definitions->slotLimit :
+                StackCount(state, item.definitionId) < _definitions->FindPassive(item.definitionId)->maxStacks;
+            if (item.weight > 0 && capacity)
+            {
+                candidates.push_back(&item);
+                sum += item.weight;
+            }
+        }
+        const auto count = candidates.empty() ? 0 : _definitions->shop.offerCount;
         if (state.shopRevision == std::numeric_limits<std::uint64_t>::max() ||
             count > std::numeric_limits<std::uint64_t>::max() - state.nextOfferId)
         {
             return false;
-        }
-        double sum = 0;
-        for (const auto& item : _definitions->shop.items)
-        {
-            sum += item.weight;
         }
         std::vector<ShopOffer> offers;
         offers.reserve(count);
@@ -183,14 +198,10 @@ namespace Client
             const double sample = RandomUnit(state.rngState) * sum;
             double cumulative = 0;
             const ShopItemDefinition* selected = nullptr;
-            for (const auto& item : _definitions->shop.items)
+            for (const auto* item : candidates)
             {
-                if (item.weight <= 0)
-                {
-                    continue;
-                }
-                selected = &item;
-                cumulative += item.weight;
+                selected = item;
+                cumulative += item->weight;
                 if (sample < cumulative)
                 {
                     break;
@@ -200,8 +211,12 @@ namespace Client
             {
                 return false;
             }
-            offers.push_back({state.nextOfferId++, selected->kind, selected->definitionId,
-                selected->price, false});
+            std::uint64_t price = 0;
+            if (!ScaleShopPrice(selected->price, PricePercent(state), price))
+            {
+                return false;
+            }
+            offers.push_back({state.nextOfferId++, selected->kind, selected->definitionId, price, false});
         }
         state.offers.swap(offers);
         state.choices.clear();
@@ -302,6 +317,15 @@ namespace Client
         try
         {
             auto candidate = _state;
+            if (candidate.intermissionIndex == std::numeric_limits<std::uint32_t>::max())
+            {
+                return Reject(ProgressionFailure::Overflow);
+            }
+            ++candidate.intermissionIndex;
+            if (!ScaleShopPrice(_definitions->shop.rerollCost, PricePercent(candidate), candidate.currentRerollCost))
+            {
+                return Reject(ProgressionFailure::PreparationFailed);
+            }
             if (!(candidate.pendingChoices > 0 ? PrepareChoice(candidate) : PrepareShop(candidate)))
             {
                 return Reject(ProgressionFailure::PreparationFailed);
@@ -472,7 +496,7 @@ namespace Client
         {
             return Reject(ProgressionFailure::StaleShopRevision);
         }
-        if (_definitions->shop.rerollCost > Balance())
+        if (_state.currentRerollCost > Balance())
         {
             return Reject(ProgressionFailure::InsufficientCurrency);
         }
@@ -483,7 +507,11 @@ namespace Client
             {
                 return Reject(ProgressionFailure::PreparationFailed);
             }
-            candidate.spentCurrency += _definitions->shop.rerollCost;
+            if (candidate.offers.empty())
+            {
+                return Reject(ProgressionFailure::EmptyCandidates);
+            }
+            candidate.spentCurrency += _state.currentRerollCost;
             Commit(candidate);
             return {true, ProgressionFailure::None};
         }
@@ -532,6 +560,8 @@ namespace Client
         result.choiceId = _state.choiceId;
         result.choices = _state.choices;
         result.shopRevision = _state.shopRevision;
+        result.intermissionIndex = _state.intermissionIndex;
+        result.currentRerollCost = _state.currentRerollCost;
         result.offers = _state.offers;
         result.passiveSources = _state.passiveSources;
         result.loadout = _state.loadout;

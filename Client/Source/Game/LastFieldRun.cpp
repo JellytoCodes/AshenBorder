@@ -1360,13 +1360,14 @@ namespace Client
         {
             return {false, ProgressionFailure::PreparationFailed};
         }
+        const auto cost = _progression->Snapshot().currentRerollCost;
         const auto result = _progression->Reroll(epoch, revision);
         if (result.accepted)
         {
             GameEvent event;
             event.kind = GameEventKind::Rerolled;
             event.position = _player.base;
-            event.currency = _definitions->shop.rerollCost;
+            event.currency = cost;
             Emit(event);
         }
         return result;

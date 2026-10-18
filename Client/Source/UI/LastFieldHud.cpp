@@ -100,14 +100,14 @@ namespace
             point.x < bounds.position.x + bounds.size.x && point.y < bounds.position.y + bounds.size.y;
     }
 
-    std::string Number(double value)
+    std::string Number(double value, int precision = 1)
     {
         if (!std::isfinite(value))
         {
             return "?";
         }
         char text[48] = {};
-        std::snprintf(text, sizeof(text), "%.1f", value);
+        std::snprintf(text, sizeof(text), "%.*f", precision, value);
         return text;
     }
 
@@ -198,7 +198,8 @@ namespace
         const std::string suffix = percent ? "%" : modifier.stat == Client::StatKind::Speed ? "m/s" :
             modifier.stat == Client::StatKind::PickupRadius ? "m" :
             modifier.stat == Client::StatKind::DamageMultiplier || modifier.stat == Client::StatKind::AttackSpeed ? "배" : "";
-        return std::string(StatName(modifier.stat)) + " " + (value >= 0 ? "+" : "") + Number(value) + suffix;
+        return std::string(StatName(modifier.stat)) + " " + (value >= 0 ? "+" : "") +
+            Number(value, !percent && modifier.stat == Client::StatKind::Armor ? 2 : 1) + suffix;
     }
 
     const char* OfferBlockReason(const Client::HudSnapshot& snapshot, const Client::ShopOffer& offer)
@@ -358,8 +359,8 @@ namespace Client
 
         Panel(frame, canvas, {{24, 562}, {1232, 34}, kPanel});
         const std::string stats[] = {"이동 " + Number(snapshot.playerStats.speed) + "m/s",
-            "방어력 " + Number(snapshot.playerStats.armor), "피해 배율 ×" + Number(snapshot.playerStats.damageMultiplier),
-            "공격 속도 ×" + Number(snapshot.playerStats.attackSpeed), "획득 범위 " + Number(snapshot.playerStats.pickupRadius) + "m"};
+            "방어력 " + Number(snapshot.playerStats.armor, 2), "피해 배율 ×" + Number(snapshot.playerStats.damageMultiplier, 2),
+            "공격 속도 ×" + Number(snapshot.playerStats.attackSpeed, 2), "획득 범위 " + Number(snapshot.playerStats.pickupRadius) + "m"};
         for (size_t index = 0; index < 5; ++index)
         {
             Label(frame, canvas, 48 + static_cast<float>(index) * 240, 570, 18, stats[index], kDim, 224);
@@ -471,7 +472,7 @@ namespace Client
                 Label(frame, canvas, bounds.position.x + 250, 418, 22, offer.purchased ? "교환 완료" :
                     "보급품 " + std::to_string(offer.price), available ? kGold : kDim, 238, Alignment::Right);
             }
-            const uint64_t cost = snapshot.definitions ? snapshot.definitions->shop.rerollCost : 0;
+            const uint64_t cost = snapshot.progression.currentRerollCost;
             Button(frame, canvas, RerollButton(), "다른 물품 [R]  ·  보급품 " + std::to_string(cost),
                 snapshot.definitions && snapshot.progression.balance >= cost);
             Button(frame, canvas, AdvanceButton(), "다음 스테이지 [Enter]");
@@ -566,7 +567,7 @@ namespace Client
                     return command;
                 }
             }
-            const uint64_t cost = snapshot.definitions ? snapshot.definitions->shop.rerollCost : 0;
+            const uint64_t cost = snapshot.progression.currentRerollCost;
             if (snapshot.definitions && snapshot.progression.balance >= cost &&
                 (input.IsPressed(static_cast<Engine::Key>('R')) || clicked(RerollButton())))
             {

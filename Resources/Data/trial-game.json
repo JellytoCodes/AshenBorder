@@ -368,52 +368,52 @@
     {
       "id": 2,
       "name": "Stride",
-      "maxStacks": 3,
+      "maxStacks": 12,
       "weight": 1,
       "modifiers": [
         {
           "stat": "Speed",
           "operation": "Percent",
-          "value": 0.08
+          "value": 0.02
         }
       ]
     },
     {
       "id": 3,
       "name": "Guard",
-      "maxStacks": 3,
+      "maxStacks": 12,
       "weight": 1,
       "modifiers": [
         {
           "stat": "Armor",
           "operation": "Flat",
-          "value": 1
+          "value": 0.25
         }
       ]
     },
     {
       "id": 4,
       "name": "Power",
-      "maxStacks": 3,
+      "maxStacks": 12,
       "weight": 1,
       "modifiers": [
         {
           "stat": "DamageMultiplier",
           "operation": "Percent",
-          "value": 0.12
+          "value": 0.03
         }
       ]
     },
     {
       "id": 5,
       "name": "Haste",
-      "maxStacks": 3,
+      "maxStacks": 12,
       "weight": 1,
       "modifiers": [
         {
           "stat": "AttackSpeed",
           "operation": "Percent",
-          "value": 0.1
+          "value": 0.025
         }
       ]
     },
@@ -433,18 +433,27 @@
   ],
   "progression": {
     "cumulativeXp": [
-      5,
-      12,
-      22,
-      36,
-      55,
-      80
+      18,
+      45,
+      90,
+      160,
+      260,
+      400,
+      600,
+      850,
+      1200,
+      1650,
+      2200,
+      2900,
+      3700,
+      4600
     ],
     "choiceCount": 3
   },
   "shop": {
     "offerCount": 4,
     "rerollCost": 2,
+    "stagePricePercent": [100, 200, 400, 700, 1100, 1600, 2400, 3300, 4500],
     "items": [
       {
         "kind": "Weapon",

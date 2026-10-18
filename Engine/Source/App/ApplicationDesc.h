@@ -17,5 +17,12 @@ namespace Engine
         double fixedSeconds = 1.0 / 60.0;
         uint32_t maxCatchUp = 4;
         bool visible = true;
+        // Zero leaves foreground rendering uncapped.
+        uint32_t maxFramesPerSecond = 0;
+        // Zero preserves the legacy Sleep(8) inactive backoff.
+        uint32_t backgroundFramesPerSecond = 0;
+        bool vsync = false;
+        // Zero leaves the DXGI queue limit unchanged.
+        uint32_t maximumFrameLatency = 0;
     };
 }

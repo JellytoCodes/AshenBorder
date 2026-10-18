@@ -124,6 +124,10 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
             : GetUserLogFile();
         desc.fixedSeconds = 1.0 / 60.0;
         desc.maxCatchUp = 4;
+        desc.maxFramesPerSecond = 60;
+        desc.backgroundFramesPerSecond = 15;
+        desc.vsync = true;
+        desc.maximumFrameLatency = 1;
         desc.visible = !smoke;
 
         Engine::Application application;

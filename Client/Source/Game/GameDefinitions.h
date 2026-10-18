@@ -116,6 +116,7 @@ namespace Client
     {
         std::uint32_t offerCount = 4;
         std::uint64_t rerollCost = 2;
+        std::vector<std::uint32_t> stagePricePercent;
         std::vector<ShopItemDefinition> items;
     };
 
@@ -140,6 +141,7 @@ namespace Client
     };
 
     bool ValidateGameDefinitions(const GameDefinitions& definitions, std::string& error);
+    bool ScaleShopPrice(std::uint64_t base, std::uint32_t percent, std::uint64_t& out) noexcept;
     // Parse and validate a temporary value, then replace out only after complete success.
     bool LoadGameDefinitions(const std::filesystem::path& file, GameDefinitions& out, std::string& error);
 }

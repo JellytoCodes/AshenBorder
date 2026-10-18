@@ -9,6 +9,7 @@
 #include "Graphics/RenderFrame.h"
 #include "Graphics/Renderer.h"
 
+#include <cstdint>
 #include <memory>
 
 namespace Engine
@@ -41,6 +42,8 @@ namespace Engine
         std::unique_ptr<IGameApp> _app;
         std::unique_ptr<Renderer> _renderer;
         RenderFrame _frame;
+        HANDLE _frameTimer = nullptr;
+        std::int64_t _frameCounterFrequency = 0;
         bool _initialized = false;
         bool _clientEntered = false;
         bool _logOpened = false;

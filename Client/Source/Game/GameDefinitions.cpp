@@ -322,6 +322,23 @@ namespace
 
 namespace Client
 {
+    bool ScaleShopPrice(std::uint64_t base, std::uint32_t percent, std::uint64_t& out) noexcept
+    {
+        if (percent == 0)
+        {
+            return false;
+        }
+        constexpr auto maximum = std::numeric_limits<std::uint64_t>::max();
+        const auto whole = base / 100;
+        const auto fraction = ((base % 100) * percent + 99) / 100;
+        if (whole > maximum / percent || whole * percent > maximum - fraction)
+        {
+            return false;
+        }
+        out = whole * percent + fraction;
+        return true;
+    }
+
     const EnemyDefinition* GameDefinitions::FindEnemy(std::uint32_t id) const noexcept
     {
         const auto found = std::find_if(enemies.begin(), enemies.end(), [id](const EnemyDefinition& value)
@@ -356,6 +373,10 @@ namespace Client
             if (definitions.schemaVersion != 1 && definitions.schemaVersion != 2 && definitions.schemaVersion != 3)
             {
                 return Reject(error, "Unsupported game definitions schemaVersion");
+            }
+            if (definitions.schemaVersion != 3 && !definitions.shop.stagePricePercent.empty())
+            {
+                return Reject(error, "Stage shop prices require schema three");
             }
             const auto& player = definitions.player;
             if (!Positive(player.maxHp) || !Between(player.speed, 0, kMaximumSpeed) ||
@@ -561,6 +582,28 @@ namespace Client
                 {
                     return Reject(error, "Shop weights must have a positive finite sum");
                 }
+                if (definitions.shop.stagePricePercent.size() > 1024)
+                {
+                    return Reject(error, "Stage shop prices require schema three and at most 1024 percentages");
+                }
+                std::uint32_t previousPercent = 0;
+                for (const auto percent : definitions.shop.stagePricePercent)
+                {
+                    std::uint64_t price = 0;
+                    if (percent < 1 || percent > 1000000 || percent < previousPercent ||
+                        !ScaleShopPrice(definitions.shop.rerollCost, percent, price))
+                    {
+                        return Reject(error, "Stage price percentages must be positive, nondecreasing and uint64 safe");
+                    }
+                    for (const auto& item : definitions.shop.items)
+                    {
+                        if (!ScaleShopPrice(item.price, percent, price))
+                        {
+                            return Reject(error, "A scaled shop item price exceeds uint64");
+                        }
+                    }
+                    previousPercent = percent;
+                }
             }
             error.clear();
             return true;
@@ -664,7 +707,24 @@ namespace Client
                     candidate.progression.cumulativeXp.push_back(Unsigned64(value, "XP threshold"));
                 }
                 const auto& shop = root.at("shop");
-                Fields(shop, {"offerCount", "rerollCost", "items"}, "shop");
+                const bool stagePrices = schemaVersion == 3 && shop.contains("stagePricePercent");
+                if (stagePrices)
+                {
+                    Fields(shop, {"offerCount", "rerollCost", "items", "stagePricePercent"}, "shop");
+                    const auto& percentages = Array(shop, "stagePricePercent");
+                    if (percentages.empty())
+                    {
+                        throw std::runtime_error("An explicit stage price table cannot be empty");
+                    }
+                    for (const auto& percent : percentages)
+                    {
+                        candidate.shop.stagePricePercent.push_back(Unsigned(percent, std::string_view("stage price percent")));
+                    }
+                }
+                else
+                {
+                    Fields(shop, {"offerCount", "rerollCost", "items"}, "shop");
+                }
                 candidate.shop.offerCount = Unsigned(shop, "offerCount");
                 candidate.shop.rerollCost = Unsigned64(shop.at("rerollCost"), "rerollCost");
                 for (const auto& value : Array(shop, "items"))

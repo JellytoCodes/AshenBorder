@@ -15,11 +15,11 @@ namespace Engine
         Shutdown();
     }
 
-    bool GraphicsDevice::Initialize(const Window& window)
+    bool GraphicsDevice::Initialize(const Window& window, uint32_t maximumFrameLatency)
     {
         if (_device != nullptr || window.Handle() == nullptr || window.Width() == 0 || window.Height() == 0 ||
             window.Width() > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION ||
-            window.Height() > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION)
+            window.Height() > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION || maximumFrameLatency > 16)
         {
             Log::Error("GraphicsDevice::Initialize invalid state or window", E_INVALIDARG);
             return false;
@@ -90,6 +90,22 @@ namespace Engine
             LogFailure("Get device DXGI factory", result);
             Shutdown();
             return false;
+        }
+
+        if (maximumFrameLatency != 0)
+        {
+            Microsoft::WRL::ComPtr<IDXGIDevice1> device1;
+            result = dxgiDevice.As(&device1);
+            if (SUCCEEDED(result))
+            {
+                result = device1->SetMaximumFrameLatency(maximumFrameLatency);
+            }
+            if (FAILED(result))
+            {
+                LogFailure("SetMaximumFrameLatency", result);
+                Shutdown();
+                return false;
+            }
         }
 
         DXGI_ADAPTER_DESC adapterDesc = {};
@@ -307,14 +323,19 @@ namespace Engine
         return CheckDebugMessages();
     }
 
-    bool GraphicsDevice::Present()
+    bool GraphicsDevice::Present(uint32_t syncInterval)
     {
+        if (syncInterval > 4)
+        {
+            Log::Error("GraphicsDevice::Present invalid synchronization interval", E_INVALIDARG);
+            return false;
+        }
         if (_swapChain == nullptr || _renderTargetView == nullptr || _depthStencilView == nullptr)
         {
             Log::Error("GraphicsDevice::Present before complete initialization", E_UNEXPECTED);
             return false;
         }
-        const HRESULT result = _swapChain->Present(0, 0);
+        const HRESULT result = _swapChain->Present(syncInterval, 0);
         if (FAILED(result))
         {
             LogFailure("Present", result);

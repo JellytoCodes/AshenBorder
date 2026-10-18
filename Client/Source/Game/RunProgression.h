@@ -75,6 +75,8 @@ namespace Client
         std::uint64_t choiceId = 0;
         std::vector<std::uint32_t> choices;
         std::uint64_t shopRevision = 0;
+        std::uint32_t intermissionIndex = 0;
+        std::uint64_t currentRerollCost = 0;
         std::vector<ShopOffer> offers;
         std::vector<PassiveSource> passiveSources;
         std::vector<std::uint32_t> loadout;
@@ -118,6 +120,8 @@ namespace Client
             std::uint64_t choiceId = 0;
             std::vector<std::uint32_t> choices;
             std::uint64_t shopRevision = 0;
+            std::uint32_t intermissionIndex = 0;
+            std::uint64_t currentRerollCost = 0;
             std::vector<ShopOffer> offers;
             std::vector<PassiveSource> passiveSources;
             std::vector<std::uint32_t> loadout;
@@ -131,6 +135,7 @@ namespace Client
         ProgressionFailure Check(std::uint64_t runEpoch, ProgressionPhase phase) const noexcept;
         bool PrepareChoice(State& state) const;
         bool PrepareShop(State& state) const;
+        std::uint32_t PricePercent(const State& state) const noexcept;
         bool Recalculate(State& state) const;
         bool AddPassive(State& state, std::uint32_t id) const;
         std::uint32_t StackCount(const State& state, std::uint32_t id) const noexcept;
