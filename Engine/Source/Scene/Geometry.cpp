@@ -144,17 +144,27 @@ namespace Engine
         {
             return std::nullopt;
         }
-        if (Overlaps({baseMotion.start, movingRadius, movingHeight}, target))
-        {
-            return HitAt(baseMotion, target, 0.0, false, 0.0);
-        }
-
         const double offsetX = static_cast<double>(baseMotion.start.x) - target.base.x;
         const double offsetZ = static_cast<double>(baseMotion.start.z) - target.base.z;
         const double deltaX = static_cast<double>(baseMotion.end.x) - baseMotion.start.x;
         const double deltaY = static_cast<double>(baseMotion.end.y) - baseMotion.start.y;
         const double deltaZ = static_cast<double>(baseMotion.end.z) - baseMotion.start.z;
         const double radius = static_cast<double>(movingRadius) + target.radius;
+        // Reject only separated bounds. Keep closed contacts and uncertain roundoff
+        // cases on the unchanged precise path, including very long segments.
+        const double padding = 64 * std::numeric_limits<double>::epsilon() *
+            (1 + std::abs(offsetX) + std::abs(offsetZ) + std::abs(deltaX) + std::abs(deltaZ) + radius);
+        const double limit = radius + padding;
+        if (std::min(offsetX, offsetX + deltaX) > limit || std::max(offsetX, offsetX + deltaX) < -limit ||
+            std::min(offsetZ, offsetZ + deltaZ) > limit || std::max(offsetZ, offsetZ + deltaZ) < -limit)
+        {
+            return std::nullopt;
+        }
+        if (Overlaps({baseMotion.start, movingRadius, movingHeight}, target))
+        {
+            return HitAt(baseMotion, target, 0.0, false, 0.0);
+        }
+
         const double speedXZ = std::hypot(deltaX, deltaZ);
         const double infinity = std::numeric_limits<double>::infinity();
         double horizontalFirst = -infinity;
@@ -256,6 +266,18 @@ namespace Engine
         const double halfX = target.halfExtents.x;
         const double halfZ = target.halfExtents.y;
         const double radius = movingRadius;
+        // The local swept bounds contain the disc-expanded rounded rectangle.
+        // Scale padding by pre-rotation terms so cancellation cannot hide error.
+        const double padding = 64 * std::numeric_limits<double>::epsilon() *
+            (1 + std::abs(offsetX) + std::abs(offsetZ) + std::abs(worldDeltaX) + std::abs(worldDeltaZ) +
+                halfX + halfZ + radius);
+        const double limitX = halfX + radius + padding;
+        const double limitZ = halfZ + radius + padding;
+        if (std::min(x, x + deltaX) > limitX || std::max(x, x + deltaX) < -limitX ||
+            std::min(z, z + deltaZ) > limitZ || std::max(z, z + deltaZ) < -limitZ)
+        {
+            return std::nullopt;
+        }
         if (HeightOverlap(baseMotion.start.y, movingHeight, target.base.y, target.height)
             && std::hypot(std::max(0.0, std::abs(x) - halfX), std::max(0.0, std::abs(z) - halfZ)) <= radius)
         {

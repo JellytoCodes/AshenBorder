@@ -129,6 +129,8 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
             !config.at("trees").is_array() || !config.at("models").is_object() ||
             (config.contains("props") && !config["props"].is_array()) ||
             (config.contains("colliders") && !config["colliders"].is_object()) ||
+            (config.contains("blockingBoxes") &&
+                (!config["blockingBoxes"].is_array() || config["blockingBoxes"].size() > 256)) ||
             config["trees"].size() + (config.contains("props") ? config["props"].size() : 0) > 128)
         {
             throw std::runtime_error("Invalid presentation environment");
@@ -157,6 +159,26 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
             }
             return Engine::Vector3{number(value[0]), number(value[1]), number(value[2])};
         };
+        const auto readBox = [&](const nlohmann::json& shape)
+        {
+            if (!shape.is_object())
+            {
+                throw std::runtime_error("Environment box requires an object");
+            }
+            const auto& halfExtents = shape.at("halfExtents");
+            if (!halfExtents.is_array() || halfExtents.size() != 2)
+            {
+                throw std::runtime_error("Environment box requires two XZ half extents");
+            }
+            Engine::UprightBox box{vector3(shape.at("base")),
+                {number(halfExtents[0]), number(halfExtents[1])}, number(shape.at("height")),
+                shape.contains("yaw") ? number(shape.at("yaw")) : 0};
+            if (!Engine::IsValid(box) || box.halfExtents.x <= 0 || box.halfExtents.y <= 0 || box.height <= 0)
+            {
+                throw std::runtime_error("Environment box requires positive extents and height");
+            }
+            return box;
+        };
         if (config.contains("colliders"))
         {
             for (const auto& [role, shapes] : config["colliders"].items())
@@ -184,19 +206,7 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
                     }
                     else if (kind == "box")
                     {
-                        const auto& halfExtents = shape.at("halfExtents");
-                        if (!halfExtents.is_array() || halfExtents.size() != 2)
-                        {
-                            throw std::runtime_error("Environment box requires two XZ half extents");
-                        }
-                        Engine::UprightBox box{vector3(shape.at("base")),
-                            {number(halfExtents[0]), number(halfExtents[1])}, number(shape.at("height")),
-                            shape.contains("yaw") ? number(shape.at("yaw")) : 0};
-                        if (!Engine::IsValid(box) || box.halfExtents.x <= 0 || box.halfExtents.y <= 0 || box.height <= 0)
-                        {
-                            throw std::runtime_error("Environment box requires positive extents and height");
-                        }
-                        localBoxes[role].push_back(box);
+                        localBoxes[role].push_back(readBox(shape));
                     }
                     else
                     {
@@ -340,6 +350,18 @@ bool Environment::Initialize(const std::filesystem::path& resourceRoot, Engine::
                     entry.at("scale").get<float>(), entry.at("yaw").get<float>());
                 placeColliders(decoration.role, decoration.placement, entry.at("scale").get<float>(), entry.at("yaw").get<float>());
                 decorations.push_back(std::move(decoration));
+            }
+        }
+        // World-space blockers have no model or fade; retain the existing placed-box prefix.
+        if (config.contains("blockingBoxes"))
+        {
+            for (const auto& shape : config["blockingBoxes"])
+            {
+                if (solidCylinders.size() + solidBoxes.size() >= 256)
+                {
+                    throw std::runtime_error("Environment solid capacity exceeded");
+                }
+                solidBoxes.push_back(readBox(shape));
             }
         }
         _tree = tree;

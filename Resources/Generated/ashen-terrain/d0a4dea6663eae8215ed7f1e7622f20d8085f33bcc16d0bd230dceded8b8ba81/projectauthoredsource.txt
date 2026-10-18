@@ -1,0 +1,27 @@
+SAVE MYSELF: ASHEN BORDER - Project-authored individual mountain massifs
+96 by 96 metres; origin (-48,0,-48), 129 by 129 vertices at 0.75 metres.
+The original central 48 metre terrain keeps every FP32 world-space vertex
+position and A-C-B/B-C-D collision triangle. Lighting normals are recomputed
+for the continuous extended surface; UVs retain 2 metres per repeated tile.
+The normalized FP32 JSON is the authoritative new height source. HeightScale
+32 preserves the old FP32 world heights exactly by power-of-two rescaling.
+Independent elliptic peaks, saddles and lower rear massifs replace v002's
+single all-around ramp. Primary peaks have different centers, dimensions,
+yaw, height and falloff. No shared flat top or height-clipping plateau is used;
+client blocking volumes, placement, camera and art acceptance are separate.
+Existing project-authored soil/ash texture bytes are reused unchanged. No
+external raster or model bytes are introduced. Source and generated files
+may be stored, modified and redistributed with this project and builds.
+Retain this notice. The following older notice applies to the preserved
+48 metre portion and its original project-authored sources only:
+
+SAVE MYSELF: ASHEN BORDER - Expanded project-authored terrain
+BuildAshenMap.py reuses the project's preserved LF05 65 by 65 normalized
+height samples and its original ash/soil textures. The horizontal span is
+48 by 48 metres: origin (-24,0,-24), spacing 0.75 metres. Heights remain
+unchanged; world X/Z, lighting normals and world-metre UV values are rebuilt.
+The grid topology remains 8,192 triangles. Old terrain generations remain
+immutable. This bundle is new geometry, not a byte-identical old mesh.
+No external artwork or model bytes are introduced. Project-authored source
+and generated files may be stored, modified and redistributed with this
+project's repository and builds. Preserve this notice with the bundle.

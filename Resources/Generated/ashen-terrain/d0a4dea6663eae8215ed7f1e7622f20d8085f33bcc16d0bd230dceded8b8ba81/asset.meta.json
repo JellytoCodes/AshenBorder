@@ -1,0 +1,813 @@
+{
+  "assetId": "ashen-terrain",
+  "converter": {
+    "name": "BuildAshenMountainMapV3.py",
+    "revision": 1,
+    "sha256": "86f7e5401f52df7135115d697f078fe718dc788cc49a793c67b13d320b9ec380"
+  },
+  "converterRevision": 1,
+  "converterSha256": "86f7e5401f52df7135115d697f078fe718dc788cc49a793c67b13d320b9ec380",
+  "counts": {
+    "indices": 98304,
+    "materials": 2,
+    "meshes": 1,
+    "nodes": 1,
+    "vertices": 16641
+  },
+  "formatVersion": 1,
+  "generation": "d0a4dea6663eae8215ed7f1e7622f20d8085f33bcc16d0bd230dceded8b8ba81",
+  "importOptions": {
+    "assetId": "ashen-terrain",
+    "blendEndHeight": 1.2,
+    "blendStartHeight": 0.65,
+    "cellSize": 0.75,
+    "formatVersion": 1,
+    "height": 129,
+    "heightScale": 32.0,
+    "maximumPlaySlopeDegrees": 30.0,
+    "maximumSlopeDegrees": 85.0,
+    "nameProfile": "preserve",
+    "normalMethod": "world_height_finite_difference",
+    "origin": [
+      -48.0,
+      0.0,
+      -48.0
+    ],
+    "outputFile": "terrain.mesh",
+    "playBounds": [
+      -32.0,
+      32.0,
+      -32.0,
+      32.0
+    ],
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "9a5f1dfd6d34720f9c20241e5e86b8acfbb44118b07184cd88b55ef4f87e1d1d",
+      "BuildTrialAssets.py": "6a431ab66ff0cf9c640cce0e28c75f21d40f4d20fe83fd7f00c56034f01a07d3",
+      "BuildTrialTerrainAssets.py": "4f83d6db15587569678eb5286fe29418f238a83979ae2d599bee18148e9df4c4"
+    },
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "static_heightfield_only",
+    "skinCount": 0,
+    "sourceFile": "heightfield-129.json",
+    "sourceFormat": "normalized_float32_JSON",
+    "triangleOrder": "A-C-B/B-C-D",
+    "uvMeters": 2.0,
+    "width": 129
+  },
+  "importOptionsSha256": "d3d3caf048e6466719fe910546f6a70063062b3a036bbc4b13c6c9e1f85a6afa",
+  "inputs": [
+    {
+      "bytes": 13774,
+      "path": "Textures/grass.png",
+      "sha256": "1336c109b8be866ca6d037f36ace8e83b543cb6c9eeccd5a2009a58642e56924"
+    },
+    {
+      "bytes": 13753,
+      "path": "Textures/rock.png",
+      "sha256": "1731de881b71504c11657e597571e0c6ac4b2431060626190dc4783591effa49"
+    },
+    {
+      "bytes": 420143,
+      "path": "heightfield-129.json",
+      "sha256": "6075d44ac1bc33b21ce497a42520b1f60c4abae26dd5f0c2d402fbed006af290"
+    },
+    {
+      "bytes": 1158,
+      "path": "import.json",
+      "sha256": "e87616f310dac92ff92c0d6077333da0433692e760bd329f736a0aa0309781a4"
+    },
+    {
+      "bytes": 23419,
+      "path": "preserved-heightmap-65.pgm",
+      "sha256": "275206fe1d5264a3049ba0fadbdeb4e92186b44b03b0d9c8f431953947f9ffb9"
+    },
+    {
+      "bytes": 1910,
+      "path": "projectauthoredsource.txt",
+      "sha256": "3164c7c11751bcca5eb8579ebfca43bb8737f056ab92af0a8a7a1fea781b3c4a"
+    },
+    {
+      "bytes": 6350,
+      "path": "source.json",
+      "sha256": "69075886aa269a8ff72745b86ef10d4ad8b2382749665fd3aea924f6f2b9002c"
+    },
+    {
+      "bytes": 4910145,
+      "path": "terrain.geometry.json",
+      "sha256": "500503ff0b9158ce1d99ec97f7c2f21c64bc223a76856cea2c2628614c8d088a"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 13774,
+      "kind": "texture",
+      "path": "Textures/grass.png",
+      "sha256": "1336c109b8be866ca6d037f36ace8e83b543cb6c9eeccd5a2009a58642e56924"
+    },
+    {
+      "bytes": 13753,
+      "kind": "texture",
+      "path": "Textures/rock.png",
+      "sha256": "1731de881b71504c11657e597571e0c6ac4b2431060626190dc4783591effa49"
+    },
+    {
+      "bytes": 1910,
+      "kind": "license",
+      "path": "projectauthoredsource.txt",
+      "sha256": "3164c7c11751bcca5eb8579ebfca43bb8737f056ab92af0a8a7a1fea781b3c4a"
+    },
+    {
+      "bytes": 926031,
+      "kind": "model",
+      "path": "terrain.mesh",
+      "sha256": "ee7627d94913c41b53c4e2863e06967cc92a51e1d5f8efd05461c0b3870bbbf6"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 1,
+  "skinCount": 0,
+  "source": {
+    "assetId": "ashen-terrain",
+    "author": "SAVE MYSELF: ASHEN BORDER project",
+    "centralTrianglesBitExact": true,
+    "centralVertexPositionsBitExact": true,
+    "collisionPolicy": "Client boundary boxes have inner faces at +/-32; Terrain descriptor spans +/-48",
+    "externalAssets": false,
+    "geometryBytesUnchanged": false,
+    "heightAuthority": "heightfield-129.json normalized FP32; not quantized PGM",
+    "noticeFile": "projectauthoredsource.txt",
+    "origin": "project_authored_individual_mountain_massifs_with_preserved_48m_center",
+    "originalGenerationUnchanged": true,
+    "preservedSourceHeightmapSha256": "275206fe1d5264a3049ba0fadbdeb4e92186b44b03b0d9c8f431953947f9ffb9",
+    "preservedTerrainGeneration": "3e185bf8207b2783653b79522459990de8b1f04632aeb0e232d5d805750c6506",
+    "preservedTerrainMeshSha256": "05b11706e794e8386fe23c0ea571847b94a358763aec64176909745114c543ac",
+    "recipe": {
+      "centralBounds": [
+        -24.0,
+        24.0,
+        -24.0,
+        24.0
+      ],
+      "extensionAmplitude": 0.16,
+      "extensionOutwardSlope": 0.01,
+      "heightCombination": "max of independent rotated elliptic peaks; no common radial ramp or flat height cap",
+      "lowFoothills": [
+        [
+          29.5,
+          -17,
+          5,
+          9,
+          0.65,
+          0.1,
+          1.8
+        ],
+        [
+          30,
+          13,
+          5.2,
+          11,
+          0.8,
+          -0.2,
+          1.7
+        ],
+        [
+          -30,
+          -13,
+          5.2,
+          10,
+          0.6,
+          0.15,
+          1.8
+        ],
+        [
+          -29.5,
+          17,
+          5,
+          9,
+          0.75,
+          -0.1,
+          1.7
+        ],
+        [
+          16,
+          30,
+          10,
+          5.2,
+          0.55,
+          0.15,
+          1.8
+        ],
+        [
+          -15,
+          29.5,
+          9,
+          5,
+          0.8,
+          -0.1,
+          1.7
+        ],
+        [
+          13,
+          -29.5,
+          10,
+          5,
+          0.7,
+          0.1,
+          1.8
+        ],
+        [
+          -16,
+          -30,
+          10,
+          5.2,
+          0.6,
+          -0.15,
+          1.7
+        ]
+      ],
+      "massifFields": [
+        "centerX",
+        "centerZ",
+        "radiusX",
+        "radiusZ",
+        "height",
+        "yawRadians",
+        "power"
+      ],
+      "maximumOuterSlopeDegrees": 85.0,
+      "maximumWalkableSlopeDegrees": 30.0,
+      "name": "preserved_central_surface_with_individual_elliptic_mountain_massifs",
+      "originalTextureUvTilesOffset": [
+        12.0,
+        12.0
+      ],
+      "peakFormula": "A * max(0, 1 - sqrt((rotatedX/sx)^2 + (rotatedZ/sz)^2))^power",
+      "primaryMassifs": [
+        [
+          -28,
+          43,
+          20,
+          9.5,
+          15.5,
+          -0.1,
+          1.55
+        ],
+        [
+          -6,
+          41.5,
+          22,
+          8.5,
+          12,
+          0.08,
+          1.65
+        ],
+        [
+          18,
+          43,
+          20,
+          10.2,
+          17.4,
+          -0.12,
+          1.5
+        ],
+        [
+          42,
+          24,
+          9.2,
+          20,
+          16.8,
+          -0.07,
+          1.7
+        ],
+        [
+          41.5,
+          1,
+          8.5,
+          20,
+          12.8,
+          0.07,
+          1.55
+        ],
+        [
+          43,
+          -20,
+          9.8,
+          23,
+          18,
+          -0.1,
+          1.6
+        ],
+        [
+          26,
+          -42,
+          20,
+          8.8,
+          14.8,
+          0.12,
+          1.75
+        ],
+        [
+          3,
+          -43,
+          22,
+          10,
+          17,
+          -0.08,
+          1.5
+        ],
+        [
+          -21,
+          -42,
+          20,
+          9,
+          13.8,
+          0.08,
+          1.6
+        ],
+        [
+          -42,
+          -27,
+          9,
+          20,
+          16.1,
+          0.1,
+          1.55
+        ],
+        [
+          -41.5,
+          -5,
+          8.5,
+          22,
+          12,
+          -0.04,
+          1.7
+        ],
+        [
+          -43,
+          18,
+          10,
+          20,
+          17.8,
+          0.06,
+          1.5
+        ],
+        [
+          41,
+          42,
+          13,
+          12,
+          16,
+          0.3,
+          1.6
+        ],
+        [
+          -42,
+          41,
+          13,
+          12,
+          18,
+          -0.5,
+          1.55
+        ],
+        [
+          -41,
+          -42,
+          13,
+          12,
+          15.4,
+          0.4,
+          1.65
+        ],
+        [
+          42,
+          -41,
+          13,
+          12,
+          17.2,
+          -0.4,
+          1.5
+        ]
+      ],
+      "rearMassifs": [
+        [
+          -26,
+          50,
+          20,
+          13,
+          8.6,
+          -0.08,
+          1.35
+        ],
+        [
+          1,
+          51,
+          23,
+          14,
+          10.5,
+          0.1,
+          1.45
+        ],
+        [
+          29,
+          50,
+          19,
+          13,
+          9.2,
+          -0.1,
+          1.3
+        ],
+        [
+          50,
+          25,
+          13,
+          20,
+          10.1,
+          0.12,
+          1.4
+        ],
+        [
+          51,
+          -2,
+          14,
+          23,
+          8.8,
+          -0.08,
+          1.3
+        ],
+        [
+          50,
+          -28,
+          13,
+          21,
+          9.7,
+          0.1,
+          1.45
+        ],
+        [
+          26,
+          -50,
+          21,
+          13,
+          10.4,
+          -0.12,
+          1.3
+        ],
+        [
+          -2,
+          -51,
+          23,
+          14,
+          8.7,
+          0.08,
+          1.45
+        ],
+        [
+          -29,
+          -50,
+          19,
+          13,
+          9.4,
+          -0.1,
+          1.35
+        ],
+        [
+          -50,
+          -26,
+          13,
+          21,
+          10.2,
+          0.12,
+          1.35
+        ],
+        [
+          -51,
+          2,
+          14,
+          23,
+          8.9,
+          -0.08,
+          1.4
+        ],
+        [
+          -50,
+          28,
+          13,
+          20,
+          9.5,
+          0.1,
+          1.3
+        ],
+        [
+          50,
+          50,
+          21,
+          21,
+          10.5,
+          0.2,
+          1.35
+        ],
+        [
+          -50,
+          50,
+          21,
+          21,
+          9.7,
+          -0.25,
+          1.4
+        ],
+        [
+          -50,
+          -50,
+          21,
+          21,
+          10.2,
+          0.3,
+          1.35
+        ],
+        [
+          50,
+          -50,
+          21,
+          21,
+          9.4,
+          -0.2,
+          1.4
+        ]
+      ],
+      "terrainBounds": [
+        -48.0,
+        48.0,
+        -48.0,
+        48.0
+      ],
+      "walkableInteriorBounds": [
+        -32.0,
+        32.0,
+        -32.0,
+        32.0
+      ]
+    },
+    "schemaVersion": 1,
+    "sourceRevision": "v003",
+    "textureBytesUnchanged": true,
+    "textureNamesRetained": "Textures/grass.png and rock.png are the same project-authored soil and ash",
+    "worldDepthMeters": 96.0,
+    "worldWidthMeters": 96.0
+  },
+  "staticOnly": true,
+  "validation": {
+    "animation": "NOT_SUPPORTED",
+    "centralPreservedTriangleCount": 8192,
+    "centralPreservedVertexCount": 4225,
+    "centralRuntimeHeightRoundtripBitExact": true,
+    "centralTrianglesBitExact": true,
+    "centralUvOffsetInRepeatedTiles": [
+      12,
+      12
+    ],
+    "centralVertexPositionsBitExact": true,
+    "cpuConversion": "PASS",
+    "entireWalkableInteriorTriangleAudit": true,
+    "gpuUpload": "NOT_RUN",
+    "heightRangeMeters": [
+      0.081581,
+      17.864378
+    ],
+    "maximumReconstructionErrorMeters": 0.0,
+    "maximumSlopeDegrees": 73.289149,
+    "nominalPlayerFollowCameraTerrainClearanceProbes": [
+      {
+        "eye": [
+          0,
+          17.5323414524804,
+          -9
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000002,
+        "playerXZ": [
+          0,
+          0
+        ],
+        "terrainAtEye": 0.7232043743133545
+      },
+      {
+        "eye": [
+          -31,
+          16.756021879157466,
+          -9
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000009,
+        "playerXZ": [
+          -31,
+          0
+        ],
+        "terrainAtEye": 0.5142426888147991
+      },
+      {
+        "eye": [
+          31,
+          17.124068629782442,
+          -9
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9899999999999997,
+        "playerXZ": [
+          31,
+          0
+        ],
+        "terrainAtEye": 0.36728270848592126
+      },
+      {
+        "eye": [
+          0,
+          16.86358573242132,
+          -40
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000009,
+        "playerXZ": [
+          0,
+          -31
+        ],
+        "terrainAtEye": 10.102060000101726
+      },
+      {
+        "eye": [
+          0,
+          16.931548786204104,
+          22
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9899999999999998,
+        "playerXZ": [
+          0,
+          31
+        ],
+        "terrainAtEye": 0.33384299278259283
+      },
+      {
+        "eye": [
+          -30,
+          16.74170366132363,
+          -39
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000002,
+        "playerXZ": [
+          -30,
+          -30
+        ],
+        "terrainAtEye": 3.443709373474121
+      },
+      {
+        "eye": [
+          30,
+          17.04308116638764,
+          -39
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000002,
+        "playerXZ": [
+          30,
+          -30
+        ],
+        "terrainAtEye": 7.353508949279785
+      },
+      {
+        "eye": [
+          -30,
+          16.745546715499007,
+          21
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000002,
+        "playerXZ": [
+          -30,
+          30
+        ],
+        "terrainAtEye": 0.4373705983161926
+      },
+      {
+        "eye": [
+          30,
+          17.061581107021414,
+          21
+        ],
+        "method": "exact grid and diagonal crossings",
+        "minimumTerrainSightlineClearanceMeters": 0.9900000000000002,
+        "playerXZ": [
+          30,
+          30
+        ],
+        "terrainAtEye": 0.4991794228553772
+      }
+    ],
+    "normals": "finite_difference_rebuilt; central outer boundary normals may change with continuous neighbors",
+    "playMaximumSlopeDegrees": 15.972284,
+    "playTriangleCount": 14792,
+    "ridgeSectorCount": 32,
+    "ridgeSectorPeakHeightRangeMeters": [
+      7.987775802612305,
+      17.864377975463867
+    ],
+    "sampledLocalPeakCount": 16,
+    "sampledLocalPeaks": [
+      [
+        3.0,
+        16.882234573364258,
+        -42.75
+      ],
+      [
+        -41.25,
+        15.334184646606445,
+        -42.0
+      ],
+      [
+        -21.0,
+        14.193914413452148,
+        -42.0
+      ],
+      [
+        26.25,
+        14.933084487915039,
+        -42.0
+      ],
+      [
+        42.0,
+        17.21004295349121,
+        -41.25
+      ],
+      [
+        -42.0,
+        16.472923278808594,
+        -27.0
+      ],
+      [
+        42.75,
+        17.864377975463867,
+        -20.25
+      ],
+      [
+        -41.25,
+        11.837698936462402,
+        -5.25
+      ],
+      [
+        41.25,
+        12.656143188476562,
+        0.75
+      ],
+      [
+        -42.75,
+        17.572677612304688,
+        18.0
+      ],
+      [
+        42.0,
+        17.163774490356445,
+        24.0
+      ],
+      [
+        -42.0,
+        17.780046463012695,
+        41.25
+      ],
+      [
+        -6.0,
+        11.710670471191406,
+        41.25
+      ],
+      [
+        41.25,
+        16.20868492126465,
+        42.0
+      ],
+      [
+        -27.75,
+        15.364022254943848,
+        42.75
+      ],
+      [
+        18.0,
+        17.19221305847168,
+        42.75
+      ]
+    ],
+    "shapeMethod": "independent rotated elliptic peaks and lower rear massifs; no common all-around ramp",
+    "textureBytesUnchanged": true,
+    "triangleCount": 32768
+  }
+}

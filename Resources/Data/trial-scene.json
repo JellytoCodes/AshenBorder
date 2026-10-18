@@ -7,20 +7,20 @@
     "move": "Generated/ashen-player/24ba1f8fbf87551467d75336562815d35aa9d1a22c6b05b048d60cc4c9c59e3b/walk.clip"
   },
   "terrain": {
-    "modelPath": "Generated/ashen-terrain/3e185bf8207b2783653b79522459990de8b1f04632aeb0e232d5d805750c6506/terrain.mesh",
-    "width": 65,
-    "height": 65,
-    "origin": [
-      -24.0,
-      0.0,
-      -24.0
-    ],
-    "cellSize": 0.75,
-    "heightScale": 2.4,
-    "uvMeters": 2.0,
-    "blendStartHeight": 0.65,
     "blendEndHeight": 1.2,
-    "maxSlopeDegrees": 30.0
+    "blendStartHeight": 0.65,
+    "cellSize": 0.75,
+    "height": 129,
+    "heightScale": 32.0,
+    "maxSlopeDegrees": 30.0,
+    "modelPath": "Generated/ashen-terrain/d0a4dea6663eae8215ed7f1e7622f20d8085f33bcc16d0bd230dceded8b8ba81/terrain.mesh",
+    "origin": [
+      -48.0,
+      0.0,
+      -48.0
+    ],
+    "uvMeters": 2.0,
+    "width": 129
   },
   "enemyVisuals": [
     {
@@ -162,5 +162,15 @@
         0.65
       ]
     }
+  },
+  "playBounds": {
+    "min": [
+      -48,
+      -48
+    ],
+    "max": [
+      48,
+      48
+    ]
   }
 }

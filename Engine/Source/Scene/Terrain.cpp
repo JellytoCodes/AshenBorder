@@ -533,7 +533,7 @@ namespace Engine
         return item;
     }
 
-    TerrainDesc Terrain::Description() const
+    const TerrainDesc& Terrain::Description() const noexcept
     {
         return _desc;
     }

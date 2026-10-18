@@ -686,7 +686,7 @@ namespace Client
         {
             return body.base;
         }
-        const auto terrainDesc = _terrain.Description();
+        const auto& terrainDesc = _terrain.Description();
         if (terrainDesc.width < 2 || terrainDesc.height < 2 || terrainDesc.width > 1025 || terrainDesc.height > 1025 ||
             !std::isfinite(terrainDesc.cellSize) || terrainDesc.cellSize <= 0)
         {
@@ -740,7 +740,11 @@ namespace Client
                 {
                     return;
                 }
-                for (std::uint32_t index = 1; index + 1 < count; ++index)
+                const double end = start + delta;
+                // Keep an extra boundary on both ends; the original t filter handles exact contacts.
+                const auto firstIndex = std::max(1u, cell(origin, count, std::min(start, end)));
+                const auto lastIndex = std::min(count - 2, cell(origin, count, std::max(start, end)) + 1);
+                for (std::uint32_t index = firstIndex; index <= lastIndex; ++index)
                 {
                     const double t = (static_cast<double>(coordinate(origin, index)) - start) / delta;
                     if (t > 0 && t < 1)
@@ -1064,7 +1068,7 @@ namespace Client
         }
         projectile.position = end;
         projectile.ttl -= seconds;
-        const auto terrainDesc = _terrain.Description();
+        const auto& terrainDesc = _terrain.Description();
         if (projectile.ttl <= 0 || end.x < terrainDesc.origin.x || end.z < terrainDesc.origin.z ||
             end.x > static_cast<float>(static_cast<double>(terrainDesc.origin.x) + (terrainDesc.width - 1) * static_cast<double>(terrainDesc.cellSize)) ||
             end.z > static_cast<float>(static_cast<double>(terrainDesc.origin.z) + (terrainDesc.height - 1) * static_cast<double>(terrainDesc.cellSize)))

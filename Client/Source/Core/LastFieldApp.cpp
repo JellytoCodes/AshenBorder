@@ -276,9 +276,39 @@ namespace Client
         const auto terrainDesc = _terrain->Description();
         const float terrainWidth = static_cast<float>(terrainDesc.width - 1) * terrainDesc.cellSize;
         const float terrainDepth = static_cast<float>(terrainDesc.height - 1) * terrainDesc.cellSize;
-        // Keep the outer sixth for solid scenery; upper canopies may overhang the arena.
-        _playBounds = {{terrainDesc.origin.x + terrainWidth / 6, terrainDesc.origin.z + terrainDepth / 6},
-                       {terrainDesc.origin.x + terrainWidth * 5 / 6, terrainDesc.origin.z + terrainDepth * 5 / 6}};
+        // Legacy scenes keep their outer sixth; an explicit safe range can leave movement limits to solid scenery.
+        Engine::BoundsXZ playBounds{{terrainDesc.origin.x + terrainWidth / 6, terrainDesc.origin.z + terrainDepth / 6},
+                                    {terrainDesc.origin.x + terrainWidth * 5 / 6, terrainDesc.origin.z + terrainDepth * 5 / 6}};
+        if (config.contains("playBounds"))
+        {
+            const auto& selected = config["playBounds"];
+            const auto validPoint = [](const nlohmann::json& point)
+            {
+                return point.is_array() && point.size() == 2 &&
+                    std::all_of(point.begin(), point.end(), [](const auto& value)
+                    {
+                        return value.is_number() && std::isfinite(value.template get<float>());
+                    });
+            };
+            if (!selected.is_object() || !selected.contains("min") || !selected.contains("max") ||
+                !validPoint(selected["min"]) || !validPoint(selected["max"]))
+            {
+                Engine::Log::Write("LastFieldApp: playBounds requires finite min/max XZ pairs");
+                return false;
+            }
+            playBounds = {{selected["min"][0].get<float>(), selected["min"][1].get<float>()},
+                          {selected["max"][0].get<float>(), selected["max"][1].get<float>()}};
+            if (playBounds.min.x >= playBounds.max.x || playBounds.min.y >= playBounds.max.y ||
+                playBounds.min.x < terrainDesc.origin.x || playBounds.min.y < terrainDesc.origin.z ||
+                playBounds.max.x > terrainDesc.origin.x + terrainWidth ||
+                playBounds.max.y > terrainDesc.origin.z + terrainDepth ||
+                playBounds.min.x > 0 || playBounds.min.y > 0 || playBounds.max.x < 0 || playBounds.max.y < 0)
+            {
+                Engine::Log::Write("LastFieldApp: playBounds must be ordered, inside Terrain, and contain the starting origin");
+                return false;
+            }
+        }
+        _playBounds = playBounds;
         const float sourceHeight = character->BoundsMax().y - character->BoundsMin().y;
         const auto spawnSurface = _terrain->Sample({0, 0});
         if (!std::isfinite(sourceHeight) || sourceHeight <= 0.0f || !spawnSurface ||
@@ -595,12 +625,13 @@ namespace Client
                 return false;
             }
         }
-        Engine::Log::Write("LastFieldApp: character/texture loaded; Terrain 65x65 and two-material blend; camera pitch=60 distance=18 fov=45; WASD/P/F2/F3/F4/F5/F6/Escape");
+        Engine::Log::Write("LastFieldApp: character/texture loaded; Terrain " + std::to_string(terrainDesc.width) + "x" +
+                           std::to_string(terrainDesc.height) + " and two-material blend; camera pitch=60 distance=18 fov=45; WASD/P/F2/F3/F4/F5/F6/Escape");
         Engine::Log::Write("LastFieldApp: terrain span=" + std::to_string(terrainWidth) + "x" + std::to_string(terrainDepth) +
-                           "m; playable span=" + std::to_string(_playBounds.max.x - _playBounds.min.x) + "x" +
+                           "m; run safety span=" + std::to_string(_playBounds.max.x - _playBounds.min.x) + "x" +
                            std::to_string(_playBounds.max.y - _playBounds.min.y) + "m");
         Engine::Log::Write("LastFieldApp: environment collision ready; trunk cylinders=" +
-                           std::to_string(_environment.SolidCylinders().size()) + ", wall boxes=" +
+                           std::to_string(_environment.SolidCylinders().size()) + ", solid boxes=" +
                            std::to_string(_environment.SolidBoxes().size()) + "; canopy remains walkable");
         Engine::Log::Write("LastFieldApp: LF07 enemy/projectile/drop pools ready; storage/generation/RunEpoch validation; F4 trial display, F5 recycle, F6 new run");
         Engine::Log::Write("LastFieldApp: LF08 grounded movement/grid/nearest/melee/swept projectile ready; F7 collision trial, Space fire, Q melee");
@@ -1744,11 +1775,15 @@ namespace Client
             out.clearColor = {.08f, .095f, .10f, 1.0f};
             out.shadow.enabled = _shadows;
             const auto terrainDesc = _terrain->Description();
-            const float shadowScale = std::max(1.0f, static_cast<float>(std::max(terrainDesc.width, terrainDesc.height) - 1) *
-                                                        terrainDesc.cellSize / 24.0f);
+            const float terrainShadowScale = std::max(1.0f, static_cast<float>(std::max(terrainDesc.width, terrainDesc.height) - 1) *
+                                                               terrainDesc.cellSize / 24.0f);
+            const float shadowScale = std::min(2.0f, terrainShadowScale);
+            // Larger scenery keeps the existing 68m shadow coverage around the grounded player.
+            const auto shadowCenter = terrainShadowScale > 2.0f ? _run->PlayerCollider().base : Engine::Vector3{};
             const auto view =
-                DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(12 * shadowScale, 24 * shadowScale, -16 * shadowScale, 1),
-                                          DirectX::XMVectorSet(0, 0, 0, 1),
+                DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(shadowCenter.x + 12 * shadowScale,
+                                              shadowCenter.y + 24 * shadowScale, shadowCenter.z - 16 * shadowScale, 1),
+                                          DirectX::XMVectorSet(shadowCenter.x, shadowCenter.y, shadowCenter.z, 1),
                                           DirectX::XMVectorSet(0, 1, 0, 0));
             DirectX::XMStoreFloat4x4(&out.shadow.viewProjection,
                                      view * DirectX::XMMatrixOrthographicLH(34 * shadowScale, 34 * shadowScale, 1, 65 * shadowScale));

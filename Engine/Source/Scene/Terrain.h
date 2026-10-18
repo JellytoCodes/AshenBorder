@@ -43,7 +43,8 @@ namespace Engine
         std::optional<SurfaceHit> Sample(Vector2 xz) const;
         std::optional<SurfaceHit> SweepSphere(const Segment& segment, float radius) const;
         DrawItem BuildDrawItem() const;
-        TerrainDesc Description() const;
+        // Borrowed until this Terrain is reinitialized or destroyed.
+        const TerrainDesc& Description() const noexcept;
 
     private:
         TerrainDesc _desc;
