@@ -24,8 +24,8 @@
   "enemies": [
     {
       "id": 1,
-      "hp": 20,
-      "speed": 1.5,
+      "hp": 24,
+      "speed": 1.6,
       "armor": 0,
       "radius": 0.35,
       "height": 1.8,
@@ -37,8 +37,8 @@
     },
     {
       "id": 2,
-      "hp": 10,
-      "speed": 2.5,
+      "hp": 14,
+      "speed": 2.75,
       "armor": 0,
       "radius": 0.28,
       "height": 1.5,
@@ -50,8 +50,8 @@
     },
     {
       "id": 3,
-      "hp": 45,
-      "speed": 0.8,
+      "hp": 55,
+      "speed": 0.9,
       "armor": 2,
       "radius": 0.5,
       "height": 2,
@@ -115,9 +115,9 @@
   "waves": [
     {
       "id": 1,
-      "duration": 45,
+      "duration": 22.5,
       "maxAlive": 16,
-      "spawnPerSecond": 0.8,
+      "spawnPerSecond": 1.6,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -138,9 +138,9 @@
     },
     {
       "id": 2,
-      "duration": 45,
+      "duration": 22.5,
       "maxAlive": 20,
-      "spawnPerSecond": 1.2,
+      "spawnPerSecond": 2.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -161,9 +161,9 @@
     },
     {
       "id": 3,
-      "duration": 45,
+      "duration": 22.5,
       "maxAlive": 24,
-      "spawnPerSecond": 1.6,
+      "spawnPerSecond": 2.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -184,9 +184,9 @@
     },
     {
       "id": 4,
-      "duration": 60,
+      "duration": 30,
       "maxAlive": 28,
-      "spawnPerSecond": 2.75,
+      "spawnPerSecond": 3.0,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -207,9 +207,9 @@
     },
     {
       "id": 5,
-      "duration": 60,
+      "duration": 30,
       "maxAlive": 32,
-      "spawnPerSecond": 3,
+      "spawnPerSecond": 3.3,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -230,9 +230,9 @@
     },
     {
       "id": 6,
-      "duration": 60,
+      "duration": 30,
       "maxAlive": 36,
-      "spawnPerSecond": 3.5,
+      "spawnPerSecond": 3.6,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -253,9 +253,9 @@
     },
     {
       "id": 7,
-      "duration": 75,
+      "duration": 37.5,
       "maxAlive": 40,
-      "spawnPerSecond": 4,
+      "spawnPerSecond": 4.0,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -276,7 +276,7 @@
     },
     {
       "id": 8,
-      "duration": 75,
+      "duration": 37.5,
       "maxAlive": 44,
       "spawnPerSecond": 4.5,
       "minSpawnDistance": 4,
@@ -299,9 +299,9 @@
     },
     {
       "id": 9,
-      "duration": 75,
+      "duration": 37.5,
       "maxAlive": 48,
-      "spawnPerSecond": 5,
+      "spawnPerSecond": 5.0,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -322,7 +322,7 @@
     },
     {
       "id": 10,
-      "duration": 90,
+      "duration": 45,
       "maxAlive": 32,
       "spawnPerSecond": 3.5,
       "minSpawnDistance": 4,
@@ -433,80 +433,80 @@
   ],
   "progression": {
     "cumulativeXp": [
-      18,
-      45,
-      90,
-      160,
-      260,
-      400,
-      600,
-      850,
-      1200,
-      1650,
-      2200,
-      2900,
-      3700,
-      4600
+      14,
+      35,
+      70,
+      120,
+      190,
+      285,
+      420,
+      585,
+      800,
+      1080,
+      1440,
+      1880,
+      2440,
+      3120
     ],
     "choiceCount": 3
   },
   "shop": {
     "offerCount": 4,
-    "rerollCost": 2,
-    "stagePricePercent": [100, 200, 400, 700, 1100, 1600, 2400, 3300, 4500],
+    "rerollCost": 4,
+    "stagePricePercent": [100, 150, 225, 325, 450, 600, 800, 1050, 1350],
     "items": [
       {
         "kind": "Weapon",
         "definitionId": 1,
-        "price": 5,
+        "price": 14,
         "weight": 1
       },
       {
         "kind": "Weapon",
         "definitionId": 2,
-        "price": 6,
+        "price": 16,
         "weight": 1
       },
       {
         "kind": "Weapon",
         "definitionId": 3,
-        "price": 7,
+        "price": 18,
         "weight": 1
       },
       {
         "kind": "Passive",
         "definitionId": 1,
-        "price": 4,
+        "price": 6,
         "weight": 0
       },
       {
         "kind": "Passive",
         "definitionId": 2,
-        "price": 4,
+        "price": 6,
         "weight": 1
       },
       {
         "kind": "Passive",
         "definitionId": 3,
-        "price": 4,
+        "price": 6,
         "weight": 1
       },
       {
         "kind": "Passive",
         "definitionId": 4,
-        "price": 4,
+        "price": 6,
         "weight": 1
       },
       {
         "kind": "Passive",
         "definitionId": 5,
-        "price": 4,
+        "price": 6,
         "weight": 1
       },
       {
         "kind": "Passive",
         "definitionId": 6,
-        "price": 4,
+        "price": 6,
         "weight": 0
       }
     ]
