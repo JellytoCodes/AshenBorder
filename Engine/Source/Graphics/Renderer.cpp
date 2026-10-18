@@ -855,10 +855,11 @@ namespace Engine
             }
             if (draw.mesh->skin)
             {
-                SkinConstants skin{};
                 const auto& palette = draw.item->pose->meshPalettes[draw.meshIndex];
-                std::copy(palette.begin(), palette.end(), skin.palettes.begin());
-                if (!upload(_skinConstantBuffer.Get(), &skin, sizeof(skin), "Map SkinConstants"))
+                // All four vertex joint indices are validated against this palette at upload.
+                // Preserve the 128-joint buffer ABI; the discarded tail is never read.
+                if (!upload(_skinConstantBuffer.Get(), palette.data(), palette.size() * sizeof(Matrix),
+                    "Map SkinConstants"))
                 {
                     return false;
                 }
@@ -871,7 +872,12 @@ namespace Engine
             // A UI pass and Resize may change all state. Each draw restores its complete pipeline.
             context->VSSetShader(instanced ? _instancedVertexShader.Get() :
                 (draw.mesh->skin ? _skinnedVertexShader.Get() : _vertexShader.Get()), nullptr, 0);
-            context->PSSetShader(shadow ? _shadowPixelShader.Get() : _pixelShader.Get(), nullptr, 0);
+            const bool shadowAlphaTest = shadow && (instanced
+                ? std::any_of(instances, instances + count,
+                    [](const InstanceData& instance) { return instance.effects.y > 0.0f; })
+                : draw.item->alphaCutoff > 0.0f);
+            context->PSSetShader(shadow ? (shadowAlphaTest ? _shadowPixelShader.Get() : nullptr)
+                : _pixelShader.Get(), nullptr, 0);
             context->GSSetShader(nullptr, nullptr, 0);
             context->HSSetShader(nullptr, nullptr, 0);
             context->DSSetShader(nullptr, nullptr, 0);

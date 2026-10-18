@@ -19,6 +19,7 @@
 #include <fstream>
 #include <iomanip>
 #include <limits>
+#include <locale>
 #include <sstream>
 #include <stdexcept>
 #include <utility>
@@ -33,27 +34,27 @@ namespace
     constexpr float kCameraFov = DirectX::XM_PI / 4.0f;
     constexpr float kFollowRate = 12.0f;
 
-    const wchar_t* WaveLabel(const Client::WaveSnapshot& wave) noexcept
+    const char* WaveLabel(const Client::WaveSnapshot& wave) noexcept
     {
         if (wave.outcome == Client::RunOutcome::Victory)
         {
-            return L"Victory";
+            return "Victory";
         }
         if (wave.outcome == Client::RunOutcome::Defeat)
         {
-            return L"Defeat";
+            return "Defeat";
         }
         switch (wave.phase)
         {
-        case Client::WavePhase::Ready: return L"Ready";
-        case Client::WavePhase::Combat: return L"Combat";
-        case Client::WavePhase::Settlement: return L"Settlement";
-        case Client::WavePhase::Rest: return L"Rest";
-        case Client::WavePhase::Complete: return L"Complete";
-        case Client::WavePhase::Selection: return L"Selection";
-        case Client::WavePhase::Shop: return L"Shop";
+        case Client::WavePhase::Ready: return "Ready";
+        case Client::WavePhase::Combat: return "Combat";
+        case Client::WavePhase::Settlement: return "Settlement";
+        case Client::WavePhase::Rest: return "Rest";
+        case Client::WavePhase::Complete: return "Complete";
+        case Client::WavePhase::Selection: return "Selection";
+        case Client::WavePhase::Shop: return "Shop";
         }
-        return L"Invalid";
+        return "Invalid";
     }
 
     std::filesystem::path Utf8Path(const std::string& value)
@@ -229,6 +230,10 @@ namespace Client
         _automaticAttack = true;
         ResetPresentation();
         _frameCount = 0;
+        _diagnosticSeconds = 0;
+        _diagnosticRunEpoch = 0;
+        _diagnosticPhase = WavePhase::Ready;
+        _diagnosticOutcome = RunOutcome::Playing;
         auto definitions = std::make_shared<GameDefinitions>();
         std::string definitionsError;
         if (!LoadGameDefinitions(_resourceRoot / L"Data" / L"trial-game.json", *definitions, definitionsError))
@@ -1397,6 +1402,11 @@ namespace Client
             }
         }
         _run->ClearHits();
+        if (_gameMode || _showSurface || _showPools || _collisionTrial)
+        {
+            // Count actual fixed simulation progress, not idle render callbacks or paused wall time.
+            _diagnosticSeconds += animationSeconds;
+        }
     }
 
     bool LastFieldApp::UpdateCamera(float dt)
@@ -1418,6 +1428,75 @@ namespace Client
             return false;
         }
         return true;
+    }
+
+    std::string LastFieldApp::DiagnosticText() const
+    {
+        std::ostringstream text;
+        text.imbue(std::locale::classic());
+        text << "SAVE MYSELF: ASHEN BORDER";
+        if (_gameMode && _run)
+        {
+            const auto& wave = _run->Wave();
+            const auto& rewards = _run->Rewards();
+            text << " | Run=" << _run->RunEpoch()
+                << " | Wave=" << wave.waveIndex + 1 << "/" << wave.waveCount << " " << WaveLabel(wave)
+                << std::fixed << std::setprecision(1) << " | HP=" << _run->Player().hp << "/" << _run->PlayerStats().maxHp
+                << " | Time=" << wave.remaining << " | XP=" << rewards.acquiredXp
+                << " Currency=" << rewards.acquiredCurrency << " Kills=" << rewards.kills
+                << " | Auto=" << (_automaticAttack ? "ON" : "OFF");
+            const EventMarker* pickup = nullptr;
+            for (const auto& marker : _eventMarkers)
+            {
+                if (marker.remaining > 0 && marker.event.kind == GameEventKind::PickedUp &&
+                    (!pickup || marker.event.sequence > pickup->event.sequence))
+                {
+                    pickup = &marker;
+                }
+            }
+            if (pickup)
+            {
+                text << " | +XP=" << pickup->event.xp << " +Currency=" << pickup->event.currency;
+            }
+        }
+        if (_showSurface && _terrain)
+        {
+            const auto position = _characterTransform.Position();
+            const auto surface = _terrain->Sample({position.x, position.z});
+            if (!surface)
+            {
+                throw std::runtime_error("Client surface diagnostic query failed");
+            }
+            const float slope = std::acos(std::clamp(surface->normal.y, -1.0f, 1.0f)) * 180.0f / DirectX::XM_PI;
+            text << std::fixed << std::setprecision(3) << " | footY=" << position.y - _footOffset
+                << "m | surfaceY=" << surface->position.y << "m | slope=" << slope << "deg";
+        }
+        if (_showPools && _run)
+        {
+            const auto enemies = _run->Enemies().GetStats();
+            const auto projectiles = _run->Projectiles().GetStats();
+            const auto drops = _run->Drops().GetStats();
+            if (!_gameMode)
+            {
+                text << " | run=" << _run->RunEpoch();
+            }
+            text << " | E=" << enemies.active << "/" << enemies.capacity
+                << " P=" << projectiles.active << "/" << projectiles.capacity
+                << " D=" << drops.active << "/" << drops.capacity;
+            if (!_gameMode)
+            {
+                text << " | peak=" << enemies.highWater << "/" << projectiles.highWater << "/" << drops.highWater
+                    << " | fail=" << enemies.reserveFailures << "/" << projectiles.reserveFailures << "/"
+                    << drops.reserveFailures << " | merge=" << _run->DropMerges() << " ledger="
+                    << _run->Ledger(DropKind::Experience);
+            }
+        }
+        if (_collisionTrial)
+        {
+            text << " | LF08 target=" << (_nearest ? std::to_string(_nearest->handle->index) : "none")
+                << " hit=" << (_lastHit ? std::to_string(static_cast<int>(_lastHit->kind)) : "none");
+        }
+        return text.str();
     }
 
     Engine::AppAction LastFieldApp::Update(const Engine::InputState& input, float dt)
@@ -1581,103 +1660,53 @@ namespace Client
         {
             _showSurface = !_showSurface;
         }
-        if (_gameMode || _showSurface || surfaceToggle || _showPools || poolToggle || collisionToggle || gameToggle ||
-            restart)
+        if (_showSurface)
         {
-            std::wstring title = L"SAVE MYSELF: ASHEN BORDER";
-            if (_gameMode)
+            const auto position = _characterTransform.Position();
+            if (!_terrain->Sample({position.x, position.z}))
             {
-                const auto& wave = _run->Wave();
-                const auto& rewards = _run->Rewards();
-                std::wostringstream text;
-                text << L"SAVE MYSELF: ASHEN BORDER | Run=" << _run->RunEpoch()
-                    << L" | Wave=" << wave.waveIndex + 1 << L"/" << wave.waveCount << L" " << WaveLabel(wave)
-                    << std::fixed << std::setprecision(1) << L" | HP=" << _run->Player().hp << L"/" << _run->PlayerStats().maxHp
-                    << L" | Time=" << wave.remaining << L" | XP=" << rewards.acquiredXp
-                    << L" Currency=" << rewards.acquiredCurrency << L" Kills=" << rewards.kills
-                    << L" | Auto=" << (_automaticAttack ? L"ON" : L"OFF");
-                const EventMarker* pickup = nullptr;
-                for (const auto& marker : _eventMarkers)
-                {
-                    if (marker.remaining > 0 && marker.event.kind == GameEventKind::PickedUp &&
-                        (!pickup || marker.event.sequence > pickup->event.sequence))
-                    {
-                        pickup = &marker;
-                    }
-                }
-                if (pickup)
-                {
-                    text << L" | +XP=" << pickup->event.xp << L" +Currency=" << pickup->event.currency;
-                }
-                title = text.str();
-            }
-            if (_showSurface)
-            {
-                const auto position = _characterTransform.Position();
-                const auto surface = _terrain->Sample({position.x, position.z});
-                if (!surface)
-                {
-                    Engine::Log::Write("LastFieldApp: surface diagnostic query failed");
-                    return Engine::AppAction::Exit;
-                }
-                const float slope = std::acos(std::clamp(surface->normal.y, -1.0f, 1.0f)) * 180.0f / DirectX::XM_PI;
-                std::wostringstream text;
-                text << title << std::fixed << std::setprecision(3) << L" | footY=" << position.y - _footOffset
-                    << L"m | surfaceY=" << surface->position.y << L"m | slope=" << slope << L"deg";
-                title = text.str();
-                if (surfaceToggle)
-                {
-                    Engine::Log::Write("LastFieldApp: footY=" + std::to_string(position.y - _footOffset) +
-                        " surfaceY=" + std::to_string(surface->position.y) + " slopeDegrees=" + std::to_string(slope));
-                }
-            }
-            if (_showPools)
-            {
-                const auto enemies = _run->Enemies().GetStats();
-                const auto projectiles = _run->Projectiles().GetStats();
-                const auto drops = _run->Drops().GetStats();
-                std::wostringstream text;
-                text << title;
-                if (!_gameMode)
-                {
-                    text << L" | run=" << _run->RunEpoch();
-                }
-                text << L" | E=" << enemies.active << L"/" << enemies.capacity
-                    << L" P=" << projectiles.active << L"/" << projectiles.capacity
-                    << L" D=" << drops.active << L"/" << drops.capacity;
-                if (!_gameMode)
-                {
-                    text << L" | peak=" << enemies.highWater << L"/" << projectiles.highWater << L"/" << drops.highWater
-                         << L" | fail=" << enemies.reserveFailures << L"/" << projectiles.reserveFailures << L"/"
-                         << drops.reserveFailures << L" | merge=" << _run->DropMerges() << L" ledger="
-                         << _run->Ledger(DropKind::Experience);
-                }
-                title = text.str();
-            }
-            if (_collisionTrial)
-            {
-                title += L" | LF08 target=" + (_nearest ? std::to_wstring(_nearest->handle->index) : L"none");
-                title += L" hit=" + (_lastHit ? std::to_wstring(static_cast<int>(_lastHit->kind)) : L"none");
-            }
-            if (SetWindowTextW(_application->NativeWindow(), title.c_str()) == FALSE)
-            {
-                Engine::Log::Error("Client surface diagnostic window title", static_cast<long>(GetLastError()));
+                Engine::Log::Write("LastFieldApp: surface diagnostic query failed");
                 return Engine::AppAction::Exit;
             }
         }
+        auto action = Engine::AppAction::Continue;
         if (pauseToggle)
         {
             _paused = !_paused;
             _pendingHudCommand.reset();
             _audio.SetPaused(_paused || inactive);
             Engine::Log::Write(_paused ? "LastFieldApp: pause simulation" : "LastFieldApp: resume simulation");
-            return _paused ? Engine::AppAction::PauseSimulation : Engine::AppAction::ResumeSimulation;
+            action = _paused ? Engine::AppAction::PauseSimulation : Engine::AppAction::ResumeSimulation;
         }
-        if (resumeAfterReset || (wasPaused && !_paused))
+        else if (resumeAfterReset || (wasPaused && !_paused))
         {
-            return Engine::AppAction::ResumeSimulation;
+            action = Engine::AppAction::ResumeSimulation;
         }
-        return Engine::AppAction::Continue;
+        const auto& wave = _run->Wave();
+        const bool changed = _diagnosticRunEpoch != _run->RunEpoch() ||
+            _diagnosticPhase != wave.phase || _diagnosticOutcome != wave.outcome;
+        const bool forced = changed || surfaceToggle || poolToggle || collisionToggle || gameToggle || restart ||
+            recycle || input.IsPressed(Engine::Key::F9) || pauseToggle || wasPaused != _paused;
+        if (forced)
+        {
+            _diagnosticSeconds = 0;
+        }
+        const bool progressing = !_paused && (_gameMode ?
+            wave.phase == WavePhase::Combat && wave.outcome == RunOutcome::Playing :
+            _showSurface || _showPools || _collisionTrial);
+        const bool due = progressing && std::isfinite(dt) && dt > 0 && _diagnosticSeconds >= 1.0;
+        if (forced || due)
+        {
+            if (due)
+            {
+                _diagnosticSeconds = std::fmod(_diagnosticSeconds, 1.0);
+            }
+            Engine::Log::Write(std::string("LastFieldApp diagnostics: paused=") + (_paused ? "1 " : "0 ") + DiagnosticText());
+        }
+        _diagnosticRunEpoch = _run->RunEpoch();
+        _diagnosticPhase = wave.phase;
+        _diagnosticOutcome = wave.outcome;
+        return action;
     }
 
     void LastFieldApp::BuildRenderFrame(Engine::RenderFrame& out)
@@ -1973,6 +2002,10 @@ namespace Client
         _moving = false;
         _showPools = false;
         _frameCount = 0;
+        _diagnosticSeconds = 0;
+        _diagnosticRunEpoch = 0;
+        _diagnosticPhase = WavePhase::Ready;
+        _diagnosticOutcome = RunOutcome::Playing;
         Engine::Log::Write("LastFieldApp: shutdown");
     }
 }

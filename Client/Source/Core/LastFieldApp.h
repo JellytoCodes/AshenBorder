@@ -41,6 +41,7 @@ namespace Client
         void BuildRenderFrame(Engine::RenderFrame& out) override;
         void Shutdown() override;
         HudSnapshot Hud() const;
+        std::string DiagnosticText() const;
 
     private:
         bool UpdateCamera(float dt);
@@ -170,5 +171,9 @@ namespace Client
         bool _wasInactive = true;
         std::uint64_t _nextRunEpoch = 1;
         std::uint32_t _frameCount = 0;
+        double _diagnosticSeconds = 0;
+        std::uint64_t _diagnosticRunEpoch = 0;
+        WavePhase _diagnosticPhase = WavePhase::Ready;
+        RunOutcome _diagnosticOutcome = RunOutcome::Playing;
     };
 }
