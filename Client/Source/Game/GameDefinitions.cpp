@@ -223,10 +223,19 @@ namespace
         return result;
     }
 
-    Client::EnemyDefinition ParseEnemy(const Json& value)
+    Client::EnemyDefinition ParseEnemy(const Json& value, std::uint32_t schemaVersion)
     {
-        Fields(value, {"id", "hp", "speed", "armor", "radius", "height", "contactDamage",
-            "contactInterval", "knockback", "xp", "currency"}, "enemy");
+        const bool hasRanged = schemaVersion == 3 && value.contains("ranged");
+        if (hasRanged)
+        {
+            Fields(value, {"id", "hp", "speed", "armor", "radius", "height", "contactDamage",
+                "contactInterval", "knockback", "xp", "currency", "ranged"}, "enemy");
+        }
+        else
+        {
+            Fields(value, {"id", "hp", "speed", "armor", "radius", "height", "contactDamage",
+                "contactInterval", "knockback", "xp", "currency"}, "enemy");
+        }
         Client::EnemyDefinition result;
         result.id = Unsigned(value, "id");
         result.hp = Scalar(value, "hp");
@@ -239,6 +248,16 @@ namespace
         result.knockback = Scalar(value, "knockback");
         result.xp = Unsigned(value, "xp");
         result.currency = Unsigned(value, "currency");
+        if (hasRanged)
+        {
+            const auto& ranged = value.at("ranged");
+            Fields(ranged, {"damage", "interval", "projectileSpeed", "projectileLife", "projectileRadius",
+                "range", "preferredDistance", "windup", "spawnDelay"}, "enemy ranged attack");
+            result.ranged = Client::EnemyRangedDefinition{Scalar(ranged, "damage"), Scalar(ranged, "interval"),
+                Scalar(ranged, "projectileSpeed"), Scalar(ranged, "projectileLife"), Scalar(ranged, "projectileRadius"),
+                Scalar(ranged, "range"), Scalar(ranged, "preferredDistance"), Scalar(ranged, "windup"),
+                Scalar(ranged, "spawnDelay")};
+        }
         return result;
     }
 
@@ -417,6 +436,21 @@ namespace Client
                 {
                     return Reject(error, "Enemy fields exceed their finite gameplay ranges");
                 }
+                if (enemy.ranged)
+                {
+                    const auto& ranged = *enemy.ranged;
+                    if (definitions.schemaVersion != 3 || !Positive(ranged.damage) ||
+                        !Between(ranged.interval, kMinimumCooldown, kMaximumSeconds) ||
+                        !Positive(ranged.projectileSpeed, kMaximumSpeed) || !Positive(ranged.projectileLife, kMaximumSeconds) ||
+                        !Positive(ranged.projectileRadius) || !Positive(ranged.range) ||
+                        !Between(ranged.preferredDistance, 0, ranged.range) ||
+                        !Between(ranged.windup, kMinimumCooldown, kMaximumSeconds) ||
+                        !Between(ranged.spawnDelay, kMinimumCooldown, kMaximumSeconds) ||
+                        static_cast<double>(ranged.range) > static_cast<double>(ranged.projectileSpeed) * ranged.projectileLife)
+                    {
+                        return Reject(error, "Schema 3 ranged attacks require finite reachable range, positive shot fields and visible attack delays");
+                    }
+                }
             }
             std::unordered_set<std::uint32_t> weaponIds;
             for (const auto& weapon : definitions.weapons)
@@ -463,25 +497,29 @@ namespace Client
                     return Reject(error, "Loadout references an unknown weapon ID");
                 }
             }
-            std::unordered_set<std::uint32_t> waveIds;
+            std::unordered_set<std::uint32_t> bossIds;
             for (const auto& wave : definitions.waves)
             {
                 if (wave.bossEnemyId != 0)
                 {
-                    if (definitions.schemaVersion != 3 || &wave != &definitions.waves.back() ||
-                        !enemyIds.contains(wave.bossEnemyId) || wave.bossName.empty() || wave.bossName.size() > 128 ||
+                    if (definitions.schemaVersion != 3 || !enemyIds.contains(wave.bossEnemyId) ||
+                        !bossIds.insert(wave.bossEnemyId).second || wave.bossName.empty() || wave.bossName.size() > 128 ||
                         std::any_of(wave.bossName.begin(), wave.bossName.end(), [](unsigned char value)
                         {
                             return value < 0x20 || value == 0x7f;
                         }))
                     {
-                        return Reject(error, "A named, known boss is supported only in the final schema 3 wave");
+                        return Reject(error, "Schema 3 bosses require unique known enemy IDs and bounded nonempty display names");
                     }
                 }
                 else if (!wave.bossName.empty())
                 {
                     return Reject(error, "A boss name requires its enemy ID");
                 }
+            }
+            std::unordered_set<std::uint32_t> waveIds;
+            for (const auto& wave : definitions.waves)
+            {
                 if (wave.id == 0 || !waveIds.insert(wave.id).second)
                 {
                     return Reject(error, "Wave IDs must be nonzero and unique within the wave catalog");
@@ -499,7 +537,7 @@ namespace Client
                 std::unordered_set<std::uint32_t> weightedEnemies;
                 for (const auto& weight : wave.enemyWeights)
                 {
-                    if (weight.enemyId == definitions.waves.back().bossEnemyId ||
+                    if (bossIds.contains(weight.enemyId) ||
                         !enemyIds.contains(weight.enemyId) || !weightedEnemies.insert(weight.enemyId).second ||
                         !std::isfinite(weight.weight) || weight.weight < 0)
                     {
@@ -679,7 +717,7 @@ namespace Client
             candidate.minimumCooldown = Scalar(root, "minimumCooldown");
             for (const auto& value : Array(root, "enemies"))
             {
-                candidate.enemies.push_back(ParseEnemy(value));
+                candidate.enemies.push_back(ParseEnemy(value, schemaVersion));
             }
             for (const auto& value : Array(root, "weapons"))
             {

@@ -292,8 +292,8 @@ namespace Client
         const bool bossStage = snapshot.wave.bossEnemyId != 0;
         Label(frame, canvas, 48, 32, 22, "스테이지 " + std::to_string(snapshot.wave.waveIndex + 1) +
             " / " + std::to_string(snapshot.wave.waveCount) + "  ·  " + PhaseName(snapshot.wave.phase), kGold, 420);
-        Label(frame, canvas, 640, 34, 20, bossStage ? "수비대장을 쓰러뜨리세요" :
-            "남은 시간 " + Number(snapshot.wave.remaining) + "초", kWhite, 260, Alignment::Center);
+        Label(frame, canvas, 640, 34, 20, bossStage ? "보스를 쓰러뜨리세요" :
+            "남은 시간 " + Number(std::ceil(snapshot.wave.remaining), 0) + "초", kWhite, 260, Alignment::Center);
         Label(frame, canvas, 1232, 32, 22, "보급품 " + std::to_string(snapshot.progression.balance), kGold, 380, Alignment::Right);
         Label(frame, canvas, 48, 72, 20, "체력 " + Number(snapshot.player.hp) + " / " + Number(snapshot.playerStats.maxHp), kWhite, 340);
         Panel(frame, canvas, {{48, 105}, {340, 8}, kTrack});

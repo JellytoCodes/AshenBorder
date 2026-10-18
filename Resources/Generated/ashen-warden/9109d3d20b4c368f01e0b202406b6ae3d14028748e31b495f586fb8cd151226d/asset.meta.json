@@ -1,0 +1,1251 @@
+{
+  "assetId": "ashen-warden",
+  "clipFormatVersion": 1,
+  "clips": [
+    {
+      "channelCount": 17,
+      "durationSeconds": 0.45,
+      "name": "attack",
+      "nodeCount": 19,
+      "path": "attack.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "attack"
+    },
+    {
+      "channelCount": 17,
+      "durationSeconds": 0.8,
+      "name": "death",
+      "nodeCount": 19,
+      "path": "death.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "death"
+    },
+    {
+      "channelCount": 17,
+      "durationSeconds": 2.4,
+      "name": "idle",
+      "nodeCount": 19,
+      "path": "idle.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "idle"
+    },
+    {
+      "channelCount": 17,
+      "durationSeconds": 1.0,
+      "name": "walk",
+      "nodeCount": 19,
+      "path": "walk.clip",
+      "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+      "sourceTake": "walk"
+    }
+  ],
+  "converter": {
+    "name": "BuildAshenCharacters.py",
+    "revision": 5,
+    "sha256": "5a2a2b45b837b36e1caedcc693ddac9ef6f9508a85d346454261b596e717dcfa"
+  },
+  "counts": {
+    "indices": 5028,
+    "materials": 1,
+    "meshes": 1,
+    "nodes": 19,
+    "skins": 1,
+    "vertices": 5028
+  },
+  "formatVersion": 2,
+  "generation": "9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d",
+  "importOptions": {
+    "assetId": "ashen-warden",
+    "flipV": true,
+    "flipX": true,
+    "generatedTextureSha256": {
+      "Textures/palette.png": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    "importDiagnostics": {
+      "aiBoneBytes": 1120,
+      "aiMatrix4x4Bytes": 64,
+      "aiRealBytes": 4,
+      "assimpCompileFlags": 17,
+      "assimpRevision": 0,
+      "assimpVersion": "6.0.4",
+      "boneMappings": [
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 1,
+          "originalName": "Pelvis",
+          "resolution": "mNode",
+          "sourceBoneIndex": 0
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 2,
+          "originalName": "Spine",
+          "resolution": "mNode",
+          "sourceBoneIndex": 1
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 3,
+          "originalName": "Chest",
+          "resolution": "mNode",
+          "sourceBoneIndex": 2
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 4,
+          "originalName": "Neck",
+          "resolution": "mNode",
+          "sourceBoneIndex": 3
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 5,
+          "originalName": "Head",
+          "resolution": "mNode",
+          "sourceBoneIndex": 4
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 6,
+          "originalName": "UpperArm_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 5
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 7,
+          "originalName": "Forearm_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 6
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 8,
+          "originalName": "Hand_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 7
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 9,
+          "originalName": "UpperArm_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 8
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 10,
+          "originalName": "Forearm_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 9
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 11,
+          "originalName": "Hand_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 10
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 12,
+          "originalName": "Thigh_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 11
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 13,
+          "originalName": "Shin_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 12
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 14,
+          "originalName": "Foot_L",
+          "resolution": "mNode",
+          "sourceBoneIndex": 13
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 15,
+          "originalName": "Thigh_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 14
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 16,
+          "originalName": "Shin_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 15
+        },
+        {
+          "meshNodeIndex": 18,
+          "nodeIndex": 17,
+          "originalName": "Foot_R",
+          "resolution": "mNode",
+          "sourceBoneIndex": 16
+        }
+      ],
+      "fbxPreservePivots": true,
+      "missingChannelPolicy": "Preserve bind-local; do not bake or remove helper nodes",
+      "nameMappings": [
+        {
+          "nodeIndex": 0,
+          "originalName": "ASHEN_ROOT",
+          "runtimeName": "ASHEN_ROOT"
+        },
+        {
+          "nodeIndex": 1,
+          "originalName": "Pelvis",
+          "runtimeName": "Pelvis"
+        },
+        {
+          "nodeIndex": 2,
+          "originalName": "Spine",
+          "runtimeName": "Spine"
+        },
+        {
+          "nodeIndex": 3,
+          "originalName": "Chest",
+          "runtimeName": "Chest"
+        },
+        {
+          "nodeIndex": 4,
+          "originalName": "Neck",
+          "runtimeName": "Neck"
+        },
+        {
+          "nodeIndex": 5,
+          "originalName": "Head",
+          "runtimeName": "Head"
+        },
+        {
+          "nodeIndex": 6,
+          "originalName": "UpperArm_L",
+          "runtimeName": "UpperArm_L"
+        },
+        {
+          "nodeIndex": 7,
+          "originalName": "Forearm_L",
+          "runtimeName": "Forearm_L"
+        },
+        {
+          "nodeIndex": 8,
+          "originalName": "Hand_L",
+          "runtimeName": "Hand_L"
+        },
+        {
+          "nodeIndex": 9,
+          "originalName": "UpperArm_R",
+          "runtimeName": "UpperArm_R"
+        },
+        {
+          "nodeIndex": 10,
+          "originalName": "Forearm_R",
+          "runtimeName": "Forearm_R"
+        },
+        {
+          "nodeIndex": 11,
+          "originalName": "Hand_R",
+          "runtimeName": "Hand_R"
+        },
+        {
+          "nodeIndex": 12,
+          "originalName": "Thigh_L",
+          "runtimeName": "Thigh_L"
+        },
+        {
+          "nodeIndex": 13,
+          "originalName": "Shin_L",
+          "runtimeName": "Shin_L"
+        },
+        {
+          "nodeIndex": 14,
+          "originalName": "Foot_L",
+          "runtimeName": "Foot_L"
+        },
+        {
+          "nodeIndex": 15,
+          "originalName": "Thigh_R",
+          "runtimeName": "Thigh_R"
+        },
+        {
+          "nodeIndex": 16,
+          "originalName": "Shin_R",
+          "runtimeName": "Shin_R"
+        },
+        {
+          "nodeIndex": 17,
+          "originalName": "Foot_R",
+          "runtimeName": "Foot_R"
+        },
+        {
+          "nodeIndex": 18,
+          "originalName": "Body",
+          "runtimeName": "Body"
+        }
+      ],
+      "nameProfile": "preserve",
+      "normalization": "reflectX+reverseWinding+flipV",
+      "postprocessFlags": 17416,
+      "sourceBehaviorEnum": {
+        "0": "DEFAULT",
+        "1": "CONSTANT",
+        "2": "LINEAR",
+        "3": "REPEAT"
+      },
+      "sourceChannelBehaviors": [
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "idle"
+        },
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "walk"
+        },
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "attack"
+        },
+        {
+          "nodeIndex": 5,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 3,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 1,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 4,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 2,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 6,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 7,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 8,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 9,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 10,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 11,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 12,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 13,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 14,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 15,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 16,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        },
+        {
+          "nodeIndex": 17,
+          "sourcePostState": 0,
+          "sourcePreState": 0,
+          "take": "death"
+        }
+      ],
+      "sourceFile": "character.glb",
+      "sourceFormat": ".glb",
+      "sourceMetadata": {},
+      "sourceUnitsPerMeter": 1.0,
+      "times": [
+        {
+          "durationTicks": 2400.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "idle",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 1000.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "walk",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 450.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "attack",
+          "ticksPerSecond": 1000.0
+        },
+        {
+          "durationTicks": 800.0,
+          "fallback": false,
+          "reportedTicksPerSecond": 1000.0,
+          "take": "death",
+          "ticksPerSecond": 1000.0
+        }
+      ],
+      "trackOutsideKeyPolicy": "clamp_to_nearest_key",
+      "unitPolicy": "Explicit settings; metadata recorded, never applied a second time",
+      "unusedMaterialsRemoved": 1,
+      "unweightedPolicy": "Explicit mesh-node identity inverse-bind joint; no pruning"
+    },
+    "importedUvOrigin": "bottom_left",
+    "importerFingerprint": {
+      "assimpLibrarySha256": "7647d322b3a9462cf05e1a851a1ccbe108f7e1171701c94022e1f1e32bf13a1b",
+      "assimpSourceArchiveSha256": "1eeb63f3e6f6c9d820cc52f7d44fa6b6557256330f45ddaa903aa658c47fece5",
+      "assimpVersion": "6.0.4",
+      "nativeExecutableSha256": "7575586daf9077fc43e8f36784751e24fdbf5b3cf917ffc7fa111088dbfd08dd",
+      "nativeSourceSha256": "7761fbfcbe1f9b97ab9e1766dd9e0aae4bb49cd66499e641a66ae274dfa45ee3"
+    },
+    "keyTimePolicy": "source_ticks_divided_by_reported_ticks_per_second",
+    "keyTimeUnit": "seconds",
+    "loopPolicyOwner": "Client",
+    "maximumJointsPerMesh": 128,
+    "maximumWeightsPerVertex": 4,
+    "mixamoAliases": false,
+    "nameProfile": "preserve",
+    "normalizedSceneSha256": "0d8e51d9e1615d786f776ca99a723a4e1e747d1e89e16fa16dc7f747c718edca",
+    "outputClips": {
+      "attack.clip": "attack",
+      "death.clip": "death",
+      "idle.clip": "idle",
+      "walk.clip": "walk"
+    },
+    "outputModel": "character.mesh",
+    "publisherDependencies": {
+      "BuildAnimatedAssets.py": "9a5f1dfd6d34720f9c20241e5e86b8acfbb44118b07184cd88b55ef4f87e1d1d",
+      "BuildTrialAssets.py": "6a431ab66ff0cf9c640cce0e28c75f21d40f4d20fe83fd7f00c56034f01a07d3"
+    },
+    "reverseWinding": true,
+    "runtimeFront": "+Z",
+    "runtimeHandedness": "LH",
+    "runtimeUnitsPerMeter": 1.0,
+    "runtimeUp": "+Y",
+    "runtimeUvOrigin": "top_left",
+    "schemaVersion": 1,
+    "scope": "skeletal_model_and_selected_clips",
+    "selectedTakes": [
+      "idle",
+      "walk",
+      "attack",
+      "death"
+    ],
+    "sourceFile": "character.glb",
+    "sourceFormat": "glTF2_GLB",
+    "sourceFront": "+Z",
+    "sourceHandedness": "RH",
+    "sourceUnitsPerMeter": 1.0,
+    "sourceUp": "+Y",
+    "sourceUvOrigin": "top_left",
+    "textureRemap": {
+      "*0": "Textures/palette.png"
+    }
+  },
+  "importOptionsSha256": "fd5e57f174db27454cc75bd618d49016b0e12df44e08c5c93e29c72ae89b3993",
+  "inputs": [
+    {
+      "bytes": 610,
+      "path": "License.txt",
+      "sha256": "63781eb453a105d3277ee91fa8041c349fa7a3217f2edb3a94578e3952c35ea2"
+    },
+    {
+      "bytes": 246,
+      "path": "Textures/palette.png",
+      "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    {
+      "bytes": 369164,
+      "path": "character.glb",
+      "sha256": "46ebde2d9ef81c2e989ab824d2c4cf8012f6e48405728ad40697a61352f1888e"
+    },
+    {
+      "bytes": 1081,
+      "path": "import.json",
+      "sha256": "cc498e6d14363bd8a83811442df9bc59f935fe717698c67d3426db1dd31e4c4c"
+    },
+    {
+      "bytes": 8153,
+      "path": "source.json",
+      "sha256": "7ab0e0a1a8a89cf6cc0576c5f77aee3b217a204891a9c731c3b298feb73ea66a"
+    }
+  ],
+  "nameProfile": "preserve",
+  "outputs": [
+    {
+      "bytes": 610,
+      "kind": "license",
+      "path": "License.txt",
+      "sha256": "63781eb453a105d3277ee91fa8041c349fa7a3217f2edb3a94578e3952c35ea2"
+    },
+    {
+      "bytes": 246,
+      "kind": "texture",
+      "path": "Textures/palette.png",
+      "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+    },
+    {
+      "bytes": 14352,
+      "kind": "clip",
+      "path": "attack.clip",
+      "sha256": "7fb912d7bceb4ee1b8cbd24dae8542fccf39c5acad363cb87e232477d74f2b7b"
+    },
+    {
+      "bytes": 344702,
+      "kind": "model",
+      "path": "character.mesh",
+      "sha256": "d92d889b0cf9096de8609fd7c93e65ebc04b631a7b4ee59700f6dc06f6555c7d"
+    },
+    {
+      "bytes": 22054,
+      "kind": "clip",
+      "path": "death.clip",
+      "sha256": "1301db90a4d2b39e79f8b960d44932956154018630de396de329f14b4ac13517"
+    },
+    {
+      "bytes": 22052,
+      "kind": "clip",
+      "path": "idle.clip",
+      "sha256": "29089e4a0e9c5bf8ce4943310e37403f3d8cb035bbe59119b84cfee0f4841272"
+    },
+    {
+      "bytes": 15204,
+      "kind": "clip",
+      "path": "walk.clip",
+      "sha256": "59c5b173bf6697fe67c4304f267647e6c12282cdf3fd230406c397fdc7504a5f"
+    }
+  ],
+  "runtimeCoordinates": {
+    "front": "+Z",
+    "handedness": "LH",
+    "unitsPerMeter": 1.0,
+    "up": "+Y",
+    "uvOrigin": "top_left"
+  },
+  "sidecarVersion": 2,
+  "skeletonSignature": "5aa9c3c358815171181b6819c227e60554094b052d81afeafe5ae62680f934ac",
+  "skinCount": 1,
+  "source": {
+    "animationAuthoringChecks": {
+      "attack": {
+        "durationSeconds": 0.45,
+        "exactLoopEndpoint": true,
+        "finalPoseHeld": false,
+        "maximumSkinnedDisplacementMeters": 0.9010552579862541,
+        "minimumVertexYAtAuthoredKeys": 0.0020000000000000573,
+        "recommendedPlayback": "Clamp",
+        "rootXZTranslationMeters": [
+          0,
+          0
+        ],
+        "sampledKeys": 31,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      },
+      "death": {
+        "durationSeconds": 0.8,
+        "exactLoopEndpoint": false,
+        "finalPoseBounds": {
+          "max": [
+            0.6763646840360057,
+            0.6002857139714548,
+            0.9365204773560442
+          ],
+          "min": [
+            -0.6924109767054457,
+            0.0020000000000000573,
+            -1.3692819285119182
+          ]
+        },
+        "finalPoseHeld": true,
+        "maximumSkinnedDisplacementMeters": 2.4590779194676395,
+        "minimumVertexYAtAuthoredKeys": 0.0019999999999999324,
+        "recommendedPlayback": "Clamp",
+        "rootXZTranslationMeters": [
+          0,
+          0
+        ],
+        "sampledKeys": 49,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      },
+      "idle": {
+        "durationSeconds": 2.4,
+        "exactLoopEndpoint": true,
+        "finalPoseHeld": false,
+        "maximumSkinnedDisplacementMeters": 0.060029195368807846,
+        "minimumVertexYAtAuthoredKeys": 0.0019999999999998352,
+        "recommendedPlayback": "Loop",
+        "rootXZTranslationMeters": [
+          0,
+          0
+        ],
+        "sampledKeys": 49,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      },
+      "walk": {
+        "durationSeconds": 1.0,
+        "exactLoopEndpoint": true,
+        "finalPoseHeld": false,
+        "maximumSkinnedDisplacementMeters": 0.3766509503364151,
+        "minimumVertexYAtAuthoredKeys": 0.0019999999999998352,
+        "recommendedPlayback": "Loop",
+        "rootXZTranslationMeters": [
+          0,
+          0
+        ],
+        "sampledKeys": 33,
+        "scope": "CPU authoring key samples only; not GPU, interpolation-foot-contact or IK approval"
+      }
+    },
+    "assetId": "ashen-warden",
+    "authoredBounds": {
+      "max": [
+        0.6409698831278217,
+        2.31,
+        0.31436396103067893
+      ],
+      "min": [
+        -0.6409698831278217,
+        0.0,
+        -0.27583883476483184
+      ]
+    },
+    "creator": "SAVE MYSELF: ASHEN BORDER project",
+    "front": "+Z",
+    "generator": {
+      "path": "Scripts/BuildAshenCharacters.py",
+      "revision": 5,
+      "sha256": "5a2a2b45b837b36e1caedcc693ddac9ef6f9508a85d346454261b596e717dcfa"
+    },
+    "heightMeters": 2.31,
+    "joints": 17,
+    "license": "Project-authored; project repository and game redistribution permitted",
+    "licenseFile": "License.txt",
+    "materials": 1,
+    "meshes": 1,
+    "noExternalAssetBytesCopied": true,
+    "parts": [
+      {
+        "firstVertex": 0,
+        "name": "trouser-upper-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 144,
+        "name": "trouser-lower-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 288,
+        "name": "boot-L",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 384,
+        "name": "sleeve-upper-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 528,
+        "name": "sleeve-lower-L",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 672,
+        "name": "glove-L",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 852,
+        "name": "trouser-upper-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 996,
+        "name": "trouser-lower-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1140,
+        "name": "boot-R",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1236,
+        "name": "sleeve-upper-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1380,
+        "name": "sleeve-lower-R",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 1524,
+        "name": "glove-R",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 1704,
+        "name": "pelvis-belt-base",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1800,
+        "name": "waist",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 1896,
+        "name": "barrel-cuirass",
+        "vertices": 192
+      },
+      {
+        "firstVertex": 2088,
+        "name": "cuirass-lower-band",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2184,
+        "name": "broad-pauldron-L",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 2364,
+        "name": "tasset-L",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2460,
+        "name": "broad-pauldron-R",
+        "vertices": 180
+      },
+      {
+        "firstVertex": 2640,
+        "name": "tasset-R",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2736,
+        "name": "black-neck-opening",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 2832,
+        "name": "empty-helmet-interior",
+        "vertices": 240
+      },
+      {
+        "firstVertex": 3072,
+        "name": "helmet-back",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3168,
+        "name": "helmet-cheek",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3264,
+        "name": "helmet-cheek",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3360,
+        "name": "helmet-crown",
+        "vertices": 144
+      },
+      {
+        "firstVertex": 3504,
+        "name": "helmet-brow",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3600,
+        "name": "cuirass-seal",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3696,
+        "name": "warden-teal-seal-mantle",
+        "vertices": 108
+      },
+      {
+        "firstVertex": 3804,
+        "name": "warden-flared-pauldron-L",
+        "vertices": 72
+      },
+      {
+        "firstVertex": 3876,
+        "name": "warden-teal-cuff-L",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 3972,
+        "name": "warden-split-crown-L",
+        "vertices": 72
+      },
+      {
+        "firstVertex": 4044,
+        "name": "warden-back-seal-L",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4140,
+        "name": "warden-flared-pauldron-R",
+        "vertices": 72
+      },
+      {
+        "firstVertex": 4212,
+        "name": "warden-teal-cuff-R",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4308,
+        "name": "warden-split-crown-R",
+        "vertices": 72
+      },
+      {
+        "firstVertex": 4380,
+        "name": "warden-back-seal-R",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4476,
+        "name": "warden-central-crown",
+        "vertices": 72
+      },
+      {
+        "firstVertex": 4548,
+        "name": "warden-dark-visor",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4644,
+        "name": "warden-pale-visor-slit",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4740,
+        "name": "warden-seal-breastplate",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4836,
+        "name": "warden-ivory-seal-vertical",
+        "vertices": 96
+      },
+      {
+        "firstVertex": 4932,
+        "name": "warden-ivory-seal-horizontal",
+        "vertices": 96
+      }
+    ],
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "rights": {
+      "attributionRequired": false,
+      "commercial": true,
+      "modification": true,
+      "personal": true,
+      "redistribution": true,
+      "repositoryInclusion": true,
+      "scope": "This project repository and game builds; not a separate third-party asset pack license"
+    },
+    "schemaVersion": 1,
+    "selectedFiles": [
+      {
+        "bytes": 610,
+        "path": "License.txt",
+        "sha256": "63781eb453a105d3277ee91fa8041c349fa7a3217f2edb3a94578e3952c35ea2"
+      },
+      {
+        "bytes": 246,
+        "path": "Textures/palette.png",
+        "sha256": "04c9346e6d417c569dd12b38b457eb5a553b547b7def16575f8550b62d890b47"
+      },
+      {
+        "bytes": 369164,
+        "path": "character.glb",
+        "sha256": "46ebde2d9ef81c2e989ab824d2c4cf8012f6e48405728ad40697a61352f1888e"
+      },
+      {
+        "bytes": 1081,
+        "path": "import.json",
+        "sha256": "cc498e6d14363bd8a83811442df9bc59f935fe717698c67d3426db1dd31e4c4c"
+      }
+    ],
+    "sourceRevision": "v005",
+    "sourceType": "Original procedural authoring from this repository script; no external assets",
+    "triangles": 1676,
+    "unitsPerMeter": 1,
+    "up": "+Y",
+    "variantId": "warden",
+    "vertices": 5028
+  },
+  "staticOnly": false,
+  "validation": {
+    "animationRuntime": "NOT_RUN",
+    "cpuConversion": "PASS",
+    "gpuUpload": "NOT_RUN",
+    "mixamoSample": "NOT_APPLICABLE"
+  }
+}

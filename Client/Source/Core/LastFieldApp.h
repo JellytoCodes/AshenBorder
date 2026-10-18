@@ -85,6 +85,7 @@ namespace Client
             bool seen = false;
             std::uint32_t definitionId = 0;
             bool attacking = false;
+            bool charging = false;
         };
 
         struct DeathVisual

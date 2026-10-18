@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -22,12 +23,21 @@ namespace Client
         float radius = 0.35f, height = 1.8f;
     };
 
+    struct EnemyRangedDefinition
+    {
+        float damage = 6, interval = 2;
+        float projectileSpeed = 7, projectileLife = 2, projectileRadius = 0.16f;
+        float range = 10, preferredDistance = 6;
+        float windup = 0.55f, spawnDelay = 1;
+    };
+
     struct EnemyDefinition
     {
         std::uint32_t id = 0;
         float hp = 20, speed = 2, armor = 0, radius = 0.35f, height = 1.8f;
         float contactDamage = 5, contactInterval = 0.8f, knockback = 2;
         std::uint32_t xp = 2, currency = 1;
+        std::optional<EnemyRangedDefinition> ranged;
     };
 
     struct WeaponDefinition

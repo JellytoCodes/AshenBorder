@@ -1103,6 +1103,7 @@ namespace Client
                     visual.moving = false;
                     visual.definitionId = enemy.definitionId;
                     visual.attacking = false;
+                    visual.charging = false;
                     if (asset.idle && (!visual.animator.SetModel(asset.model, error) ||
                         !visual.animator.SetClip(asset.idle, Engine::PlaybackMode::Loop, error)))
                     {
@@ -1118,10 +1119,25 @@ namespace Client
                 const bool moved = x != 0 || z != 0;
                 if (simulationSeconds > 0 && enemy.eligibleTick <= _run->TickIndex())
                 {
-                    if (moved)
+                    if (enemy.rangedCharging)
+                    {
+                        const double aimX = static_cast<double>(enemy.rangedAim.x) - enemy.position.x;
+                        const double aimZ = static_cast<double>(enemy.rangedAim.z) - enemy.position.z;
+                        visual.yaw = static_cast<float>(std::atan2(aimX, aimZ));
+                        if (!visual.charging && asset.attack)
+                        {
+                            if (!visual.animator.SetClip(asset.attack, Engine::PlaybackMode::Clamp, error))
+                            {
+                                throw std::runtime_error("Enemy ranged windup transition: " + error);
+                            }
+                            visual.attacking = true;
+                        }
+                    }
+                    else if (moved)
                     {
                         visual.yaw = static_cast<float>(std::atan2(x, z));
                     }
+                    visual.charging = enemy.rangedCharging;
                     if (asset.idle)
                     {
                         if (visual.attacking && visual.animator.TimeSeconds() >= asset.attack->Data().durationSeconds)
@@ -1260,6 +1276,13 @@ namespace Client
                 }
                 break;
             }
+            case GameEventKind::EnemyAttacked:
+                if (const auto* enemy = _definitions->FindEnemy(event.definitionId);
+                    enemy && enemy->ranged && event.damage > 0)
+                {
+                    sound = "bow";
+                }
+                break;
             case GameEventKind::Damaged: sound = "hit"; break;
             case GameEventKind::EnemyDied: sound = "death"; break;
             case GameEventKind::PickedUp: sound = "pickup"; break;
@@ -1794,6 +1817,10 @@ namespace Client
                         tint = _gameMode ? Engine::Vector4{1, .92f, .8f, 1}
                                          : Engine::Vector4{0.25f, 0.8f, 1, 1};
                     }
+                    if (_gameMode && value.rangedCharging)
+                    {
+                        tint = {1, .58f, .3f, 1};
+                    }
                     if ((visual && visual->hitFlash > 0) ||
                         (!_gameMode && _hitFlash > 0 && _lastHit && _lastHit->target == ref))
                     {
@@ -1852,13 +1879,25 @@ namespace Client
                     const float yaw = _gameMode ? std::atan2(value.velocity.x, value.velocity.z) : 0;
                     if (_gameMode)
                     {
-                        const auto* definition = _definitions->FindWeapon(value.definitionId);
-                        if (!definition || definition->kind == WeaponKind::Melee)
+                        if (value.owner.kind == EntityKind::Enemy)
                         {
-                            throw std::runtime_error("Projectile visual references an invalid weapon definition");
+                            const auto* definition = _definitions->FindEnemy(value.definitionId);
+                            if (!definition || !definition->ranged)
+                            {
+                                throw std::runtime_error("Enemy projectile visual references an invalid ranged definition");
+                            }
+                            prop(_projectileModels[0], value.position, 1.25f, {1, .3f, .12f, 1}, yaw);
                         }
-                        const auto& model = _projectileModels[definition->kind == WeaponKind::Shotgun ? 1 : 0];
-                        prop(model, value.position, 1, {1, 1, 1, 1}, yaw);
+                        else
+                        {
+                            const auto* definition = _definitions->FindWeapon(value.definitionId);
+                            if (!definition || definition->kind == WeaponKind::Melee)
+                            {
+                                throw std::runtime_error("Projectile visual references an invalid weapon definition");
+                            }
+                            const auto& model = _projectileModels[definition->kind == WeaponKind::Shotgun ? 1 : 0];
+                            prop(model, value.position, 1, {1, 1, 1, 1}, yaw);
+                        }
                     }
                     else
                     {

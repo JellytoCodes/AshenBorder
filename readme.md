@@ -7,7 +7,7 @@ DirectX 11과 C++로 만든 자체 엔진 기반의 싱글플레이 3D 탑다운
 
 - 군용 단검·사냥활·투척칼을 조합하는 자동 전투
 - 전투 사이 성장 선택과 상점 구매를 통한 장비·능력 강화
-- 총 10스테이지와 마지막 보스인 잿빛 수비대장
+- 총 20스테이지와 두 차례 보스전, 근접·원거리 적
 - 직접 제작한 로우폴리 캐릭터와 환경, 캐릭터를 가리는 나무의 투명화
 
 ## 구조
@@ -18,7 +18,7 @@ DirectX 11과 C++로 만든 자체 엔진 기반의 싱글플레이 3D 탑다운
 
 ## 실행
 
-[Windows x64 배포본](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261018-pacing)을 압축 해제한 뒤 `AshenBorder.exe`를 실행한다. Windows 10/11과 Direct3D 11 기능 수준 11.0 이상 GPU가 필요하다. 동봉된 DLL·Resources·Engine 폴더를 함께 둔다.
+[Windows x64 배포본](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261018-stages20)을 압축 해제한 뒤 `AshenBorder.exe`를 실행한다. Windows 10/11과 Direct3D 11 기능 수준 11.0 이상 GPU가 필요하다. 동봉된 DLL·Resources·Engine 폴더를 함께 둔다.
 
 | 입력 | 동작 |
 |---|---|

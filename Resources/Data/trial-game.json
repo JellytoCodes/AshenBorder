@@ -68,11 +68,48 @@
       "armor": 3,
       "radius": 0.85,
       "height": 2.8,
-      "contactDamage": 18,
+      "contactDamage": 12,
       "contactInterval": 1.2,
       "knockback": 4,
       "xp": 40,
       "currency": 20
+    },
+    {
+      "id": 5,
+      "hp": 12,
+      "speed": 1.3,
+      "armor": 0,
+      "radius": 0.3,
+      "height": 1.7,
+      "contactDamage": 2,
+      "contactInterval": 1.0,
+      "knockback": 1,
+      "xp": 3,
+      "currency": 2,
+      "ranged": {
+        "damage": 2,
+        "interval": 5,
+        "projectileSpeed": 5.5,
+        "projectileLife": 2.4,
+        "projectileRadius": 0.13,
+        "range": 6,
+        "preferredDistance": 3.25,
+        "windup": 0.55,
+        "spawnDelay": 1.2
+      }
+    },
+    {
+      "id": 6,
+      "hp": 1400,
+      "speed": 1.25,
+      "armor": 4,
+      "radius": 0.9,
+      "height": 3.0,
+      "contactDamage": 12,
+      "contactInterval": 2,
+      "knockback": 4,
+      "xp": 80,
+      "currency": 40
     }
   ],
   "weapons": [
@@ -88,11 +125,11 @@
     {
       "id": 2,
       "kind": "SingleProjectile",
-      "damage": 9,
+      "damage": 14,
       "cooldown": 0.45,
       "range": 12,
       "knockback": 1,
-      "projectileSpeed": 20,
+      "projectileSpeed": 26,
       "projectileLife": 1,
       "projectileRadius": 0.12,
       "projectileCount": 1,
@@ -101,23 +138,23 @@
     {
       "id": 3,
       "kind": "Shotgun",
-      "damage": 5,
-      "cooldown": 1.2,
+      "damage": 6,
+      "cooldown": 1.05,
       "range": 8,
       "knockback": 1.5,
       "projectileSpeed": 18,
       "projectileLife": 0.8,
       "projectileRadius": 0.1,
-      "projectileCount": 5,
-      "spreadRadians": 0.523598776
+      "projectileCount": 7,
+      "spreadRadians": 0.4
     }
   ],
   "waves": [
     {
       "id": 1,
-      "duration": 22.5,
+      "duration": 20,
       "maxAlive": 16,
-      "spawnPerSecond": 1.6,
+      "spawnPerSecond": 1.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -138,9 +175,9 @@
     },
     {
       "id": 2,
-      "duration": 22.5,
-      "maxAlive": 20,
-      "spawnPerSecond": 2.8,
+      "duration": 20,
+      "maxAlive": 18,
+      "spawnPerSecond": 2.2,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -161,9 +198,9 @@
     },
     {
       "id": 3,
-      "duration": 22.5,
-      "maxAlive": 24,
-      "spawnPerSecond": 2.8,
+      "duration": 20,
+      "maxAlive": 20,
+      "spawnPerSecond": 2.5,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -184,9 +221,32 @@
     },
     {
       "id": 4,
-      "duration": 30,
-      "maxAlive": 28,
-      "spawnPerSecond": 3.0,
+      "duration": 20,
+      "maxAlive": 22,
+      "spawnPerSecond": 2.8,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 5
+        },
+        {
+          "enemyId": 2,
+          "weight": 3
+        },
+        {
+          "enemyId": 3,
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "duration": 20,
+      "maxAlive": 24,
+      "spawnPerSecond": 3.1,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -206,44 +266,21 @@
       ]
     },
     {
-      "id": 5,
-      "duration": 30,
-      "maxAlive": 32,
-      "spawnPerSecond": 3.3,
-      "minSpawnDistance": 4,
-      "maxSpawnDistance": 7,
-      "maxSpawnAttempts": 12,
-      "enemyWeights": [
-        {
-          "enemyId": 1,
-          "weight": 4
-        },
-        {
-          "enemyId": 2,
-          "weight": 3
-        },
-        {
-          "enemyId": 3,
-          "weight": 3
-        }
-      ]
-    },
-    {
       "id": 6,
-      "duration": 30,
-      "maxAlive": 36,
-      "spawnPerSecond": 3.6,
+      "duration": 20,
+      "maxAlive": 28,
+      "spawnPerSecond": 3.4,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
       "enemyWeights": [
         {
           "enemyId": 1,
-          "weight": 3
+          "weight": 4
         },
         {
           "enemyId": 2,
-          "weight": 4
+          "weight": 3
         },
         {
           "enemyId": 3,
@@ -253,8 +290,31 @@
     },
     {
       "id": 7,
-      "duration": 37.5,
-      "maxAlive": 40,
+      "duration": 20,
+      "maxAlive": 30,
+      "spawnPerSecond": 3.7,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 3
+        },
+        {
+          "enemyId": 2,
+          "weight": 4
+        },
+        {
+          "enemyId": 3,
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "duration": 20,
+      "maxAlive": 32,
       "spawnPerSecond": 4.0,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
@@ -275,40 +335,17 @@
       ]
     },
     {
-      "id": 8,
-      "duration": 37.5,
-      "maxAlive": 44,
-      "spawnPerSecond": 4.5,
-      "minSpawnDistance": 4,
-      "maxSpawnDistance": 7,
-      "maxSpawnAttempts": 12,
-      "enemyWeights": [
-        {
-          "enemyId": 1,
-          "weight": 2
-        },
-        {
-          "enemyId": 2,
-          "weight": 4
-        },
-        {
-          "enemyId": 3,
-          "weight": 4
-        }
-      ]
-    },
-    {
       "id": 9,
-      "duration": 37.5,
-      "maxAlive": 48,
-      "spawnPerSecond": 5.0,
+      "duration": 20,
+      "maxAlive": 36,
+      "spawnPerSecond": 4.3,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
       "enemyWeights": [
         {
           "enemyId": 1,
-          "weight": 2
+          "weight": 3
         },
         {
           "enemyId": 2,
@@ -316,22 +353,22 @@
         },
         {
           "enemyId": 3,
-          "weight": 5
+          "weight": 4
         }
       ]
     },
     {
       "id": 10,
-      "duration": 45,
-      "maxAlive": 32,
-      "spawnPerSecond": 3.5,
+      "duration": 40,
+      "maxAlive": 28,
+      "spawnPerSecond": 2.6,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
       "enemyWeights": [
         {
           "enemyId": 1,
-          "weight": 3
+          "weight": 4
         },
         {
           "enemyId": 2,
@@ -339,12 +376,286 @@
         },
         {
           "enemyId": 3,
-          "weight": 4
+          "weight": 3
         }
       ],
       "boss": {
         "enemyId": 4,
         "name": "잿빛 수비대장"
+      }
+    },
+    {
+      "id": 11,
+      "duration": 25,
+      "maxAlive": 38,
+      "spawnPerSecond": 4.4,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 8
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 6
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "duration": 25,
+      "maxAlive": 40,
+      "spawnPerSecond": 4.65,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 8
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 6
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.55
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "duration": 25,
+      "maxAlive": 42,
+      "spawnPerSecond": 4.9,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 8
+        },
+        {
+          "enemyId": 3,
+          "weight": 6
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.6
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "duration": 25,
+      "maxAlive": 44,
+      "spawnPerSecond": 5.15,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 8
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.65
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "duration": 25,
+      "maxAlive": 46,
+      "spawnPerSecond": 5.4,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 8
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.7
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "duration": 25,
+      "maxAlive": 50,
+      "spawnPerSecond": 5.65,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 8
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.75
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "duration": 25,
+      "maxAlive": 54,
+      "spawnPerSecond": 5.9,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 4
+        },
+        {
+          "enemyId": 2,
+          "weight": 8
+        },
+        {
+          "enemyId": 3,
+          "weight": 8
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "duration": 25,
+      "maxAlive": 58,
+      "spawnPerSecond": 6.15,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 4
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 10
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.85
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "duration": 25,
+      "maxAlive": 60,
+      "spawnPerSecond": 6.4,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 4
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 10
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.9
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "duration": 40,
+      "maxAlive": 48,
+      "spawnPerSecond": 3.6,
+      "minSpawnDistance": 4,
+      "maxSpawnDistance": 7,
+      "maxSpawnAttempts": 12,
+      "enemyWeights": [
+        {
+          "enemyId": 1,
+          "weight": 6
+        },
+        {
+          "enemyId": 2,
+          "weight": 6
+        },
+        {
+          "enemyId": 3,
+          "weight": 8
+        },
+        {
+          "enemyId": 5,
+          "weight": 0.9
+        }
+      ],
+      "boss": {
+        "enemyId": 6,
+        "name": "봉인 수호장"
       }
     }
   ],
@@ -368,52 +679,52 @@
     {
       "id": 2,
       "name": "Stride",
-      "maxStacks": 12,
+      "maxStacks": 20,
       "weight": 1,
       "modifiers": [
         {
           "stat": "Speed",
           "operation": "Percent",
-          "value": 0.02
+          "value": 0.012
         }
       ]
     },
     {
       "id": 3,
       "name": "Guard",
-      "maxStacks": 12,
+      "maxStacks": 20,
       "weight": 1,
       "modifiers": [
         {
           "stat": "Armor",
           "operation": "Flat",
-          "value": 0.25
+          "value": 0.15
         }
       ]
     },
     {
       "id": 4,
       "name": "Power",
-      "maxStacks": 12,
+      "maxStacks": 20,
       "weight": 1,
       "modifiers": [
         {
           "stat": "DamageMultiplier",
           "operation": "Percent",
-          "value": 0.03
+          "value": 0.018
         }
       ]
     },
     {
       "id": 5,
       "name": "Haste",
-      "maxStacks": 12,
+      "maxStacks": 20,
       "weight": 1,
       "modifiers": [
         {
           "stat": "AttackSpeed",
           "operation": "Percent",
-          "value": 0.025
+          "value": 0.015
         }
       ]
     },
@@ -435,25 +746,55 @@
     "cumulativeXp": [
       14,
       35,
-      70,
-      120,
-      190,
-      285,
-      420,
-      585,
-      800,
-      1080,
-      1440,
-      1880,
-      2440,
-      3120
+      65,
+      105,
+      160,
+      235,
+      330,
+      450,
+      600,
+      780,
+      995,
+      1240,
+      1530,
+      1860,
+      2240,
+      2670,
+      3150,
+      3680,
+      4270,
+      4920,
+      5630,
+      6410,
+      7260,
+      8180
     ],
     "choiceCount": 3
   },
   "shop": {
     "offerCount": 4,
     "rerollCost": 4,
-    "stagePricePercent": [100, 150, 225, 325, 450, 600, 800, 1050, 1350],
+    "stagePricePercent": [
+      100,
+      125,
+      150,
+      185,
+      225,
+      270,
+      325,
+      390,
+      465,
+      550,
+      645,
+      750,
+      865,
+      990,
+      1125,
+      1270,
+      1425,
+      1590,
+      1765
+    ],
     "items": [
       {
         "kind": "Weapon",
@@ -464,13 +805,13 @@
       {
         "kind": "Weapon",
         "definitionId": 2,
-        "price": 16,
+        "price": 15,
         "weight": 1
       },
       {
         "kind": "Weapon",
         "definitionId": 3,
-        "price": 18,
+        "price": 15,
         "weight": 1
       },
       {

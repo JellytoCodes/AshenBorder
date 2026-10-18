@@ -62,6 +62,26 @@
         "idle": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/idle.clip",
         "move": "Generated/ashen-commander/4a43de467defb3fd7af0b8122b4bd1417b0088618a299df8b8db4bd377489046/walk.clip"
       }
+    },
+    {
+      "modelPath": "Generated/ashen-archer/60d862434be3cd92ccb178d7051093a8d244b6cfcb83b1714e0b5f816528fa06/character.mesh",
+      "definitionId": 5,
+      "animationSlots": {
+        "attack": "Generated/ashen-archer/60d862434be3cd92ccb178d7051093a8d244b6cfcb83b1714e0b5f816528fa06/attack.clip",
+        "death": "Generated/ashen-archer/60d862434be3cd92ccb178d7051093a8d244b6cfcb83b1714e0b5f816528fa06/death.clip",
+        "idle": "Generated/ashen-archer/60d862434be3cd92ccb178d7051093a8d244b6cfcb83b1714e0b5f816528fa06/idle.clip",
+        "move": "Generated/ashen-archer/60d862434be3cd92ccb178d7051093a8d244b6cfcb83b1714e0b5f816528fa06/walk.clip"
+      }
+    },
+    {
+      "modelPath": "Generated/ashen-warden/9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d/character.mesh",
+      "definitionId": 6,
+      "animationSlots": {
+        "attack": "Generated/ashen-warden/9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d/attack.clip",
+        "death": "Generated/ashen-warden/9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d/death.clip",
+        "idle": "Generated/ashen-warden/9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d/idle.clip",
+        "move": "Generated/ashen-warden/9109d3d20b4c368f01e0b202406b6ae3d14028748e31b495f586fb8cd151226d/walk.clip"
+      }
     }
   ],
   "weaponAttackSlots": {

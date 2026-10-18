@@ -147,6 +147,7 @@ namespace Client
         void GatherContactDamage();
         void ApplyDamage();
         void AttackWeapons();
+        void AttackRangedEnemies(float dt);
         bool ReserveWeaponShots(std::uint32_t slotIndex, const WeaponDefinition& weapon,
             Engine::Vector2 direction);
         void CommitWeaponShots(bool allow);
@@ -186,6 +187,7 @@ namespace Client
         {
             std::uint32_t slotIndex = 0;
             std::size_t first = 0, count = 0;
+            EntityRef owner;
         };
         std::shared_ptr<const GameDefinitions> _definitions;
         std::vector<WeaponSlot> _weaponSlots;

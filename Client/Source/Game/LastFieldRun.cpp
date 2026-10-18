@@ -130,7 +130,9 @@ namespace Client
         {
             return {};
         }
-        if (_definitions && spawn.definitionId == _definitions->waves.back().bossEnemyId &&
+        const bool bossDefinition = _definitions && std::any_of(_definitions->waves.begin(), _definitions->waves.end(),
+            [&](const WaveDefinition& wave) { return wave.bossEnemyId == spawn.definitionId; });
+        if (bossDefinition &&
             (spawn.definitionId != _wave.bossEnemyId || _wave.bossSpawned))
         {
             return {};
@@ -149,6 +151,14 @@ namespace Client
         enemy->eligibleTick = eligibleTick;
         enemy->radius = spawn.radius;
         enemy->height = spawn.height;
+        if (_definitions)
+        {
+            const auto* definition = _definitions->FindEnemy(spawn.definitionId);
+            if (definition->ranged)
+            {
+                enemy->rangedCooldown = definition->ranged->spawnDelay;
+            }
+        }
         const auto result = Ref(EntityKind::Enemy, _enemyReservation[0]);
         if (!_enemies.Commit(_enemyReservation))
         {
@@ -203,11 +213,20 @@ namespace Client
         for (const auto& spawn : batch)
         {
             if (!Finite(spawn.position) || !Finite(spawn.velocity) || !IsValid(spawn.owner) ||
+                (spawn.owner.kind != EntityKind::Player && spawn.owner.kind != EntityKind::Enemy) ||
                 spawn.definitionId == 0 || !std::isfinite(spawn.attackPower) || spawn.attackPower < 0 ||
                 !std::isfinite(spawn.ttl) || spawn.ttl <= 0 || !std::isfinite(spawn.knockback) || spawn.knockback < 0 ||
                 !Engine::IsValid({spawn.position, spawn.radius, spawn.radius * 2}))
             {
                 return false;
+            }
+            if (_definitions && spawn.owner.kind == EntityKind::Enemy)
+            {
+                const auto* owner = TryEnemy(spawn.owner);
+                if (!owner || owner->hp <= 0 || owner->definitionId != spawn.definitionId)
+                {
+                    return false;
+                }
             }
         }
         if (!_projectiles.Reserve(static_cast<std::uint32_t>(batch.size()), _projectileReservation))
@@ -967,8 +986,15 @@ namespace Client
         const Engine::Vector3 end{static_cast<float>(projectile.position.x + projectile.velocity.x * seconds),
             static_cast<float>(projectile.position.y + projectile.velocity.y * seconds),
             static_cast<float>(projectile.position.z + projectile.velocity.z * seconds)};
-        if (!Finite(end) || !std::isfinite(projectile.radius) || projectile.radius < 0 ||
-            !_grid.QuerySegment({projectile.position, end}, projectile.radius, _candidates))
+        if (projectile.owner.runEpoch != _runEpoch ||
+            (projectile.owner.kind != EntityKind::Player && projectile.owner.kind != EntityKind::Enemy) ||
+            (projectile.owner.kind == EntityKind::Player && projectile.owner.handle) ||
+            (projectile.owner.kind == EntityKind::Enemy && !projectile.owner.handle))
+        {
+            _projectiles.RequestRelease(handle);
+            return;
+        }
+        if (!Finite(end) || !std::isfinite(projectile.radius) || projectile.radius < 0)
         {
             throw std::runtime_error("Run projectile sweep is invalid or query capacity is insufficient");
         }
@@ -976,19 +1002,38 @@ namespace Client
         float fraction = std::numeric_limits<float>::infinity();
         const Engine::Segment baseMotion{{projectile.position.x, projectile.position.y - projectile.radius, projectile.position.z},
             {end.x, end.y - projectile.radius, end.z}};
-        for (const auto& ref : _candidates)
+        if (_definitions && projectile.owner.kind == EntityKind::Enemy)
         {
-            const auto* enemy = TryEnemy(ref);
-            if (!enemy || !Targetable(*enemy, _tick) || ref == projectile.owner)
+            if (!_playerState.dead)
             {
-                continue;
+                const auto hit = Engine::SweepCylinder(baseMotion, projectile.radius, projectile.radius * 2, _player);
+                if (hit)
+                {
+                    victim = EntityRef{EntityKind::Player, {}, _runEpoch};
+                    fraction = hit->fraction;
+                }
             }
-            const auto hit = Engine::SweepCylinder(baseMotion, projectile.radius, projectile.radius * 2,
-                {enemy->position, enemy->radius, enemy->height});
-            if (hit && (hit->fraction < fraction || (hit->fraction == fraction && (!victim || HandleLess(ref, *victim)))))
+        }
+        else
+        {
+            if (!_grid.QuerySegment({projectile.position, end}, projectile.radius, _candidates))
             {
-                victim = ref;
-                fraction = hit->fraction;
+                throw std::runtime_error("Run projectile query capacity is insufficient");
+            }
+            for (const auto& ref : _candidates)
+            {
+                const auto* enemy = TryEnemy(ref);
+                if (!enemy || !Targetable(*enemy, _tick) || ref == projectile.owner)
+                {
+                    continue;
+                }
+                const auto hit = Engine::SweepCylinder(baseMotion, projectile.radius, projectile.radius * 2,
+                    {enemy->position, enemy->radius, enemy->height});
+                if (hit && (hit->fraction < fraction || (hit->fraction == fraction && (!victim || HandleLess(ref, *victim)))))
+                {
+                    victim = ref;
+                    fraction = hit->fraction;
+                }
             }
         }
         const auto terrain = _terrain.SweepSphere({projectile.position, end}, projectile.radius);
@@ -1150,7 +1195,7 @@ namespace Client
             _appliedThisTick.reserve(hitCapacity);
             _hitProjectiles.reserve(_projectiles.GetStats().capacity);
             _pendingProjectileHandles.reserve(_projectiles.GetStats().capacity);
-            _pendingShots.reserve(definitions->slotLimit);
+            _pendingShots.reserve(static_cast<std::size_t>(definitions->slotLimit) + _enemies.GetStats().capacity);
             _events.reserve(hitCapacity * 2 + _drops.GetStats().capacity * 2 + _enemies.GetStats().capacity + 64);
         }
         catch (const std::exception&)
@@ -1520,13 +1565,21 @@ namespace Client
                         throw std::runtime_error("Live Enemy has an unknown definition");
                     }
                     enemy.cooldown = std::max(0.0, enemy.cooldown - dt);
+                    enemy.rangedCooldown = std::max(0.0, enemy.rangedCooldown - dt);
                     const double x = static_cast<double>(_player.base.x) - enemy.position.x;
                     const double z = static_cast<double>(_player.base.z) - enemy.position.z;
                     const double length = std::hypot(x, z);
                     if (length > 0)
                     {
-                        enemy.velocity = {static_cast<float>(x / length * definition->speed), 0,
-                                          static_cast<float>(z / length * definition->speed)};
+                        double direction = 1;
+                        if (definition->ranged)
+                        {
+                            const auto preferred = definition->ranged->preferredDistance;
+                            direction = enemy.rangedCharging || std::abs(length - preferred) <= 0.5 ? 0 :
+                                length < preferred ? -1 : 1;
+                        }
+                        enemy.velocity = {static_cast<float>(x / length * definition->speed * direction), 0,
+                                          static_cast<float>(z / length * definition->speed * direction)};
                     }
                     else
                     {
@@ -1600,7 +1653,9 @@ namespace Client
         for (const auto& hit : _damageRequests)
         {
             if (hit.tick > _tick || !hit.target || hit.target->runEpoch != _runEpoch ||
-                hit.source.runEpoch != _runEpoch || !std::isfinite(hit.attackPower) || hit.attackPower < 0)
+                hit.source.runEpoch != _runEpoch || !std::isfinite(hit.attackPower) || hit.attackPower < 0 ||
+                (hit.source.kind == EntityKind::Enemy && hit.target->kind == EntityKind::Enemy) ||
+                (hit.source.kind == EntityKind::Player && hit.target->kind == EntityKind::Player))
             {
                 continue;
             }
@@ -1631,6 +1686,9 @@ namespace Client
             {
                 projectile = hit.projectile ? TryProjectile(*hit.projectile) : nullptr;
                 if (!projectile || projectile->attackId != hit.attackId || projectile->eligibleTick > _tick ||
+                    projectile->owner != hit.source ||
+                    (projectile->owner.kind == EntityKind::Enemy && hit.target->kind != EntityKind::Player) ||
+                    (projectile->owner.kind == EntityKind::Player && hit.target->kind != EntityKind::Enemy) ||
                     projectile->hitCount >= projectile->hits.size() ||
                     std::find(projectile->hits.begin(), projectile->hits.begin() + projectile->hitCount, *hit.target) !=
                         projectile->hits.begin() + projectile->hitCount)
@@ -1651,9 +1709,18 @@ namespace Client
             auto& hp = player ? _playerState.hp : victim->hp;
             hp = std::max(0.0f, hp - damage);
             Engine::Vector3 sourcePosition = _player.base;
+            std::uint32_t attackDefinitionId = projectile ? projectile->definitionId : 0;
             if (const auto* source = TryEnemy(hit.source))
             {
                 sourcePosition = source->position;
+                if (!projectile)
+                {
+                    attackDefinitionId = source->definitionId;
+                }
+            }
+            else if (!projectile && hit.source.kind == EntityKind::Player && hit.slotIndex < _weaponSlots.size())
+            {
+                attackDefinitionId = _weaponSlots[hit.slotIndex].definitionId;
             }
             const auto targetPosition = player ? _player.base : victim->position;
             double dx = static_cast<double>(targetPosition.x) - sourcePosition.x;
@@ -1706,6 +1773,7 @@ namespace Client
             event.target = hit.target;
             event.position = targetPosition;
             event.damage = damage;
+            event.definitionId = attackDefinitionId;
             event.slotIndex = hit.slotIndex;
             Emit(event);
         }
@@ -1761,7 +1829,7 @@ namespace Client
             _pendingProjectileHandles.push_back(handle);
         }
         ++_nextAttackId;
-        _pendingShots.push_back({slotIndex, start, weapon.projectileCount});
+        _pendingShots.push_back({slotIndex, start, weapon.projectileCount, {EntityKind::Player, {}, _runEpoch}});
         return true;
     }
 
@@ -1771,7 +1839,10 @@ namespace Client
         {
             const std::span<const Engine::PoolHandle> handles(_pendingProjectileHandles.data() + group.first,
                                                               group.count);
-            if (!allow)
+            auto* enemy = group.owner.kind == EntityKind::Enemy ? TryEnemy(group.owner) : nullptr;
+            const auto* enemyDefinition = enemy ? _definitions->FindEnemy(enemy->definitionId) : nullptr;
+            const bool liveEnemy = enemyDefinition && enemyDefinition->ranged && Targetable(*enemy, _tick);
+            if (!allow || (group.owner.kind == EntityKind::Enemy && !liveEnemy))
             {
                 for (const auto handle : handles)
                 {
@@ -1786,6 +1857,21 @@ namespace Client
             if (!_projectiles.Commit(handles))
             {
                 throw std::runtime_error("Run attack publication failed");
+            }
+            if (liveEnemy)
+            {
+                enemy->rangedCharging = false;
+                enemy->rangedWindup = 0;
+                enemy->rangedCooldown = enemyDefinition->ranged->interval;
+                GameEvent event;
+                event.kind = GameEventKind::EnemyAttacked;
+                event.definitionId = enemy->definitionId;
+                event.damage = enemyDefinition->ranged->damage;
+                event.source = group.owner;
+                event.target = EntityRef{EntityKind::Player, {}, _runEpoch};
+                event.position = enemy->position;
+                Emit(event);
+                continue;
             }
             auto& slot = _weaponSlots[group.slotIndex];
             const auto* weapon = _definitions->FindWeapon(slot.definitionId);
@@ -1864,6 +1950,76 @@ namespace Client
             event.source = {EntityKind::Player, {}, _runEpoch};
             event.position = _player.base;
             Emit(event);
+        }
+    }
+
+    void LastFieldRun::AttackRangedEnemies(float dt)
+    {
+        if (dt <= 0 || _playerState.dead)
+        {
+            return;
+        }
+        if (!_enemies.ForEachActive([&](Engine::PoolHandle handle, Enemy& enemy)
+            {
+                const auto* definition = _definitions->FindEnemy(enemy.definitionId);
+                if (!definition || !definition->ranged || !Targetable(enemy, _tick))
+                {
+                    return;
+                }
+                const auto& ranged = *definition->ranged;
+                if (!enemy.rangedCharging)
+                {
+                    if (enemy.rangedCooldown > 0 || Engine::DistanceSquaredXZ(enemy.position, _player.base) >
+                        static_cast<double>(ranged.range) * ranged.range)
+                    {
+                        return;
+                    }
+                    enemy.rangedCharging = true;
+                    enemy.rangedWindup = ranged.windup;
+                    enemy.rangedAim = {_player.base.x, _player.base.y + _player.height * 0.55f, _player.base.z};
+                    return;
+                }
+                enemy.rangedWindup = std::max(0.0, enemy.rangedWindup - dt);
+                if (enemy.rangedWindup > 0)
+                {
+                    return;
+                }
+                const Engine::Vector3 start{enemy.position.x, enemy.position.y + enemy.height * 0.55f, enemy.position.z};
+                const double x = static_cast<double>(enemy.rangedAim.x) - start.x;
+                const double y = static_cast<double>(enemy.rangedAim.y) - start.y;
+                const double z = static_cast<double>(enemy.rangedAim.z) - start.z;
+                const double length = std::sqrt(x * x + y * y + z * z);
+                if (length <= 0.000001 || _nextAttackId == std::numeric_limits<std::uint64_t>::max() ||
+                    _tick == std::numeric_limits<std::uint64_t>::max() ||
+                    _pendingShots.size() == _pendingShots.capacity() ||
+                    _pendingProjectileHandles.size() == _pendingProjectileHandles.capacity() ||
+                    !_projectiles.Reserve(1, _projectileReservation))
+                {
+                    ++_projectileBatchFailures;
+                    enemy.rangedCharging = false;
+                    enemy.rangedCooldown = ranged.interval;
+                    return;
+                }
+                const auto projectileHandle = _projectileReservation[0];
+                auto* shot = _projectiles.Reserved(projectileHandle);
+                shot->Reset();
+                shot->position = start;
+                shot->velocity = {static_cast<float>(x / length * ranged.projectileSpeed),
+                    static_cast<float>(y / length * ranged.projectileSpeed), static_cast<float>(z / length * ranged.projectileSpeed)};
+                shot->owner = Ref(EntityKind::Enemy, handle);
+                shot->definitionId = enemy.definitionId;
+                shot->attackPower = ranged.damage;
+                shot->ttl = ranged.projectileLife;
+                shot->eligibleTick = _tick + 1;
+                shot->attackId = _nextAttackId++;
+                shot->radius = ranged.projectileRadius;
+                shot->knockback = definition->knockback;
+                const auto first = _pendingProjectileHandles.size();
+                _pendingProjectileHandles.push_back(projectileHandle);
+                _pendingShots.push_back({0, first, 1, shot->owner});
+            }))
+        {
+            throw std::runtime_error("Run ranged attack iteration failed");
         }
     }
 
@@ -2236,6 +2392,7 @@ namespace Client
             if (!_playerState.dead && !expires)
             {
                 AttackWeapons();
+                AttackRangedEnemies(seconds);
             }
             CollectDrops(false);
             FinalizeDeaths(!_playerState.dead && !expires);
