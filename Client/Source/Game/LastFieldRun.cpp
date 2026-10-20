@@ -158,6 +158,10 @@ namespace Client
             {
                 enemy->rangedCooldown = definition->ranged->spawnDelay;
             }
+            if (definition->charge)
+            {
+                enemy->chargeCooldown = definition->charge->spawnDelay;
+            }
         }
         const auto result = Ref(EntityKind::Enemy, _enemyReservation[0]);
         if (!_enemies.Commit(_enemyReservation))
@@ -647,6 +651,20 @@ namespace Client
             {
                 continue;
             }
+            // Body-proxy occlusion at the common vertical interval; this is not a hand/IK sweep.
+            const double low = std::max(static_cast<double>(origin.y), static_cast<double>(enemy->position.y));
+            const double high = std::min(static_cast<double>(origin.y) + height,
+                static_cast<double>(enemy->position.y) + enemy->height);
+            const float attackY = static_cast<float>(low + (high - low) * 0.5);
+            if (!std::isfinite(attackY))
+            {
+                return false;
+            }
+            if (FirstStaticHit({{origin.x, attackY, origin.z},
+                    {enemy->position.x, attackY, enemy->position.z}}, 0, 0))
+            {
+                continue;
+            }
             _newMeleeHits.push_back({HitKind::Melee, _tick, attack.id, attack.source, {}, ref, enemy->position, 0,
                 attack.attackPower, attack.knockback, attack.slotIndex,
                 {static_cast<float>(forward.x / std::hypot(static_cast<double>(forward.x), forward.y)),
@@ -669,6 +687,29 @@ namespace Client
         }
         SortHits();
         return true;
+    }
+
+    std::optional<Engine::GeometryHit> LastFieldRun::FirstStaticHit(const Engine::Segment& motion,
+        float radius, float height) const noexcept
+    {
+        std::optional<Engine::GeometryHit> first;
+        const auto consider = [&](const auto& shape)
+        {
+            const auto hit = Engine::SweepCylinder(motion, radius, height, shape);
+            if (hit && (!first || hit->fraction < first->fraction))
+            {
+                first = hit;
+            }
+        };
+        for (const auto& shape : _staticCylinders)
+        {
+            consider(shape);
+        }
+        for (const auto& shape : _staticBoxes)
+        {
+            consider(shape);
+        }
+        return first;
     }
 
     bool LastFieldRun::OverlapsEnvironment(const Engine::Cylinder& body) const noexcept
@@ -1041,22 +1082,27 @@ namespace Client
             }
         }
         const auto terrain = _terrain.SweepSphere({projectile.position, end}, projectile.radius);
-        const bool terrainFirst = terrain && terrain->fraction <= fraction;
-        if (terrainFirst || victim)
+        const auto geometry = FirstStaticHit(baseMotion, projectile.radius, projectile.radius * 2);
+        // Equal fractions use the deterministic priority static geometry > Terrain > actor.
+        const bool geometryFirst = geometry && geometry->fraction <= fraction &&
+            (!terrain || geometry->fraction <= terrain->fraction);
+        const bool terrainFirst = !geometryFirst && terrain && terrain->fraction <= fraction;
+        if (geometryFirst || terrainFirst || victim)
         {
             if (_hits.size() == _hits.capacity())
             {
                 throw std::runtime_error("Run hit queue exhausted; drain value snapshots before the next tick");
             }
-            fraction = terrainFirst ? terrain->fraction : fraction;
+            fraction = geometryFirst ? geometry->fraction : (terrainFirst ? terrain->fraction : fraction);
             const Engine::Vector3 point{projectile.position.x + (end.x - projectile.position.x) * fraction,
                 projectile.position.y + (end.y - projectile.position.y) * fraction,
                 projectile.position.z + (end.z - projectile.position.z) * fraction};
-            RecordHit({terrainFirst ? HitKind::Terrain : HitKind::Projectile, _tick, projectile.attackId,
-                projectile.owner, Ref(EntityKind::Projectile, handle), terrainFirst ? std::nullopt : victim,
+            RecordHit({geometryFirst ? HitKind::StaticGeometry : (terrainFirst ? HitKind::Terrain : HitKind::Projectile),
+                _tick, projectile.attackId, projectile.owner, Ref(EntityKind::Projectile, handle),
+                (geometryFirst || terrainFirst) ? std::nullopt : victim,
                 terrainFirst ? terrain->position : point, fraction, projectile.attackPower, projectile.knockback,
                 projectile.slotIndex});
-            if (_definitions && !terrainFirst)
+            if (_definitions && !geometryFirst && !terrainFirst)
             {
                 _hitProjectiles.push_back(handle);
             }
@@ -1542,7 +1588,7 @@ namespace Client
             throw std::runtime_error("Run hit snapshot capacity exhausted");
         }
         _hits.push_back(hit);
-        if (_definitions && hit.target && hit.kind != HitKind::Terrain)
+        if (_definitions && hit.target && hit.kind != HitKind::Terrain && hit.kind != HitKind::StaticGeometry)
         {
             if (_damageRequests.size() == _damageRequests.capacity())
             {
@@ -1552,6 +1598,62 @@ namespace Client
             damage.tick = _inGameTick ? _tick : _tick + 1;
             _damageRequests.push_back(damage);
         }
+    }
+
+    void LastFieldRun::UpdateEnemyCharge(Enemy& enemy, const EnemyChargeDefinition& charge, float dt)
+    {
+        enemy.chargeCooldown = std::max(0.0, enemy.chargeCooldown - dt);
+        if (enemy.chargePhase == EnemyChargePhase::Windup)
+        {
+            enemy.velocity = {};
+            enemy.chargeRemaining = std::max(0.0, enemy.chargeRemaining - dt);
+            if (dt > 0 && enemy.chargeRemaining == 0)
+            {
+                enemy.chargePhase = EnemyChargePhase::Charging;
+                enemy.chargeRemaining = charge.duration;
+                enemy.chargeCooldown = charge.interval;
+            }
+            return;
+        }
+        if (enemy.chargePhase == EnemyChargePhase::Charging)
+        {
+            // A long tick cannot extend the configured dash distance. MoveBody still adds normal impulse.
+            const double seconds = std::min(static_cast<double>(dt), enemy.chargeRemaining);
+            const float speed = dt > 0 ? static_cast<float>(charge.speed * seconds / dt) : 0;
+            enemy.velocity = {enemy.chargeDirection.x * speed, 0, enemy.chargeDirection.y * speed};
+            enemy.chargeRemaining = std::max(0.0, enemy.chargeRemaining - seconds);
+            if (dt > 0 && enemy.chargeRemaining == 0)
+            {
+                enemy.chargePhase = EnemyChargePhase::Recovery;
+                enemy.chargeRemaining = charge.recovery;
+            }
+            return;
+        }
+        if (enemy.chargePhase == EnemyChargePhase::Recovery)
+        {
+            enemy.velocity = {};
+            enemy.chargeRemaining = std::max(0.0, enemy.chargeRemaining - dt);
+            if (dt > 0 && enemy.chargeRemaining == 0)
+            {
+                enemy.chargePhase = EnemyChargePhase::Pursuit;
+            }
+            return;
+        }
+        const double x = static_cast<double>(_player.base.x) - enemy.position.x;
+        const double z = static_cast<double>(_player.base.z) - enemy.position.z;
+        const double length = std::hypot(x, z);
+        if (dt > 0 && enemy.chargeCooldown == 0 && length > 0.000001 && length <= charge.range)
+        {
+            enemy.chargeAim = _player.base;
+            enemy.chargeDirection = {static_cast<float>(x / length), static_cast<float>(z / length)};
+            enemy.chargePhase = EnemyChargePhase::Windup;
+            enemy.chargeRemaining = charge.windup;
+            enemy.velocity = {};
+            return;
+        }
+        const auto* definition = _definitions->FindEnemy(enemy.definitionId);
+        enemy.velocity = length > 0 ? Engine::Vector3{static_cast<float>(x / length * definition->speed), 0,
+            static_cast<float>(z / length * definition->speed)} : Engine::Vector3{};
     }
 
     void LastFieldRun::UpdateEnemyIntent(float dt)
@@ -1570,6 +1672,11 @@ namespace Client
                     }
                     enemy.cooldown = std::max(0.0, enemy.cooldown - dt);
                     enemy.rangedCooldown = std::max(0.0, enemy.rangedCooldown - dt);
+                    if (definition->charge && _wave.waveIndex + 1 >= definition->charge->firstStage)
+                    {
+                        UpdateEnemyCharge(enemy, *definition->charge, dt);
+                        return;
+                    }
                     const double x = static_cast<double>(_player.base.x) - enemy.position.x;
                     const double z = static_cast<double>(_player.base.z) - enemy.position.z;
                     const double length = std::hypot(x, z);

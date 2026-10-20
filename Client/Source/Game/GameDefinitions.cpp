@@ -225,8 +225,18 @@ namespace
 
     Client::EnemyDefinition ParseEnemy(const Json& value, std::uint32_t schemaVersion)
     {
-        const bool hasRanged = schemaVersion == 3 && value.contains("ranged");
-        if (hasRanged)
+        const bool hasRanged = schemaVersion >= 3 && value.contains("ranged");
+        const bool hasCharge = schemaVersion == 4 && value.contains("charge");
+        if (hasRanged && hasCharge)
+        {
+            throw std::runtime_error("An enemy cannot combine ranged and charge attacks");
+        }
+        if (hasCharge)
+        {
+            Fields(value, {"id", "hp", "speed", "armor", "radius", "height", "contactDamage",
+                "contactInterval", "knockback", "xp", "currency", "charge"}, "enemy");
+        }
+        else if (hasRanged)
         {
             Fields(value, {"id", "hp", "speed", "armor", "radius", "height", "contactDamage",
                 "contactInterval", "knockback", "xp", "currency", "ranged"}, "enemy");
@@ -257,6 +267,28 @@ namespace
                 Scalar(ranged, "projectileSpeed"), Scalar(ranged, "projectileLife"), Scalar(ranged, "projectileRadius"),
                 Scalar(ranged, "range"), Scalar(ranged, "preferredDistance"), Scalar(ranged, "windup"),
                 Scalar(ranged, "spawnDelay")};
+        }
+        if (hasCharge)
+        {
+            const auto& charge = value.at("charge");
+            const bool hasFirstStage = charge.contains("firstStage");
+            if (hasFirstStage)
+            {
+                Fields(charge, {"range", "windup", "speed", "duration", "recovery", "interval", "spawnDelay", "firstStage"},
+                    "enemy charge attack");
+            }
+            else
+            {
+                Fields(charge, {"range", "windup", "speed", "duration", "recovery", "interval", "spawnDelay"},
+                    "enemy charge attack");
+            }
+            result.charge = Client::EnemyChargeDefinition{Scalar(charge, "range"), Scalar(charge, "windup"),
+                Scalar(charge, "speed"), Scalar(charge, "duration"), Scalar(charge, "recovery"),
+                Scalar(charge, "interval"), Scalar(charge, "spawnDelay")};
+            if (hasFirstStage)
+            {
+                result.charge->firstStage = Unsigned(charge, "firstStage");
+            }
         }
         return result;
     }
@@ -300,7 +332,7 @@ namespace
 
     Client::WaveDefinition ParseWave(const Json& value, std::uint32_t schemaVersion)
     {
-        const bool hasBoss = schemaVersion == 3 && value.contains("boss");
+        const bool hasBoss = schemaVersion >= 3 && value.contains("boss");
         if (hasBoss)
         {
             Fields(value, {"id", "duration", "maxAlive", "spawnPerSecond", "minSpawnDistance",
@@ -389,13 +421,13 @@ namespace Client
     {
         try
         {
-            if (definitions.schemaVersion != 1 && definitions.schemaVersion != 2 && definitions.schemaVersion != 3)
+            if (definitions.schemaVersion < 1 || definitions.schemaVersion > 4)
             {
                 return Reject(error, "Unsupported game definitions schemaVersion");
             }
-            if (definitions.schemaVersion != 3 && !definitions.shop.stagePricePercent.empty())
+            if (definitions.schemaVersion < 3 && !definitions.shop.stagePricePercent.empty())
             {
-                return Reject(error, "Stage shop prices require schema three");
+                return Reject(error, "Stage shop prices require schema three or four");
             }
             const auto& player = definitions.player;
             if (!Positive(player.maxHp) || !Between(player.speed, 0, kMaximumSpeed) ||
@@ -439,7 +471,7 @@ namespace Client
                 if (enemy.ranged)
                 {
                     const auto& ranged = *enemy.ranged;
-                    if (definitions.schemaVersion != 3 || !Positive(ranged.damage) ||
+                    if (definitions.schemaVersion < 3 || !Positive(ranged.damage) ||
                         !Between(ranged.interval, kMinimumCooldown, kMaximumSeconds) ||
                         !Positive(ranged.projectileSpeed, kMaximumSpeed) || !Positive(ranged.projectileLife, kMaximumSeconds) ||
                         !Positive(ranged.projectileRadius) || !Positive(ranged.range) ||
@@ -448,7 +480,22 @@ namespace Client
                         !Between(ranged.spawnDelay, kMinimumCooldown, kMaximumSeconds) ||
                         static_cast<double>(ranged.range) > static_cast<double>(ranged.projectileSpeed) * ranged.projectileLife)
                     {
-                        return Reject(error, "Schema 3 ranged attacks require finite reachable range, positive shot fields and visible attack delays");
+                        return Reject(error, "Schema 3/4 ranged attacks require finite reachable range, positive shot fields and visible attack delays");
+                    }
+                }
+                if (enemy.charge)
+                {
+                    const auto& charge = *enemy.charge;
+                    if (definitions.schemaVersion != 4 || enemy.ranged || !Positive(charge.range, 10000) ||
+                        !Positive(charge.speed, kMaximumSpeed) ||
+                        !Between(charge.windup, kMinimumCooldown, kMaximumSeconds) ||
+                        !Between(charge.duration, kMinimumCooldown, kMaximumSeconds) ||
+                        !Between(charge.recovery, kMinimumCooldown, kMaximumSeconds) ||
+                        !Between(charge.interval, kMinimumCooldown, kMaximumSeconds) ||
+                        !Between(charge.spawnDelay, kMinimumCooldown, kMaximumSeconds) ||
+                        charge.firstStage < 1 || charge.firstStage > definitions.waves.size())
+                    {
+                        return Reject(error, "Schema 4 charge attacks require exclusive finite positive movement, visible phase delays and a valid firstStage");
                     }
                 }
             }
@@ -502,14 +549,14 @@ namespace Client
             {
                 if (wave.bossEnemyId != 0)
                 {
-                    if (definitions.schemaVersion != 3 || !enemyIds.contains(wave.bossEnemyId) ||
+                    if (definitions.schemaVersion < 3 || !enemyIds.contains(wave.bossEnemyId) ||
                         !bossIds.insert(wave.bossEnemyId).second || wave.bossName.empty() || wave.bossName.size() > 128 ||
                         std::any_of(wave.bossName.begin(), wave.bossName.end(), [](unsigned char value)
                         {
                             return value < 0x20 || value == 0x7f;
                         }))
                     {
-                        return Reject(error, "Schema 3 bosses require unique known enemy IDs and bounded nonempty display names");
+                        return Reject(error, "Schema 3/4 bosses require unique known enemy IDs and bounded nonempty display names");
                     }
                 }
                 else if (!wave.bossName.empty())
@@ -622,7 +669,7 @@ namespace Client
                 }
                 if (definitions.shop.stagePricePercent.size() > 1024)
                 {
-                    return Reject(error, "Stage shop prices require schema three and at most 1024 percentages");
+                    return Reject(error, "Stage shop prices require schema three or four and at most 1024 percentages");
                 }
                 std::uint32_t previousPercent = 0;
                 for (const auto percent : definitions.shop.stagePricePercent)
@@ -694,14 +741,14 @@ namespace Client
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout"}, "game definitions");
             }
-            else if (schemaVersion == 2 || schemaVersion == 3)
+            else if (schemaVersion >= 2 && schemaVersion <= 4)
             {
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout", "passives", "progression", "shop"}, "game definitions");
             }
             else
             {
-                return Reject(error, "Unsupported game definitions schemaVersion; expected 1, 2 or 3");
+                return Reject(error, "Unsupported game definitions schemaVersion; expected 1, 2, 3 or 4");
             }
             GameDefinitions candidate;
             candidate.schemaVersion = schemaVersion;
@@ -745,7 +792,7 @@ namespace Client
                     candidate.progression.cumulativeXp.push_back(Unsigned64(value, "XP threshold"));
                 }
                 const auto& shop = root.at("shop");
-                const bool stagePrices = schemaVersion == 3 && shop.contains("stagePricePercent");
+                const bool stagePrices = schemaVersion >= 3 && shop.contains("stagePricePercent");
                 if (stagePrices)
                 {
                     Fields(shop, {"offerCount", "rerollCost", "items", "stagePricePercent"}, "shop");

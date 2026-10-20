@@ -31,6 +31,13 @@ namespace Client
         float windup = 0.55f, spawnDelay = 1;
     };
 
+    struct EnemyChargeDefinition
+    {
+        float range = 5.5f, windup = 0.4f, speed = 12;
+        float duration = 0.4f, recovery = 0.8f, interval = 3, spawnDelay = 0.2f;
+        std::uint32_t firstStage = 1;
+    };
+
     struct EnemyDefinition
     {
         std::uint32_t id = 0;
@@ -38,6 +45,7 @@ namespace Client
         float contactDamage = 5, contactInterval = 0.8f, knockback = 2;
         std::uint32_t xp = 2, currency = 1;
         std::optional<EnemyRangedDefinition> ranged;
+        std::optional<EnemyChargeDefinition> charge;
     };
 
     struct WeaponDefinition

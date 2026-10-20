@@ -137,6 +137,8 @@ namespace Client
         bool RebuildGrid();
         bool GatherCircle(Engine::Vector3 center, float range, bool useGrid);
         bool OverlapsEnvironment(const Engine::Cylinder& body) const noexcept;
+        std::optional<Engine::GeometryHit> FirstStaticHit(const Engine::Segment& motion,
+            float radius, float height) const noexcept;
         Engine::Vector3 MoveBody(Engine::Cylinder body, Engine::Vector2 displacement,
             const std::optional<EntityRef>& ignored, bool collideWithPlayer);
         void MoveActors(float dt, Engine::Vector2 movement);
@@ -144,6 +146,7 @@ namespace Client
         void SortHits();
         void TickGame(float dt, Engine::Vector2 movement);
         void UpdateEnemyIntent(float dt);
+        void UpdateEnemyCharge(Enemy& enemy, const EnemyChargeDefinition& charge, float dt);
         void GatherContactDamage();
         void ApplyDamage();
         void AttackWeapons();

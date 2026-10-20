@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "player": {
     "maxHp": 100,
     "speed": 5,
@@ -37,7 +37,7 @@
     },
     {
       "id": 2,
-      "hp": 14,
+      "hp": 18,
       "speed": 2.75,
       "armor": 0,
       "radius": 0.28,
@@ -46,7 +46,17 @@
       "contactInterval": 0.6,
       "knockback": 1,
       "xp": 2,
-      "currency": 1
+      "currency": 1,
+      "charge": {
+        "range": 5,
+        "windup": 0.4,
+        "speed": 12,
+        "duration": 0.4,
+        "recovery": 0.8,
+        "interval": 3,
+        "spawnDelay": 0.2,
+        "firstStage": 4
+      }
     },
     {
       "id": 3,
@@ -685,7 +695,7 @@
         {
           "stat": "Speed",
           "operation": "Percent",
-          "value": 0.012
+          "value": 0.02
         }
       ]
     },
@@ -698,7 +708,7 @@
         {
           "stat": "Armor",
           "operation": "Flat",
-          "value": 0.15
+          "value": 0.4
         }
       ]
     },
@@ -744,30 +754,30 @@
   ],
   "progression": {
     "cumulativeXp": [
-      14,
-      35,
-      65,
-      105,
-      160,
-      235,
-      330,
-      450,
-      600,
-      780,
-      995,
-      1240,
-      1530,
-      1860,
-      2240,
-      2670,
-      3150,
-      3680,
-      4270,
-      4920,
-      5630,
-      6410,
-      7260,
-      8180
+      18,
+      44,
+      82,
+      132,
+      200,
+      294,
+      413,
+      563,
+      750,
+      975,
+      1244,
+      1550,
+      1913,
+      2325,
+      2800,
+      3338,
+      3938,
+      4600,
+      5338,
+      6150,
+      7038,
+      8013,
+      9075,
+      10225
     ],
     "choiceCount": 3
   },

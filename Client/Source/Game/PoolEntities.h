@@ -36,6 +36,14 @@ namespace Client
 
     inline constexpr std::size_t kProjectileHitCapacity = 16;
 
+    enum class EnemyChargePhase
+    {
+        Pursuit,
+        Windup,
+        Charging,
+        Recovery
+    };
+
     struct Enemy
     {
         Engine::Vector3 position = {};
@@ -49,6 +57,10 @@ namespace Client
         double rangedCooldown = 0, rangedWindup = 0;
         Engine::Vector3 rangedAim = {};
         bool rangedCharging = false;
+        EnemyChargePhase chargePhase = EnemyChargePhase::Pursuit;
+        double chargeCooldown = 0, chargeRemaining = 0;
+        Engine::Vector3 chargeAim = {};
+        Engine::Vector2 chargeDirection = {0, 1};
         std::uint64_t eligibleTick = 0;
         bool deathFinalized = false;
         bool rewardIssued = false;
@@ -104,7 +116,8 @@ namespace Client
         Melee,
         Projectile,
         Terrain,
-        Contact
+        Contact,
+        StaticGeometry
     };
 
     struct HitEvent

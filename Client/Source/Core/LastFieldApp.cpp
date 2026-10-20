@@ -1150,7 +1150,11 @@ namespace Client
                 const bool moved = x != 0 || z != 0;
                 if (simulationSeconds > 0 && enemy.eligibleTick <= _run->TickIndex())
                 {
-                    if (enemy.rangedCharging)
+                    if (enemy.chargePhase == EnemyChargePhase::Windup || enemy.chargePhase == EnemyChargePhase::Charging)
+                    {
+                        visual.yaw = static_cast<float>(std::atan2(enemy.chargeDirection.x, enemy.chargeDirection.y));
+                    }
+                    else if (enemy.rangedCharging)
                     {
                         const double aimX = static_cast<double>(enemy.rangedAim.x) - enemy.position.x;
                         const double aimZ = static_cast<double>(enemy.rangedAim.z) - enemy.position.z;
@@ -1860,6 +1864,10 @@ namespace Client
                         (!_gameMode && _hitFlash > 0 && _lastHit && _lastHit->target == ref))
                     {
                         tint = {1, 1, 0.15f, 1};
+                    }
+                    if (_gameMode && value.chargePhase == EnemyChargePhase::Windup)
+                    {
+                        tint = {1, .58f, .3f, 1};
                     }
                     if (_gameMode && visual)
                     {
