@@ -35,31 +35,35 @@ namespace
 
     Engine::UiRect PrimaryButton()
     {
-        return {{440, 432}, {400, 52}, kTeal};
+        return {{440, 446}, {400, 48}, kTeal};
     }
     Engine::UiRect AdvanceButton()
     {
-        return {{904, 468}, {312, 40}, kTeal};
+        return {{834, 490}, {212, 40}, kTeal};
     }
     Engine::UiRect RerollButton()
     {
-        return {{64, 468}, {420, 40}, kGold};
+        return {{234, 490}, {360, 40}, kGold};
     }
     Engine::UiRect PauseButton()
     {
-        return {{950, 80}, {130, 34}, kTrack};
+        return {{1198, 28}, {44, 32}, kTrack};
     }
     Engine::UiRect MuteButton()
     {
-        return {{1092, 80}, {140, 34}, kTrack};
+        return {{314, 510}, {220, 44}, kTrack};
+    }
+    Engine::UiRect ResumeButton()
+    {
+        return {{754, 510}, {212, 44}, kTeal};
     }
     Engine::UiRect ChoiceCard(size_t index)
     {
-        return {{64 + static_cast<float>(index) * 392, 262}, {368, 206}, kCard};
+        return {{234 + static_cast<float>(index) * 274, 284}, {262, 148}, kCard};
     }
     Engine::UiRect OfferCard(size_t index)
     {
-        return {{64 + static_cast<float>(index) * 294, 262}, {270, 190}, kCard};
+        return {{234 + static_cast<float>(index) * 206, 280}, {194, 174}, kCard};
     }
 
     void Panel(Engine::UiFrame& frame, const Canvas& canvas, Engine::UiRect bounds)
@@ -68,6 +72,19 @@ namespace
             (canvas.top + bounds.position.y * canvas.scale) / canvas.height};
         bounds.size = {bounds.size.x * canvas.scale / canvas.width, bounds.size.y * canvas.scale / canvas.height};
         frame.rects.push_back(bounds);
+    }
+
+    void HudBackdrop(Engine::UiFrame& frame, const Canvas& canvas, Engine::UiRect bounds)
+    {
+        bounds.color = {0.025f, 0.04f, 0.065f, 0.38f};
+        Panel(frame, canvas, bounds);
+        const auto position = bounds.position;
+        const auto size = bounds.size;
+        constexpr Engine::Vector4 border{0.65f, 0.72f, 0.79f, 0.20f};
+        Panel(frame, canvas, {position, {size.x, 1}, border});
+        Panel(frame, canvas, {{position.x, position.y + size.y - 1}, {size.x, 1}, border});
+        Panel(frame, canvas, {{position.x, position.y + 1}, {1, size.y - 2}, border});
+        Panel(frame, canvas, {{position.x + size.x - 1, position.y + 1}, {1, size.y - 2}, border});
     }
 
     void Label(Engine::UiFrame& frame, const Canvas& canvas, float x, float y, float height,
@@ -128,21 +145,6 @@ namespace
         return "무기";
     }
 
-    const char* PhaseName(Client::WavePhase phase)
-    {
-        switch (phase)
-        {
-        case Client::WavePhase::Ready: return "전투 준비";
-        case Client::WavePhase::Combat: return "전투";
-        case Client::WavePhase::Settlement: return "보상 정산";
-        case Client::WavePhase::Rest: return "전투 준비";
-        case Client::WavePhase::Complete: return "종료";
-        case Client::WavePhase::Selection: return "생존 준비";
-        case Client::WavePhase::Shop: return "야전 정비";
-        }
-        return "상태 확인 중";
-    }
-
     const char* StatName(Client::StatKind stat)
     {
         switch (stat)
@@ -174,23 +176,6 @@ namespace
         return "보급 장비";
     }
 
-    const char* PassiveDescription(const Client::PassiveDefinition& passive)
-    {
-        if (!passive.modifiers.empty())
-        {
-            switch (passive.modifiers.front().stat)
-            {
-            case Client::StatKind::MaxHp: return "최대 체력을 늘립니다.";
-            case Client::StatKind::Speed: return "더 빠르게 이동합니다.";
-            case Client::StatKind::Armor: return "받는 피해를 줄입니다.";
-            case Client::StatKind::DamageMultiplier: return "무기의 피해량을 높입니다.";
-            case Client::StatKind::AttackSpeed: return "공격 간격을 줄입니다.";
-            case Client::StatKind::PickupRadius: return "멀리 있는 보상을 줍습니다.";
-            }
-        }
-        return "생존에 필요한 장비입니다.";
-    }
-
     std::string ModifierText(const Client::StatModifierDefinition& modifier)
     {
         const bool percent = modifier.operation == Client::ModifierOperation::Percent;
@@ -206,7 +191,7 @@ namespace
     {
         if (offer.purchased)
         {
-            return "교환 완료";
+            return "구매 완료";
         }
         if (!snapshot.definitions)
         {
@@ -220,7 +205,7 @@ namespace
             }
             if (snapshot.weapons.size() >= snapshot.definitions->slotLimit)
             {
-                return "장비 칸이 가득 참";
+                return "장착 칸 가득";
             }
         }
         else
@@ -248,15 +233,56 @@ namespace
     {
         if (!passive)
         {
-            Label(frame, canvas, x, y, 19, "정보 없음", kDim, width);
+            Label(frame, canvas, x, y, 18, "정보 없음", kDim, width);
             return;
         }
         for (size_t index = 0; index < std::min<size_t>(passive->modifiers.size(), 2); ++index)
         {
-            Label(frame, canvas, x, y + static_cast<float>(index) * 28, 20,
+            Label(frame, canvas, x, y + static_cast<float>(index) * 26, 18,
                 ModifierText(passive->modifiers[index]), kTeal, width);
         }
     }
+
+    std::string HealthNumber(double value)
+    {
+        return Number(std::isfinite(value) ? std::ceil(std::max(0.0, value)) : value, 0);
+    }
+
+    std::string StageText(const Client::HudSnapshot& snapshot)
+    {
+        const auto stage = std::min<std::uint64_t>(static_cast<std::uint64_t>(snapshot.wave.waveIndex) + 1,
+            snapshot.wave.waveCount);
+        return std::to_string(stage) + " / " + std::to_string(snapshot.wave.waveCount);
+    }
+
+    std::string WeaponSummary(const Client::HudSnapshot& snapshot)
+    {
+        std::uint32_t counts[3] = {};
+        for (const auto& slot : snapshot.weapons)
+        {
+            switch (slot.kind)
+            {
+            case Client::WeaponKind::Melee: ++counts[0]; break;
+            case Client::WeaponKind::SingleProjectile: ++counts[1]; break;
+            case Client::WeaponKind::Shotgun: ++counts[2]; break;
+            }
+        }
+        const char* names[] = {"단검", "활", "투척칼"};
+        std::string summary;
+        for (std::size_t index = 0; index < 3; ++index)
+        {
+            if (counts[index] != 0)
+            {
+                if (!summary.empty())
+                {
+                    summary += "  ·  ";
+                }
+                summary += std::string(names[index]) + " ×" + std::to_string(counts[index]);
+            }
+        }
+        return summary.empty() ? "장착 무기 없음" : summary;
+    }
+
 }
 
 namespace Client
@@ -270,8 +296,8 @@ namespace Client
             return;
         }
         const Canvas canvas = MakeCanvas(width, height);
-        frame.rects.reserve(64);
-        frame.texts.reserve(96);
+        frame.rects.reserve(32);
+        frame.texts.reserve(48);
         if (snapshot.showStart)
         {
             Panel(frame, canvas, {{240, 154}, {800, 360}, kPanel});
@@ -288,45 +314,189 @@ namespace Client
             return;
         }
 
-        Panel(frame, canvas, {{24, 16}, {1232, 112}, kPanel});
-        const bool bossStage = snapshot.wave.bossEnemyId != 0;
-        Label(frame, canvas, 48, 32, 22, "스테이지 " + std::to_string(snapshot.wave.waveIndex + 1) +
-            " / " + std::to_string(snapshot.wave.waveCount) + "  ·  " + PhaseName(snapshot.wave.phase), kGold, 420);
-        std::string objective;
+        const bool ended = snapshot.wave.outcome != RunOutcome::Playing || snapshot.wave.phase == WavePhase::Complete;
+        const bool selection = snapshot.progression.phase == ProgressionPhase::Selection;
+        const bool shop = snapshot.progression.phase == ProgressionPhase::Shop;
+        const bool ready = snapshot.wave.phase == WavePhase::Ready || snapshot.wave.phase == WavePhase::Rest;
+        if (snapshot.paused || ended || selection || shop || ready)
+        {
+            Panel(frame, canvas, {{0, 0}, {1280, 720}, {0.01f, 0.02f, 0.03f, 0.45f}});
+        }
         if (snapshot.paused)
         {
-            objective = "일시정지 중";
+            Panel(frame, canvas, {{290, 154}, {700, 432}, kPanel});
+            Label(frame, canvas, 314, 178, 28, "일시정지", kGold, 360);
+            Label(frame, canvas, 966, 184, 18, "스테이지 " + StageText(snapshot), kDim, 260, Alignment::Right);
+            Label(frame, canvas, 314, 234, 20, "능력", kWhite, 298);
+            Label(frame, canvas, 670, 234, 20, "장비", kWhite, 160);
+            Label(frame, canvas, 966, 237, 16, "장착 " + std::to_string(snapshot.weapons.size()) + " / " +
+                std::to_string(snapshot.definitions ? snapshot.definitions->slotLimit : 6), kDim, 150, Alignment::Right);
+            Panel(frame, canvas, {{314, 264}, {298, 1}, kTrack});
+            Panel(frame, canvas, {{670, 264}, {296, 1}, kTrack});
+            const char* names[] = {"이동 속도", "방어력", "피해 배율", "공격 속도", "획득 범위"};
+            const std::string values[] = {Number(snapshot.playerStats.speed) + " m/s", Number(snapshot.playerStats.armor, 2),
+                "×" + Number(snapshot.playerStats.damageMultiplier, 2), "×" + Number(snapshot.playerStats.attackSpeed, 2),
+                Number(snapshot.playerStats.pickupRadius) + " m"};
+            for (size_t index = 0; index < 5; ++index)
+            {
+                const float y = 280 + static_cast<float>(index) * 34;
+                Label(frame, canvas, 314, y, 18, names[index], kDim, 150);
+                Label(frame, canvas, 612, y, 18, values[index], kWhite, 138, Alignment::Right);
+            }
+            Label(frame, canvas, 670, 280, 18, WeaponSummary(snapshot), kWhite, 296);
+            size_t shown = 0;
+            if (snapshot.definitions)
+            {
+                for (const auto& passive : snapshot.definitions->passives)
+                {
+                    const auto stacks = std::count_if(snapshot.progression.passiveSources.begin(),
+                        snapshot.progression.passiveSources.end(), [&passive](const PassiveSource& source)
+                        {
+                            return source.passiveId == passive.id;
+                        });
+                    if (stacks != 0 && shown < 6)
+                    {
+                        Label(frame, canvas, 670, 312 + static_cast<float>(shown++) * 26, 17,
+                            std::string(PassiveName(passive)) + " ×" + std::to_string(stacks), kTeal, 296);
+                    }
+                }
+            }
+            if (shown == 0)
+            {
+                Label(frame, canvas, 670, 312, 17, "보유 장비 없음", kDim, 296);
+            }
+            if (!snapshot.message.empty())
+            {
+                Label(frame, canvas, 640, 476, 16, snapshot.message, kGold, 652, Alignment::Center);
+            }
+            Button(frame, canvas, MuteButton(), snapshot.muted ? "소리 꺼짐 [M]" : "소리 켜짐 [M]");
+            Button(frame, canvas, ResumeButton(), "계속하기 [P]");
+            out = std::move(frame);
+            return;
         }
-        else if (snapshot.wave.outcome == RunOutcome::Victory)
+        if (ended)
         {
-            objective = "모든 스테이지 완료";
+            Panel(frame, canvas, {{380, 190}, {520, 340}, kPanel});
+            Label(frame, canvas, 404, 214, 30, snapshot.wave.outcome == RunOutcome::Victory ?
+                "초소 방어 완료" : "초소 방어 실패", kGold, 472);
+            const char* names[] = {"도달 스테이지", "최종 레벨", "남은 보급품"};
+            const std::string values[] = {StageText(snapshot), std::to_string(snapshot.progression.level),
+                std::to_string(snapshot.progression.balance)};
+            for (size_t index = 0; index < 3; ++index)
+            {
+                const float y = 282 + static_cast<float>(index) * 42;
+                Label(frame, canvas, 404, y, 20, names[index], kDim, 240);
+                Label(frame, canvas, 876, y, 20, values[index], kWhite, 200, Alignment::Right);
+            }
+            Button(frame, canvas, PrimaryButton(), "다시 시작하기 [Enter]", true, 21);
+            out = std::move(frame);
+            return;
         }
-        else if (snapshot.wave.outcome == RunOutcome::Defeat)
+        if (selection)
         {
-            objective = "초소 방어 실패";
+            Panel(frame, canvas, {{210, 206}, {860, 348}, kPanel});
+            Label(frame, canvas, 234, 230, 28, "레벨업", kGold, 400);
+            Label(frame, canvas, 1046, 237, 18, "남은 선택 " + std::to_string(snapshot.progression.pendingChoices) +
+                "회", kDim, 370, Alignment::Right);
+            const size_t count = std::min<size_t>(snapshot.progression.choices.size(), 3);
+            for (size_t index = 0; index < count; ++index)
+            {
+                const auto bounds = ChoiceCard(index);
+                Panel(frame, canvas, bounds);
+                const auto* passive = snapshot.definitions ? snapshot.definitions->FindPassive(snapshot.progression.choices[index]) : nullptr;
+                const float x = bounds.position.x + 16;
+                Label(frame, canvas, x, 300, 22, passive ? PassiveName(*passive) : "정보 없음", kWhite, 230);
+                PassiveDetails(frame, canvas, passive, x, 340, 230);
+                Label(frame, canvas, bounds.position.x + 131, 400, 16, "선택 [" + std::to_string(index + 1) + "]",
+                    kGold, 230, Alignment::Center);
+            }
+            if (count == 0)
+            {
+                Label(frame, canvas, 640, 322, 22, "받을 수 있는 강화가 없습니다.", kWhite, 800, Alignment::Center);
+                Button(frame, canvas, AdvanceButton(), "계속하기 [Enter]");
+            }
+            if (!snapshot.message.empty())
+            {
+                Label(frame, canvas, 640, 462, 16, snapshot.message, kGold, 812, Alignment::Center);
+            }
+            out = std::move(frame);
+            return;
         }
-        else if (snapshot.progression.phase == ProgressionPhase::Selection)
+        if (shop)
         {
-            objective = "레벨업 보상을 선택하세요";
+            Panel(frame, canvas, {{210, 166}, {860, 388}, kPanel});
+            Label(frame, canvas, 234, 190, 28, "야전 정비", kGold, 480);
+            Label(frame, canvas, 1046, 196, 22, "보급품 " + std::to_string(snapshot.progression.balance), kGold, 300, Alignment::Right);
+            Label(frame, canvas, 234, 234, 18, "장착 " + std::to_string(snapshot.weapons.size()) + " / " +
+                std::to_string(snapshot.definitions ? snapshot.definitions->slotLimit : 6), kDim, 200);
+            Label(frame, canvas, 1046, 234, 18, WeaponSummary(snapshot), kDim, 600, Alignment::Right);
+            for (size_t index = 0; index < std::min<size_t>(snapshot.progression.offers.size(), 4); ++index)
+            {
+                const auto& offer = snapshot.progression.offers[index];
+                auto bounds = OfferCard(index);
+                const char* blocked = OfferBlockReason(snapshot, offer);
+                const bool available = blocked == nullptr;
+                if (!available)
+                {
+                    bounds.color = kTrack;
+                }
+                Panel(frame, canvas, bounds);
+                const auto* passive = snapshot.definitions && offer.kind == ShopItemKind::Passive ? snapshot.definitions->FindPassive(offer.definitionId) : nullptr;
+                const auto* weapon = snapshot.definitions && offer.kind == ShopItemKind::Weapon ? snapshot.definitions->FindWeapon(offer.definitionId) : nullptr;
+                const float x = bounds.position.x + 12;
+                const float right = bounds.position.x + 182;
+                Label(frame, canvas, x, 296, 21, passive ? PassiveName(*passive) : weapon ? WeaponName(weapon->kind) : "정보 없음",
+                    available ? kWhite : kDim, 138);
+                Label(frame, canvas, right, 299, 16, "[" + std::to_string(index + 1) + "]", kGold, 28, Alignment::Right);
+                if (passive)
+                {
+                    PassiveDetails(frame, canvas, passive, x, 340, 170);
+                }
+                else if (weapon)
+                {
+                    Label(frame, canvas, x, 340, 18, "기본 피해 " + Number(weapon->damage), kTeal, 170);
+                    Label(frame, canvas, x, 366, 18, "공격 간격 " + Number(weapon->cooldown) + "초", kTeal, 170);
+                }
+                if (blocked && !offer.purchased)
+                {
+                    Label(frame, canvas, right, 400, 16, blocked, kDim, 170, Alignment::Right);
+                }
+                Label(frame, canvas, right, 426, 18, offer.purchased ? "구매 완료" :
+                    "보급품 " + std::to_string(offer.price), available ? kGold : kDim, 170, Alignment::Right);
+            }
+            if (!snapshot.message.empty())
+            {
+                Label(frame, canvas, 640, 462, 16, snapshot.message, kGold, 812, Alignment::Center);
+            }
+            const auto cost = snapshot.progression.currentRerollCost;
+            Button(frame, canvas, RerollButton(), "다른 물품 [R] · 보급품 " + std::to_string(cost),
+                snapshot.definitions && snapshot.progression.balance >= cost);
+            Button(frame, canvas, AdvanceButton(), "다음 스테이지 [Enter]");
+            out = std::move(frame);
+            return;
         }
-        else if (snapshot.progression.phase == ProgressionPhase::Shop)
+        if (ready)
         {
-            objective = "다음 전투를 준비하세요";
+            Panel(frame, canvas, {{380, 190}, {520, 340}, kPanel});
+            Label(frame, canvas, 640, 224, 30, "전투 준비", kGold, 472, Alignment::Center);
+            Label(frame, canvas, 640, 286, 22, "스테이지 " + StageText(snapshot), kWhite, 472, Alignment::Center);
+            Label(frame, canvas, 640, 334, 20, "WASD 이동  ·  자동 공격", kDim, 472, Alignment::Center);
+            if (!snapshot.message.empty())
+            {
+                Label(frame, canvas, 640, 400, 16, snapshot.message, kGold, 472, Alignment::Center);
+            }
+            Button(frame, canvas, PrimaryButton(), "다음 스테이지 [Enter]", true, 21);
+            out = std::move(frame);
+            return;
         }
-        else if (snapshot.wave.phase == WavePhase::Combat)
-        {
-            objective = bossStage ? "보스를 쓰러뜨리세요" :
-                "남은 시간 " + Number(std::ceil(snapshot.wave.remaining), 0) + "초";
-        }
-        else
-        {
-            objective = "준비가 되면 시작하세요";
-        }
-        Label(frame, canvas, 640, 34, 20, std::move(objective), kWhite, 260, Alignment::Center);
-        Label(frame, canvas, 1232, 32, 22, "보급품 " + std::to_string(snapshot.progression.balance), kGold, 380, Alignment::Right);
-        Label(frame, canvas, 48, 72, 20, "체력 " + Number(snapshot.player.hp) + " / " + Number(snapshot.playerStats.maxHp), kWhite, 340);
-        Panel(frame, canvas, {{48, 105}, {340, 8}, kTrack});
-        Panel(frame, canvas, {{48, 105}, {340 * Ratio(snapshot.player.hp, snapshot.playerStats.maxHp), 8},
+
+        const bool bossStage = snapshot.wave.bossEnemyId != 0;
+        HudBackdrop(frame, canvas, {{30, 20}, {260, 69}, {}});
+        Label(frame, canvas, 38, 28, 18, "체력", kWhite, 54);
+        Label(frame, canvas, 282, 28, 18, HealthNumber(snapshot.player.hp) + " / " + HealthNumber(snapshot.playerStats.maxHp),
+            kWhite, 184, Alignment::Right);
+        Panel(frame, canvas, {{38, 54}, {244, 6}, kTrack});
+        Panel(frame, canvas, {{38, 54}, {244 * Ratio(snapshot.player.hp, snapshot.playerStats.maxHp), 6},
             snapshot.player.hp > snapshot.playerStats.maxHp * 0.25f ? kTeal : Engine::Vector4{1, 0.25f, 0.2f, 1}});
         uint64_t levelStartXp = 0;
         if (snapshot.definitions && snapshot.progression.level > 1)
@@ -339,173 +509,32 @@ namespace Client
         }
         const uint64_t levelXp = snapshot.progression.acquiredXp >= levelStartXp ? snapshot.progression.acquiredXp - levelStartXp : 0;
         const uint64_t levelTarget = snapshot.progression.nextLevelXp > levelStartXp ? snapshot.progression.nextLevelXp - levelStartXp : 0;
-        Label(frame, canvas, 430, 72, 20, "레벨 " + std::to_string(snapshot.progression.level) +
-            "  ·  경험치 " + std::to_string(levelXp) + " / " +
-            (snapshot.progression.nextLevelXp == 0 ? "최대" : std::to_string(levelTarget)), kWhite, 460);
-        Panel(frame, canvas, {{430, 105}, {460, 8}, kTrack});
-        Panel(frame, canvas, {{430, 105}, {460 * (snapshot.progression.nextLevelXp == 0 ? 1 :
-            Ratio(static_cast<double>(levelXp), static_cast<double>(levelTarget))), 8}, kGold});
-        Button(frame, canvas, PauseButton(), snapshot.paused ? "계속하기" : "일시정지", true, 19);
-        Button(frame, canvas, MuteButton(), snapshot.muted ? "소리 켜기" : "음소거", true, 19);
-
-        Panel(frame, canvas, {{24, 140}, {1232, 44}, kPanel});
-        size_t shown = 0;
-        if (snapshot.definitions)
+        Label(frame, canvas, 38, 67, 14, "레벨 " + std::to_string(snapshot.progression.level), kDim, 64);
+        Panel(frame, canvas, {{112, 72}, {170, 3}, kTrack});
+        Panel(frame, canvas, {{112, 72}, {170 * (snapshot.progression.nextLevelXp == 0 ? 1 :
+            Ratio(static_cast<double>(levelXp), static_cast<double>(levelTarget))), 3}, kGold});
+        HudBackdrop(frame, canvas, {{584, 20}, {112, !bossStage && snapshot.wave.phase == WavePhase::Combat ? 61.0f : 36.0f}, {}});
+        Label(frame, canvas, 640, 28, 20, StageText(snapshot), kGold, 96, Alignment::Center);
+        if (!bossStage && snapshot.wave.phase == WavePhase::Combat)
         {
-            for (const PassiveDefinition& passive : snapshot.definitions->passives)
-            {
-                const auto stacks = std::count_if(snapshot.progression.passiveSources.begin(),
-                    snapshot.progression.passiveSources.end(), [&passive](const PassiveSource& source)
-                    {
-                        return source.passiveId == passive.id;
-                    });
-                if (stacks != 0 && shown < 6)
-                {
-                    Label(frame, canvas, 44 + static_cast<float>(shown++) * 200, 152, 20,
-                        std::string(PassiveName(passive)) + " ×" + std::to_string(stacks), kTeal, 184);
-                }
-            }
+            Label(frame, canvas, 640, 55, 18, Number(std::ceil(std::max(0.0, snapshot.wave.remaining)), 0) + "초",
+                kWhite, 96, Alignment::Center);
         }
-        if (shown == 0)
-        {
-            Label(frame, canvas, 48, 152, 20, "보유 장비 없음", kDim, 1120);
-        }
-
-        if (bossStage && snapshot.wave.bossSpawned && !snapshot.wave.bossDefeated && !snapshot.paused &&
-            snapshot.wave.phase == WavePhase::Combat && snapshot.wave.outcome == RunOutcome::Playing &&
-            snapshot.progression.phase == ProgressionPhase::Done)
+        Button(frame, canvas, PauseButton(), "P", true, 18);
+        if (bossStage && snapshot.wave.bossSpawned && !snapshot.wave.bossDefeated &&
+            snapshot.wave.phase == WavePhase::Combat && snapshot.progression.phase == ProgressionPhase::Done)
         {
             const std::string name = snapshot.definitions && snapshot.wave.waveIndex < snapshot.definitions->waves.size() ?
                 snapshot.definitions->waves[snapshot.wave.waveIndex].bossName : "수비대장";
-            Panel(frame, canvas, {{340, 464}, {600, 64}, kPanel});
-            Label(frame, canvas, 360, 472, 22, name, kGold, 350);
-            Label(frame, canvas, 920, 475, 18, Number(snapshot.wave.bossHp) + " / " +
-                Number(snapshot.wave.bossMaxHp), kWhite, 190, Alignment::Right);
-            Panel(frame, canvas, {{360, 506}, {560, 10}, kTrack});
-            Panel(frame, canvas, {{360, 506}, {560 * Ratio(snapshot.wave.bossHp, snapshot.wave.bossMaxHp), 10},
+            HudBackdrop(frame, canvas, {{389, 93}, {502, 32}, {}});
+            Label(frame, canvas, 397, 101, 16, name, kGold, 160);
+            Panel(frame, canvas, {{569, 110}, {314, 3}, kTrack});
+            Panel(frame, canvas, {{569, 110}, {314 * Ratio(snapshot.wave.bossHp, snapshot.wave.bossMaxHp), 3},
                 {0.85f, 0.22f, 0.18f, 1}});
         }
-
-        Panel(frame, canvas, {{24, 562}, {1232, 34}, kPanel});
-        const std::string stats[] = {"이동 " + Number(snapshot.playerStats.speed) + "m/s",
-            "방어력 " + Number(snapshot.playerStats.armor, 2), "피해 배율 ×" + Number(snapshot.playerStats.damageMultiplier, 2),
-            "공격 속도 ×" + Number(snapshot.playerStats.attackSpeed, 2), "획득 범위 " + Number(snapshot.playerStats.pickupRadius) + "m"};
-        for (size_t index = 0; index < 5; ++index)
-        {
-            Label(frame, canvas, 48 + static_cast<float>(index) * 240, 570, 18, stats[index], kDim, 224);
-        }
-        Panel(frame, canvas, {{24, 608}, {1232, 96}, kPanel});
-        for (size_t index = 0; index < std::min<size_t>(snapshot.weapons.size(), 6); ++index)
-        {
-            const float x = 44 + static_cast<float>(index) * 202;
-            const HudWeaponSlot& slot = snapshot.weapons[index];
-            Label(frame, canvas, x, 619, 21, std::to_string(index + 1) + "  " + WeaponName(slot.kind), kGold, 186);
-            Label(frame, canvas, x, 648, 18, "공격 간격 " + Number(slot.period) + "초", kDim, 186);
-            Label(frame, canvas, x, 673, 18, slot.cooldown > 0 ? "다음 공격 " + Number(slot.cooldown) + "초" : "공격 준비 완료", kWhite, 186);
-            Panel(frame, canvas, {{x, 697}, {186, 4}, kTrack});
-            Panel(frame, canvas, {{x, 697}, {186 * (1 - Ratio(slot.cooldown, slot.period)), 4}, kTeal});
-        }
-        if (!snapshot.message.empty())
-        {
-            Panel(frame, canvas, {{40, 532}, {1200, 26}, kPanel});
-            Label(frame, canvas, 640, 535, 20, snapshot.message, kGold, 1152, Alignment::Center);
-        }
-
-        if (snapshot.paused || snapshot.wave.outcome != RunOutcome::Playing ||
-            snapshot.wave.phase == WavePhase::Complete || snapshot.wave.phase == WavePhase::Ready || snapshot.wave.phase == WavePhase::Rest)
-        {
-            Panel(frame, canvas, {{320, 216}, {640, 290}, kPanel});
-            const bool ended = snapshot.wave.outcome != RunOutcome::Playing || snapshot.wave.phase == WavePhase::Complete;
-            Label(frame, canvas, 640, 246, 36, snapshot.paused ? "일시정지" : ended ?
-                snapshot.wave.outcome == RunOutcome::Victory ? "초소 방어 성공" : "전사" : "전투 준비", kGold, 560, Alignment::Center);
-            if (ended && !snapshot.paused)
-            {
-                Label(frame, canvas, 640, 316, 23, "레벨 " + std::to_string(snapshot.progression.level) +
-                    "  ·  총 경험치 " + std::to_string(snapshot.progression.acquiredXp), kWhite, 560, Alignment::Center);
-                Label(frame, canvas, 640, 358, 22, "남은 보급품 " + std::to_string(snapshot.progression.balance), kTeal, 560, Alignment::Center);
-            }
-            else
-            {
-                Label(frame, canvas, 640, 328, 22, snapshot.paused ? "준비가 되면 계속하세요." :
-                    "WASD 이동  ·  자동 공격", kWhite, 560, Alignment::Center);
-            }
-            Button(frame, canvas, PrimaryButton(), snapshot.paused ? "계속하기 [P]" : ended ?
-                "다시 시작 [Enter]" : "다음 스테이지 [Enter]", true, 23);
-        }
-        else if (snapshot.progression.phase == ProgressionPhase::Selection)
-        {
-            Panel(frame, canvas, {{40, 204}, {1200, 318}, kPanel});
-            Label(frame, canvas, 64, 220, 28, "생존 준비", kGold, 500);
-            Label(frame, canvas, 1216, 226, 20, "장비 하나를 선택하세요. [1~3]", kDim, 650, Alignment::Right);
-            const size_t count = std::min<size_t>(snapshot.progression.choices.size(), 3);
-            for (size_t index = 0; index < count; ++index)
-            {
-                const Engine::UiRect bounds = ChoiceCard(index);
-                Panel(frame, canvas, bounds);
-                const PassiveDefinition* passive = snapshot.definitions ? snapshot.definitions->FindPassive(snapshot.progression.choices[index]) : nullptr;
-                const float x = bounds.position.x + 20;
-                Label(frame, canvas, x, 278, 27, passive ? PassiveName(*passive) : "정보 없음", kWhite, 298);
-                Label(frame, canvas, bounds.position.x + 340, 282, 20, std::to_string(index + 1), kGold, 30, Alignment::Right);
-                Label(frame, canvas, x, 318, 20, passive ? PassiveDescription(*passive) : "선택할 수 없는 장비입니다.", kDim, 328);
-                PassiveDetails(frame, canvas, passive, x, 356, 328);
-                Label(frame, canvas, bounds.position.x + 184, 436, 18, "선택 [" + std::to_string(index + 1) + "]", kGold, 328, Alignment::Center);
-            }
-            if (count == 0)
-            {
-                Label(frame, canvas, 640, 316, 24, "선택할 장비가 없습니다.", kWhite, 800, Alignment::Center);
-                Button(frame, canvas, AdvanceButton(), "계속하기 [Enter]");
-            }
-            else
-            {
-                Label(frame, canvas, 1216, 490, 21, "남은 선택 " + std::to_string(snapshot.progression.pendingChoices), kTeal, 1100, Alignment::Right);
-            }
-        }
-        else if (snapshot.progression.phase == ProgressionPhase::Shop)
-        {
-            Panel(frame, canvas, {{40, 204}, {1200, 318}, kPanel});
-            Label(frame, canvas, 64, 220, 28, "야전 정비", kGold, 500);
-            Label(frame, canvas, 1216, 226, 20, "보급품을 장비로 교환하세요. [1~4]", kDim, 650, Alignment::Right);
-            for (size_t index = 0; index < std::min<size_t>(snapshot.progression.offers.size(), 4); ++index)
-            {
-                const ShopOffer& offer = snapshot.progression.offers[index];
-                Engine::UiRect bounds = OfferCard(index);
-                const char* blocked = OfferBlockReason(snapshot, offer);
-                const bool available = blocked == nullptr;
-                if (!available)
-                {
-                    bounds.color = kTrack;
-                }
-                Panel(frame, canvas, bounds);
-                const PassiveDefinition* passive = snapshot.definitions && offer.kind == ShopItemKind::Passive ? snapshot.definitions->FindPassive(offer.definitionId) : nullptr;
-                const WeaponDefinition* weapon = snapshot.definitions && offer.kind == ShopItemKind::Weapon ? snapshot.definitions->FindWeapon(offer.definitionId) : nullptr;
-                const float x = bounds.position.x + 16;
-                Label(frame, canvas, x, 278, 25, passive ? PassiveName(*passive) : weapon ? WeaponName(weapon->kind) : "정보 없음", kWhite, 216);
-                Label(frame, canvas, bounds.position.x + 250, 281, 18, std::to_string(index + 1), kGold, 24, Alignment::Right);
-                if (passive)
-                {
-                    Label(frame, canvas, x, 314, 18, PassiveDescription(*passive), kDim, 238);
-                    PassiveDetails(frame, canvas, passive, x, 345, 238);
-                }
-                else if (weapon)
-                {
-                    const std::string style = weapon->kind == WeaponKind::Melee ? "가까운 적을 베는 무기" :
-                        weapon->kind == WeaponKind::SingleProjectile ? "먼 적을 노리는 활" : std::to_string(weapon->projectileCount) + "개 동시 투척";
-                    Label(frame, canvas, x, 314, 18, style, kDim, 238);
-                    Label(frame, canvas, x, 345, 20, "기본 피해 " + Number(weapon->damage), kTeal, 238);
-                    Label(frame, canvas, x, 373, 20, "공격 간격 " + Number(weapon->cooldown) + "초", kTeal, 238);
-                }
-                if (blocked && !offer.purchased)
-                {
-                    Label(frame, canvas, bounds.position.x + 250, 397, 18, blocked, kDim, 238, Alignment::Right);
-                }
-                Label(frame, canvas, bounds.position.x + 250, 418, 22, offer.purchased ? "교환 완료" :
-                    "보급품 " + std::to_string(offer.price), available ? kGold : kDim, 238, Alignment::Right);
-            }
-            const uint64_t cost = snapshot.progression.currentRerollCost;
-            Button(frame, canvas, RerollButton(), "다른 물품 [R]  ·  보급품 " + std::to_string(cost),
-                snapshot.definitions && snapshot.progression.balance >= cost);
-            Button(frame, canvas, AdvanceButton(), "다음 스테이지 [Enter]");
-        }
+        HudBackdrop(frame, canvas, {{886, 666}, {364, 34}, {}});
+        Label(frame, canvas, 1242, 674, 18, snapshot.weapons.empty() ? "장착 무기 없음" :
+            "장착  " + WeaponSummary(snapshot), kWhite, 348, Alignment::Right);
         out = std::move(frame);
     }
 
@@ -541,18 +570,16 @@ namespace Client
         {
             return command;
         }
-        if (clicked(MuteButton()))
-        {
-            command.kind = HudCommandKind::ToggleMute;
-            return command;
-        }
-        if (clicked(PauseButton()) || (snapshot.paused && clicked(PrimaryButton())))
-        {
-            command.kind = HudCommandKind::TogglePause;
-            return command;
-        }
         if (snapshot.paused)
         {
+            if (clicked(MuteButton()))
+            {
+                command.kind = HudCommandKind::ToggleMute;
+            }
+            else if (clicked(ResumeButton()))
+            {
+                command.kind = HudCommandKind::TogglePause;
+            }
             return command;
         }
         if (snapshot.wave.outcome != RunOutcome::Playing || snapshot.wave.phase == WavePhase::Complete)
@@ -612,6 +639,10 @@ namespace Client
             (enter || clicked(PrimaryButton())))
         {
             command.kind = HudCommandKind::NextWave;
+        }
+        else if (snapshot.wave.phase == WavePhase::Combat && clicked(PauseButton()))
+        {
+            command.kind = HudCommandKind::TogglePause;
         }
         return command;
     }
