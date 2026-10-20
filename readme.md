@@ -18,7 +18,7 @@ DirectX 11과 C++로 만든 자체 엔진 기반의 싱글플레이 3D 탑다운
 
 ## 실행
 
-[Windows x64 배포본](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261020-balance)을 압축 해제한 뒤 `AshenBorder.exe`를 실행한다. Windows 10/11과 Direct3D 11 기능 수준 11.0 이상 GPU가 필요하다. 동봉된 DLL·Resources·Engine 폴더를 함께 둔다.
+[Windows x64 배포본](https://github.com/JellytoCodes/AshenBorder/releases/tag/lf17-20261020-movement-balance)을 압축 해제한 뒤 `AshenBorder.exe`를 실행한다. Windows 10/11과 Direct3D 11 기능 수준 11.0 이상 GPU가 필요하다. 동봉된 DLL·Resources·Engine 폴더를 함께 둔다.
 
 | 입력 | 동작 |
 |---|---|
