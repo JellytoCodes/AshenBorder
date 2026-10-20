@@ -119,16 +119,16 @@
       "damage": 12,
       "cooldown": 0.65,
       "range": 2.5,
-      "knockback": 3,
+      "knockback": 1.8,
       "halfAngleRadians": 1.04719755
     },
     {
       "id": 2,
       "kind": "SingleProjectile",
-      "damage": 14,
+      "damage": 13,
       "cooldown": 0.45,
       "range": 12,
-      "knockback": 1,
+      "knockback": 0.5,
       "projectileSpeed": 26,
       "projectileLife": 1,
       "projectileRadius": 0.12,
@@ -141,11 +141,11 @@
       "damage": 6,
       "cooldown": 1.05,
       "range": 8,
-      "knockback": 1.5,
+      "knockback": 0.8,
       "projectileSpeed": 18,
       "projectileLife": 0.8,
       "projectileRadius": 0.1,
-      "projectileCount": 7,
+      "projectileCount": 6,
       "spreadRadians": 0.4
     }
   ],
@@ -222,8 +222,8 @@
     {
       "id": 4,
       "duration": 20,
-      "maxAlive": 22,
-      "spawnPerSecond": 2.8,
+      "maxAlive": 28,
+      "spawnPerSecond": 3.4,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -245,8 +245,8 @@
     {
       "id": 5,
       "duration": 20,
-      "maxAlive": 24,
-      "spawnPerSecond": 3.1,
+      "maxAlive": 30,
+      "spawnPerSecond": 3.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -268,8 +268,8 @@
     {
       "id": 6,
       "duration": 20,
-      "maxAlive": 28,
-      "spawnPerSecond": 3.4,
+      "maxAlive": 34,
+      "spawnPerSecond": 4.2,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -291,8 +291,8 @@
     {
       "id": 7,
       "duration": 20,
-      "maxAlive": 30,
-      "spawnPerSecond": 3.7,
+      "maxAlive": 38,
+      "spawnPerSecond": 4.6,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -314,8 +314,8 @@
     {
       "id": 8,
       "duration": 20,
-      "maxAlive": 32,
-      "spawnPerSecond": 4.0,
+      "maxAlive": 42,
+      "spawnPerSecond": 5.0,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -337,8 +337,8 @@
     {
       "id": 9,
       "duration": 20,
-      "maxAlive": 36,
-      "spawnPerSecond": 4.3,
+      "maxAlive": 46,
+      "spawnPerSecond": 5.4,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -387,8 +387,8 @@
     {
       "id": 11,
       "duration": 25,
-      "maxAlive": 38,
-      "spawnPerSecond": 4.4,
+      "maxAlive": 48,
+      "spawnPerSecond": 5.3,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -414,8 +414,8 @@
     {
       "id": 12,
       "duration": 25,
-      "maxAlive": 40,
-      "spawnPerSecond": 4.65,
+      "maxAlive": 50,
+      "spawnPerSecond": 5.55,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -441,8 +441,8 @@
     {
       "id": 13,
       "duration": 25,
-      "maxAlive": 42,
-      "spawnPerSecond": 4.9,
+      "maxAlive": 52,
+      "spawnPerSecond": 5.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -468,8 +468,8 @@
     {
       "id": 14,
       "duration": 25,
-      "maxAlive": 44,
-      "spawnPerSecond": 5.15,
+      "maxAlive": 54,
+      "spawnPerSecond": 6.05,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -495,8 +495,8 @@
     {
       "id": 15,
       "duration": 25,
-      "maxAlive": 46,
-      "spawnPerSecond": 5.4,
+      "maxAlive": 56,
+      "spawnPerSecond": 6.3,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -522,8 +522,8 @@
     {
       "id": 16,
       "duration": 25,
-      "maxAlive": 50,
-      "spawnPerSecond": 5.65,
+      "maxAlive": 58,
+      "spawnPerSecond": 6.55,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -549,8 +549,8 @@
     {
       "id": 17,
       "duration": 25,
-      "maxAlive": 54,
-      "spawnPerSecond": 5.9,
+      "maxAlive": 60,
+      "spawnPerSecond": 6.8,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -576,8 +576,8 @@
     {
       "id": 18,
       "duration": 25,
-      "maxAlive": 58,
-      "spawnPerSecond": 6.15,
+      "maxAlive": 62,
+      "spawnPerSecond": 7.05,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -603,8 +603,8 @@
     {
       "id": 19,
       "duration": 25,
-      "maxAlive": 60,
-      "spawnPerSecond": 6.4,
+      "maxAlive": 64,
+      "spawnPerSecond": 7.3,
       "minSpawnDistance": 4,
       "maxSpawnDistance": 7,
       "maxSpawnAttempts": 12,
@@ -711,7 +711,7 @@
         {
           "stat": "DamageMultiplier",
           "operation": "Percent",
-          "value": 0.018
+          "value": 0.012
         }
       ]
     },
@@ -724,7 +724,7 @@
         {
           "stat": "AttackSpeed",
           "operation": "Percent",
-          "value": 0.015
+          "value": 0.01
         }
       ]
     },
@@ -799,19 +799,19 @@
       {
         "kind": "Weapon",
         "definitionId": 1,
-        "price": 14,
+        "price": 18,
         "weight": 1
       },
       {
         "kind": "Weapon",
         "definitionId": 2,
-        "price": 15,
+        "price": 20,
         "weight": 1
       },
       {
         "kind": "Weapon",
         "definitionId": 3,
-        "price": 15,
+        "price": 20,
         "weight": 1
       },
       {
