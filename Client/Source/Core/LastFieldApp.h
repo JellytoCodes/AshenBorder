@@ -53,6 +53,8 @@ namespace Client
         void UpdateEnemyVisuals(double simulationSeconds);
         void UpdateDeathVisuals(double seconds);
         void BeginEnemyDeath(const GameEvent& event);
+        void AppendAttackWarning(Engine::RenderFrame& frame, const Enemy& enemy,
+            const EnemyDefinition& definition) const;
         void CaptureGameEvents();
         bool LoadPresentation(std::string& error);
         void ExecuteHudCommand(const HudCommand& command);
@@ -122,6 +124,7 @@ namespace Client
         std::array<std::shared_ptr<const Engine::Model>, 3> _weaponModels;
         std::array<std::shared_ptr<const Engine::Model>, 2> _projectileModels;
         std::shared_ptr<const Engine::Model> _experienceModel, _currencyModel;
+        std::shared_ptr<const Engine::Model> _attackWarningModel;
         std::map<std::string, std::shared_ptr<const Engine::AudioClip>> _sounds;
         Engine::AudioDevice _audio;
         Environment _environment;
@@ -168,7 +171,7 @@ namespace Client
         bool _gameMode = false;
         bool _automaticAttack = true;
         bool _shadows = true, _instancing = true;
-        bool _culling = false;
+        bool _culling = true;
         bool _wasInactive = true;
         std::uint64_t _nextRunEpoch = 1;
         std::uint32_t _frameCount = 0;

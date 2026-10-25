@@ -29,6 +29,8 @@ namespace Client
         float projectileSpeed = 7, projectileLife = 2, projectileRadius = 0.16f;
         float range = 10, preferredDistance = 6;
         float windup = 0.55f, spawnDelay = 1;
+        std::uint32_t projectileCount = 1;
+        float spreadRadians = 0, recovery = 0;
     };
 
     struct EnemyChargeDefinition

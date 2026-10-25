@@ -132,10 +132,39 @@ namespace Client
         const Engine::ObjectPool<Drop>& Drops() const noexcept;
 
     private:
+        struct NavigationProfile
+        {
+            float radius = 0, height = 0;
+            // Bits 0..7 are edges; bit 8 marks a walkable node.
+            std::vector<std::uint16_t> links;
+            std::vector<std::uint32_t> distance;
+            std::vector<std::uint32_t> queue;
+        };
+
+        bool PrepareNavigation(const GameDefinitions& definitions, std::vector<NavigationProfile>& out);
+        void UpdateNavigation(float dt);
+        Engine::Vector2 PursuitDirection(const Enemy& enemy) const;
+        Engine::Vector3 NavigationApproach(Engine::Vector3 from, float radius) const noexcept;
+        bool NavigationSegmentClear(Engine::Vector3 from, Engine::Vector3 to,
+            float radius, float height) const noexcept;
+
+        bool NavigationRouteClear(Engine::Vector3 from, Engine::Vector3 to,
+            float radius, float height) const;
+
         EntityRef Ref(EntityKind kind, Engine::PoolHandle handle) const noexcept;
         bool NextEligibleTick(std::uint64_t& out) const noexcept;
         bool RebuildGrid();
         bool GatherCircle(Engine::Vector3 center, float range, bool useGrid);
+        bool MeleePathClear(Engine::Vector3 origin, float height, const Enemy& enemy) const noexcept;
+        Engine::Vector3 WeaponShotVelocity(const WeaponDefinition& weapon, Engine::Vector2 direction,
+            const Enemy* target, std::uint32_t index) const noexcept;
+        bool ProjectilePathClear(Engine::Vector3 start, Engine::Vector3 velocity, double life,
+            float radius, const Engine::Cylinder& target) const;
+        std::optional<EntityRef> FindWeaponTarget(const WeaponDefinition& weapon);
+        bool EnemyHasShot(const Enemy& enemy, const EnemyRangedDefinition& ranged) const;
+        void PrepareStaticGrid(Engine::BoundsXZ bounds);
+        // Single-threaded scratch: callers finish exact Engine geometry tests before another query.
+        std::span<const std::uint32_t> StaticCandidates(const Engine::Segment& motion, float radius) const noexcept;
         bool OverlapsEnvironment(const Engine::Cylinder& body) const noexcept;
         std::optional<Engine::GeometryHit> FirstStaticHit(const Engine::Segment& motion,
             float radius, float height) const noexcept;
@@ -172,6 +201,15 @@ namespace Client
             Engine::Cylinder body;
         };
 
+        std::vector<NavigationProfile> _navigationProfiles;
+        std::vector<Engine::Vector3> _navigationPoints;
+        Engine::Vector2 _navigationOrigin{};
+        Engine::Vector3 _navigationTarget{};
+        float _navigationCellSize = 1;
+        std::uint32_t _navigationColumns = 0, _navigationRows = 0;
+        std::uint32_t _navigationGoal = UINT32_MAX;
+        float _navigationRefresh = 0;
+
         const Engine::Terrain& _terrain;
         Engine::ObjectPool<Enemy> _enemies;
         Engine::ObjectPool<Projectile> _projectiles;
@@ -184,6 +222,10 @@ namespace Client
         std::vector<BodyEntry> _bodies;
         std::vector<Engine::Cylinder> _staticCylinders;
         std::vector<Engine::UprightBox> _staticBoxes;
+        Engine::SpatialGrid<std::uint32_t> _staticGrid;
+        std::vector<std::uint32_t> _staticIds;
+        mutable std::vector<std::uint32_t> _staticCandidates;
+        bool _staticGridReady = false;
         std::vector<HitEvent> _hits;
         std::vector<HitEvent> _newMeleeHits;
         struct PendingShot

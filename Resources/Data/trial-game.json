@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "player": {
     "maxHp": 100,
     "speed": 5,
@@ -82,7 +82,17 @@
       "contactInterval": 1.2,
       "knockback": 4,
       "xp": 40,
-      "currency": 20
+      "currency": 20,
+      "charge": {
+        "range": 7.5,
+        "windup": 0.8,
+        "speed": 10,
+        "duration": 0.55,
+        "recovery": 1.25,
+        "interval": 5,
+        "spawnDelay": 2,
+        "firstStage": 10
+      }
     },
     {
       "id": 5,
@@ -119,7 +129,21 @@
       "contactInterval": 2,
       "knockback": 4,
       "xp": 80,
-      "currency": 40
+      "currency": 40,
+      "ranged": {
+        "damage": 8,
+        "interval": 4.2,
+        "projectileSpeed": 7,
+        "projectileLife": 2,
+        "projectileRadius": 0.18,
+        "range": 12,
+        "preferredDistance": 7,
+        "windup": 1,
+        "spawnDelay": 2,
+        "projectileCount": 3,
+        "spreadRadians": 0.75,
+        "recovery": 1.35
+      }
     }
   ],
   "weapons": [
@@ -129,7 +153,7 @@
       "damage": 12,
       "cooldown": 0.65,
       "range": 2.5,
-      "knockback": 1.8,
+      "knockback": 0.9,
       "halfAngleRadians": 1.04719755
     },
     {
@@ -138,7 +162,7 @@
       "damage": 13,
       "cooldown": 0.45,
       "range": 12,
-      "knockback": 0.5,
+      "knockback": 0.25,
       "projectileSpeed": 26,
       "projectileLife": 1,
       "projectileRadius": 0.12,
@@ -151,7 +175,7 @@
       "damage": 6,
       "cooldown": 1.05,
       "range": 8,
-      "knockback": 0.8,
+      "knockback": 0.4,
       "projectileSpeed": 18,
       "projectileLife": 0.8,
       "projectileRadius": 0.1,
@@ -708,7 +732,7 @@
         {
           "stat": "Armor",
           "operation": "Flat",
-          "value": 0.4
+          "value": 0.2
         }
       ]
     },
@@ -721,7 +745,7 @@
         {
           "stat": "DamageMultiplier",
           "operation": "Percent",
-          "value": 0.012
+          "value": 0.025
         }
       ]
     },
@@ -734,7 +758,7 @@
         {
           "stat": "AttackSpeed",
           "operation": "Percent",
-          "value": 0.01
+          "value": 0.02
         }
       ]
     },

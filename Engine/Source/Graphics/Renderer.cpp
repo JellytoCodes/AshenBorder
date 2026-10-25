@@ -151,70 +151,98 @@ namespace
         return true;
     }
 
-    bool BoundsIntersectClip(const Engine::Vector3& minimum, const Engine::Vector3& maximum,
-        const Engine::Matrix& world, const Engine::Matrix& viewProjection)
+    bool CullingScalarSafe(float value)
     {
-        // This optional optimization keeps precision-sensitive inputs instead of changing
-        // the renderer's existing finite/affine acceptance policy (including GPU FTZ cases).
-        const auto safelyScaled = [](float value)
+        const double magnitude = std::abs(static_cast<double>(value));
+        return std::isfinite(value) && (value == 0 || (magnitude >= 1e-12 && magnitude <= 1e12));
+    }
+
+    bool CullingMatrixSafe(const Engine::Matrix& matrix)
+    {
+        for (const auto& row : matrix.m)
         {
-            const double magnitude = std::abs(static_cast<double>(value));
-            return std::isfinite(value) && (value == 0 || (magnitude >= 1e-12 && magnitude <= 1e12));
-        };
-        const std::array<float, 6> boundValues{minimum.x, minimum.y, minimum.z, maximum.x, maximum.y, maximum.z};
-        if (!std::all_of(boundValues.begin(), boundValues.end(), safelyScaled))
-        {
-            return true;
-        }
-        for (size_t row = 0; row < 4; ++row)
-        {
-            for (size_t column = 0; column < 4; ++column)
+            for (const float component : row)
             {
-                if (!safelyScaled(world.m[row][column]) || !safelyScaled(viewProjection.m[row][column]))
+                if (!CullingScalarSafe(component))
                 {
-                    return true;
+                    return false;
                 }
             }
         }
-        if (!IsFinite(minimum) || !IsFinite(maximum) || minimum.x > maximum.x ||
+        return true;
+    }
+
+    struct WorldClipBounds
+    {
+        std::array<std::array<double, 4>, 8> placed{};
+        std::array<std::array<double, 4>, 8> magnitude{};
+        uint32_t ready = 0;
+        bool safe = false;
+    };
+
+    WorldClipBounds PrepareClipBounds(const Engine::Vector3& minimum, const Engine::Vector3& maximum,
+        const Engine::Matrix& world)
+    {
+        WorldClipBounds result;
+        const std::array<float, 6> values{minimum.x, minimum.y, minimum.z, maximum.x, maximum.y, maximum.z};
+        if (!std::all_of(values.begin(), values.end(), CullingScalarSafe) || !CullingMatrixSafe(world) ||
+            !IsFinite(minimum) || !IsFinite(maximum) || minimum.x > maximum.x ||
             minimum.y > maximum.y || minimum.z > maximum.z)
+        {
+            return result;
+        }
+        result.safe = true;
+        return result;
+    }
+
+    bool BoundsIntersectClip(const Engine::Vector3& minimum, const Engine::Vector3& maximum,
+        const Engine::Matrix& world, const Engine::Matrix& viewProjection,
+        bool projectionSafe, WorldClipBounds& bounds)
+    {
+        // Retain the original finite/FTZ/cancellation policy. Only this DrawItem's world
+        // corners are shared between passes; lazy preparation preserves early-keep work.
+        if (!projectionSafe || !bounds.safe)
         {
             return true;
         }
-        // Bounds are already model-root bounds, including node transforms. Apply item.world once.
-        // A convex transformed box is outside only if all eight corners are outside one clip plane.
         constexpr double kRelativeError = 64.0 * std::numeric_limits<float>::epsilon();
         constexpr double kFloatMaximum = static_cast<double>(std::numeric_limits<float>::max());
         uint32_t commonOutside = 0x3f;
         for (uint32_t corner = 0; corner < 8; ++corner)
         {
-            const std::array<double, 4> point{
-                (corner & 1) != 0 ? maximum.x : minimum.x,
-                (corner & 2) != 0 ? maximum.y : minimum.y,
-                (corner & 4) != 0 ? maximum.z : minimum.z, 1.0};
-            std::array<double, 4> placed{}, placedMagnitude{}, clip{}, clipMagnitude{};
-            for (size_t column = 0; column < 4; ++column)
+            auto& placed = bounds.placed[corner];
+            auto& placedMagnitude = bounds.magnitude[corner];
+            if (!(bounds.ready & (1u << corner)))
             {
-                for (size_t row = 0; row < 4; ++row)
+                const std::array<double, 4> point{
+                    (corner & 1) != 0 ? maximum.x : minimum.x,
+                    (corner & 2) != 0 ? maximum.y : minimum.y,
+                    (corner & 4) != 0 ? maximum.z : minimum.z, 1.0};
+                for (size_t column = 0; column < 4; ++column)
                 {
-                    const double term = point[row] * world.m[row][column];
-                    placed[column] += term;
-                    placedMagnitude[column] += std::abs(term);
+                    for (size_t row = 0; row < 4; ++row)
+                    {
+                        const double term = point[row] * world.m[row][column];
+                        placed[column] += term;
+                        placedMagnitude[column] += std::abs(term);
+                    }
+                    if (!std::isfinite(placed[column]) || !std::isfinite(placedMagnitude[column]) ||
+                        std::abs(placed[column]) > kFloatMaximum)
+                    {
+                        bounds.safe = false;
+                        return true;
+                    }
                 }
-                if (!std::isfinite(placed[column]) || !std::isfinite(placedMagnitude[column]) ||
-                    std::abs(placed[column]) > kFloatMaximum)
-                {
-                    return true;
-                }
+                bounds.ready |= 1u << corner;
             }
-            std::array<double, 4> error{};
+            std::array<double, 4> clip{}, clipMagnitude{}, error{};
             for (size_t column = 0; column < 4; ++column)
             {
                 for (size_t row = 0; row < 4; ++row)
                 {
                     const double coefficient = viewProjection.m[row][column];
                     clip[column] += placed[row] * coefficient;
-                    // Propagate magnitude as well as the result, retaining safety after cancellation.
+                    // Keep per-pass magnitude/error propagation after cancellation.
                     clipMagnitude[column] += placedMagnitude[row] * std::abs(coefficient);
                 }
                 if (!std::isfinite(clip[column]) || !std::isfinite(clipMagnitude[column]) ||
@@ -682,6 +710,9 @@ namespace Engine
                 frame.light.color.z, frame.light.intensity};
         }
 
+        const bool forwardClipSafe = frame.frustumCullingEnabled && CullingMatrixSafe(common.viewProjection);
+        const bool shadowClipSafe = frame.frustumCullingEnabled && frame.shadow.enabled &&
+            CullingMatrixSafe(frame.shadow.viewProjection);
         auto& prepared = _prepared;
         uint32_t scratchGrowths = 0;
         for (const DrawItem& item : frame.draws)
@@ -747,10 +778,13 @@ namespace Engine
                 // The remaining validation below always runs, even for an outside bound.
                 const Vector3 minimum = item.model->BoundsMin();
                 const Vector3 maximum = item.model->BoundsMax();
-                forwardVisible = BoundsIntersectClip(minimum, maximum, item.world, common.viewProjection);
+                auto bounds = PrepareClipBounds(minimum, maximum, item.world);
+                forwardVisible = BoundsIntersectClip(minimum, maximum, item.world, common.viewProjection,
+                    forwardClipSafe, bounds);
                 if (frame.shadow.enabled && item.castsShadow)
                 {
-                    shadowVisible = BoundsIntersectClip(minimum, maximum, item.world, frame.shadow.viewProjection);
+                    shadowVisible = BoundsIntersectClip(minimum, maximum, item.world, frame.shadow.viewProjection,
+                        shadowClipSafe, bounds);
                 }
             }
             for (size_t index = 0; index < meshes.size(); ++index)

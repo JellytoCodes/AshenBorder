@@ -81,6 +81,7 @@ namespace Client
             _bodies.reserve(config.enemyCapacity);
             _staticCylinders.assign(config.staticCylinders.begin(), config.staticCylinders.end());
             _staticBoxes.assign(config.staticBoxes.begin(), config.staticBoxes.end());
+            PrepareStaticGrid(gridBounds);
             _hits.reserve(static_cast<std::size_t>(config.enemyCapacity) + config.projectileCapacity);
             _newMeleeHits.reserve(config.enemyCapacity);
         }
@@ -459,6 +460,13 @@ namespace Client
             _wave = {};
             _boss.reset();
             _inGameTick = false;
+            _navigationGoal = UINT32_MAX;
+            _navigationRefresh = 0;
+            _navigationTarget = {};
+            for (auto& profile : _navigationProfiles)
+            {
+                std::fill(profile.distance.begin(), profile.distance.end(), UINT32_MAX);
+            }
         }
         return cleared;
     }
@@ -609,6 +617,131 @@ namespace Client
         return result;
     }
 
+
+    bool LastFieldRun::MeleePathClear(Engine::Vector3 origin, float height, const Enemy& enemy) const noexcept
+    {
+        const double low = std::max(static_cast<double>(origin.y), static_cast<double>(enemy.position.y));
+        const double high = std::min(static_cast<double>(origin.y) + height,
+            static_cast<double>(enemy.position.y) + enemy.height);
+        if (low > high)
+        {
+            return false;
+        }
+        const float attackY = static_cast<float>(low + (high - low) * 0.5);
+        return std::isfinite(attackY) && !FirstStaticHit({{origin.x, attackY, origin.z},
+            {enemy.position.x, attackY, enemy.position.z}}, 0, 0);
+    }
+
+    Engine::Vector3 LastFieldRun::WeaponShotVelocity(const WeaponDefinition& weapon, Engine::Vector2 direction,
+        const Enemy* target, std::uint32_t index) const noexcept
+    {
+        const float startY = _player.base.y + _player.height * 0.55f;
+        const double distance = target ? std::sqrt(Engine::DistanceSquaredXZ(_player.base, target->position)) : 0;
+        const double y = target ? target->position.y + target->height * 0.55 - startY : 0;
+        const double normalizer = std::hypot(distance, y);
+        const double horizontal = normalizer > 0 ? distance / normalizer : 1;
+        const double vertical = normalizer > 0 ? y / normalizer : 0;
+        const double angle = weapon.projectileCount == 1 ? 0 :
+            (static_cast<double>(index) / (weapon.projectileCount - 1) - 0.5) * weapon.spreadRadians;
+        const double x = direction.x * std::cos(angle) - direction.y * std::sin(angle);
+        const double z = direction.x * std::sin(angle) + direction.y * std::cos(angle);
+        return {static_cast<float>(x * horizontal * weapon.projectileSpeed),
+            static_cast<float>(vertical * weapon.projectileSpeed),
+            static_cast<float>(z * horizontal * weapon.projectileSpeed)};
+    }
+
+    bool LastFieldRun::ProjectilePathClear(Engine::Vector3 start, Engine::Vector3 velocity, double life,
+        float radius, const Engine::Cylinder& target) const
+    {
+        const double speed = std::sqrt(static_cast<double>(velocity.x) * velocity.x +
+            static_cast<double>(velocity.y) * velocity.y + static_cast<double>(velocity.z) * velocity.z);
+        if (speed <= 0)
+        {
+            return false;
+        }
+        const double dy = target.base.y + target.height * 0.55 - start.y;
+        const double distance = std::sqrt(Engine::DistanceSquaredXZ(start, target.base) + dy * dy);
+        const double seconds = std::min(life, (distance + target.radius + radius * 2) / speed);
+        const Engine::Vector3 end{static_cast<float>(start.x + velocity.x * seconds),
+            static_cast<float>(start.y + velocity.y * seconds), static_cast<float>(start.z + velocity.z * seconds)};
+        const Engine::Segment baseMotion{{start.x, start.y - radius, start.z}, {end.x, end.y - radius, end.z}};
+        const auto body = Engine::SweepCylinder(baseMotion, radius, radius * 2, target);
+        if (!body)
+        {
+            return false;
+        }
+        const auto geometry = FirstStaticHit(baseMotion, radius, radius * 2);
+        if (geometry && geometry->fraction <= body->fraction)
+        {
+            return false;
+        }
+        const auto ground = _terrain.SweepSphere({start, end}, radius);
+        return !ground || ground->fraction > body->fraction;
+    }
+
+    std::optional<EntityRef> LastFieldRun::FindWeaponTarget(const WeaponDefinition& weapon)
+    {
+        if (!GatherCircle(_player.base, weapon.range, true))
+        {
+            throw std::runtime_error("Run weapon target candidate query failed");
+        }
+        std::optional<EntityRef> result;
+        double best = std::numeric_limits<double>::infinity();
+        for (const auto& ref : _candidates)
+        {
+            const auto* enemy = TryEnemy(ref);
+            if (!enemy || !Targetable(*enemy, _tick) ||
+                static_cast<double>(enemy->position.y) + enemy->height < _player.base.y ||
+                static_cast<double>(_player.base.y) + _player.height < enemy->position.y)
+            {
+                continue;
+            }
+            const double distance = Engine::DistanceSquaredXZ(_player.base, enemy->position);
+            if (distance > static_cast<double>(weapon.range) * weapon.range || distance > best ||
+                (distance == best && result && !HandleLess(ref, *result)))
+            {
+                continue;
+            }
+            bool reachable = weapon.kind == WeaponKind::Melee && MeleePathClear(_player.base, _player.height, *enemy);
+            if (weapon.kind != WeaponKind::Melee)
+            {
+                const double length = std::sqrt(distance);
+                const Engine::Vector2 direction = length > 0 ? Engine::Vector2{
+                    static_cast<float>((static_cast<double>(enemy->position.x) - _player.base.x) / length),
+                    static_cast<float>((static_cast<double>(enemy->position.z) - _player.base.z) / length)} : _playerFacing;
+                const Engine::Vector3 start{_player.base.x, _player.base.y + _player.height * 0.55f, _player.base.z};
+                for (std::uint32_t index = 0; index < weapon.projectileCount && !reachable; ++index)
+                {
+                    reachable = ProjectilePathClear(start, WeaponShotVelocity(weapon, direction, enemy, index),
+                        weapon.projectileLife, weapon.projectileRadius, {enemy->position, enemy->radius, enemy->height});
+                }
+            }
+            if (reachable)
+            {
+                best = distance;
+                result = ref;
+            }
+        }
+        return result;
+    }
+
+    bool LastFieldRun::EnemyHasShot(const Enemy& enemy, const EnemyRangedDefinition& ranged) const
+    {
+        const Engine::Vector3 start{enemy.position.x, enemy.position.y + enemy.height * 0.55f, enemy.position.z};
+        const double x = static_cast<double>(_player.base.x) - start.x;
+        const float aimY = _player.base.y + _player.height * 0.55f;
+        const double y = static_cast<double>(aimY) - start.y;
+        const double z = static_cast<double>(_player.base.z) - start.z;
+        const double length = std::sqrt(x * x + y * y + z * z);
+        if (length <= 0.000001)
+        {
+            return true;
+        }
+        return ProjectilePathClear(start, {static_cast<float>(x / length * ranged.projectileSpeed),
+            static_cast<float>(y / length * ranged.projectileSpeed), static_cast<float>(z / length * ranged.projectileSpeed)},
+            ranged.projectileLife, ranged.projectileRadius, _player);
+    }
+
     bool LastFieldRun::BeginMelee(MeleeAttack& attack, const EntityRef& source)
     {
         if (!IsValid(source) || attack.hitTargets.capacity() < _enemies.GetStats().capacity ||
@@ -651,17 +784,8 @@ namespace Client
             {
                 continue;
             }
-            // Body-proxy occlusion at the common vertical interval; this is not a hand/IK sweep.
-            const double low = std::max(static_cast<double>(origin.y), static_cast<double>(enemy->position.y));
-            const double high = std::min(static_cast<double>(origin.y) + height,
-                static_cast<double>(enemy->position.y) + enemy->height);
-            const float attackY = static_cast<float>(low + (high - low) * 0.5);
-            if (!std::isfinite(attackY))
-            {
-                return false;
-            }
-            if (FirstStaticHit({{origin.x, attackY, origin.z},
-                    {enemy->position.x, attackY, enemy->position.z}}, 0, 0))
+            // Use the same body-height visibility condition as automatic target selection.
+            if (!MeleePathClear(origin, height, *enemy))
             {
                 continue;
             }
@@ -689,6 +813,81 @@ namespace Client
         return true;
     }
 
+    void LastFieldRun::PrepareStaticGrid(Engine::BoundsXZ bounds)
+    {
+        _staticGridReady = false;
+        const auto count = static_cast<std::uint32_t>(_staticCylinders.size() + _staticBoxes.size());
+        _staticIds.resize(count);
+        _staticCandidates.reserve(count);
+        for (std::uint32_t index = 0; index < count; ++index)
+        {
+            _staticIds[index] = index;
+        }
+        if (count == 0)
+        {
+            return;
+        }
+        const auto include = [&](Engine::Vector3 base)
+        {
+            bounds.min.x = std::min(bounds.min.x, base.x);
+            bounds.min.y = std::min(bounds.min.y, base.z);
+            bounds.max.x = std::max(bounds.max.x, base.x);
+            bounds.max.y = std::max(bounds.max.y, base.z);
+        };
+        for (const auto& shape : _staticCylinders)
+        {
+            include(shape.base);
+        }
+        for (const auto& shape : _staticBoxes)
+        {
+            include(shape.base);
+        }
+        const double extent = std::max(static_cast<double>(bounds.max.x) - bounds.min.x,
+            static_cast<double>(bounds.max.y) - bounds.min.y);
+        // At most 33x33 cells after float rounding, independent of terrain dimensions.
+        const float cellSize = static_cast<float>(std::max(4.0, extent / 32));
+        if (!std::isfinite(cellSize) || !_staticGrid.Initialize(bounds, cellSize, count))
+        {
+            return;
+        }
+        for (std::uint32_t index = 0; index < count; ++index)
+        {
+            const bool cylinder = index < _staticCylinders.size();
+            const auto base = cylinder ? _staticCylinders[index].base :
+                _staticBoxes[index - _staticCylinders.size()].base;
+            const double radius = cylinder ? _staticCylinders[index].radius :
+                std::hypot(static_cast<double>(_staticBoxes[index - _staticCylinders.size()].halfExtents.x),
+                    _staticBoxes[index - _staticCylinders.size()].halfExtents.y);
+            // A circumscribed disc conservatively includes every yaw of an upright box.
+            const float proxyRadius = std::nextafter(static_cast<float>(radius),
+                std::numeric_limits<float>::infinity());
+            if (!std::isfinite(proxyRadius) || !_staticGrid.Insert(index, base, proxyRadius))
+            {
+                return;
+            }
+        }
+        _staticGridReady = true;
+    }
+
+    std::span<const std::uint32_t> LastFieldRun::StaticCandidates(const Engine::Segment& motion,
+        float radius) const noexcept
+    {
+        if (_staticGridReady)
+        {
+            const double scale = std::max({1.0, std::abs(static_cast<double>(motion.start.x)),
+                std::abs(static_cast<double>(motion.start.z)), std::abs(static_cast<double>(motion.end.x)),
+                std::abs(static_cast<double>(motion.end.z)), static_cast<double>(radius)});
+            const float paddedRadius = std::nextafter(static_cast<float>(radius +
+                8 * std::numeric_limits<float>::epsilon() * scale), std::numeric_limits<float>::infinity());
+            if (std::isfinite(paddedRadius) && _staticGrid.QuerySegment(motion, paddedRadius, _staticCandidates))
+            {
+                return _staticCandidates;
+            }
+        }
+        // Preserve valid extreme geometry and invalid-query handling on the original exact path.
+        return _staticIds;
+    }
+
     std::optional<Engine::GeometryHit> LastFieldRun::FirstStaticHit(const Engine::Segment& motion,
         float radius, float height) const noexcept
     {
@@ -701,23 +900,31 @@ namespace Client
                 first = hit;
             }
         };
-        for (const auto& shape : _staticCylinders)
+        for (const auto index : StaticCandidates(motion, radius))
         {
-            consider(shape);
-        }
-        for (const auto& shape : _staticBoxes)
-        {
-            consider(shape);
+            if (index < _staticCylinders.size())
+            {
+                consider(_staticCylinders[index]);
+            }
+            else
+            {
+                consider(_staticBoxes[index - _staticCylinders.size()]);
+            }
         }
         return first;
     }
 
     bool LastFieldRun::OverlapsEnvironment(const Engine::Cylinder& body) const noexcept
     {
-        return std::any_of(_staticCylinders.begin(), _staticCylinders.end(),
-                   [&](const auto& shape) { return Engine::Overlaps(body, shape); }) ||
-               std::any_of(_staticBoxes.begin(), _staticBoxes.end(),
-                   [&](const auto& shape) { return Engine::Overlaps(body, shape); });
+        for (const auto index : StaticCandidates({body.base, body.base}, body.radius))
+        {
+            if (index < _staticCylinders.size() ? Engine::Overlaps(body, _staticCylinders[index]) :
+                Engine::Overlaps(body, _staticBoxes[index - _staticCylinders.size()]))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     Engine::Vector3 LastFieldRun::MoveBody(Engine::Cylinder body, Engine::Vector2 displacement,
@@ -943,13 +1150,16 @@ namespace Client
                     consider(entry.body);
                 }
             }
-            for (const auto& shape : _staticCylinders)
+            for (const auto index : StaticCandidates({current, destination}, body.radius))
             {
-                consider(shape);
-            }
-            for (const auto& shape : _staticBoxes)
-            {
-                consider(shape);
+                if (index < _staticCylinders.size())
+                {
+                    consider(_staticCylinders[index]);
+                }
+                else
+                {
+                    consider(_staticBoxes[index - _staticCylinders.size()]);
+                }
             }
             if (!first)
             {
@@ -1212,6 +1422,7 @@ namespace Client
         }
         std::vector<WeaponSlot> slots;
         std::vector<WeaponSlot> spareSlots;
+        std::vector<NavigationProfile> navigation;
         std::unique_ptr<RunProgression> progression;
         const auto hitCapacity = static_cast<std::size_t>(_enemies.GetStats().capacity) * (definitions->slotLimit + 1) +
                                  _projectiles.GetStats().capacity + 64;
@@ -1240,6 +1451,10 @@ namespace Client
                 slot.melee.hitTargets.reserve(_enemies.GetStats().capacity);
                 spareSlots.push_back(std::move(slot));
             }
+            if (!PrepareNavigation(*definitions, navigation))
+            {
+                return false;
+            }
             _hits.reserve(hitCapacity);
             _damageRequests.reserve(hitCapacity);
             _appliedThisTick.reserve(hitCapacity);
@@ -1256,6 +1471,7 @@ namespace Client
         {
             return false;
         }
+        _navigationProfiles = std::move(navigation);
         _definitions = std::move(definitions);
         _weaponSlots = std::move(slots);
         _spareWeaponSlots = std::move(spareSlots);
@@ -1600,6 +1816,348 @@ namespace Client
         }
     }
 
+    Engine::Vector3 LastFieldRun::NavigationApproach(Engine::Vector3 from, float radius) const noexcept
+    {
+        const double length = std::sqrt(Engine::DistanceSquaredXZ(from, _player.base));
+        const double stop = std::max(0.0, static_cast<double>(radius) + _player.radius - 0.01);
+        const double fraction = length > stop ? (length - stop) / length : 0;
+        return {static_cast<float>(from.x + (_player.base.x - from.x) * fraction),
+            static_cast<float>(from.y + (_player.base.y - from.y) * fraction),
+            static_cast<float>(from.z + (_player.base.z - from.z) * fraction)};
+    }
+
+    bool LastFieldRun::NavigationSegmentClear(Engine::Vector3 from, Engine::Vector3 to,
+        float radius, float height) const noexcept
+    {
+        const auto blocks = [&](const auto& shape)
+        {
+            const auto hit = Engine::SweepCylinder({from, to}, radius, height, shape);
+            if (!hit)
+            {
+                return false;
+            }
+            // Preserve MoveBody's ability to leave or move parallel to an exact contact.
+            return hit->fraction != 0 || (to.x - from.x) * hit->normal.x +
+                (to.z - from.z) * hit->normal.z < 0;
+        };
+        for (const auto index : StaticCandidates({from, to}, radius))
+        {
+            if (index < _staticCylinders.size() ? blocks(_staticCylinders[index]) :
+                blocks(_staticBoxes[index - _staticCylinders.size()]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool LastFieldRun::NavigationRouteClear(Engine::Vector3 from, Engine::Vector3 to,
+        float radius, float height) const
+    {
+        if (!NavigationSegmentClear(from, to, radius, height))
+        {
+            return false;
+        }
+        const auto steps = std::max(1, static_cast<int>(std::ceil(
+            std::sqrt(Engine::DistanceSquaredXZ(from, to)) / (_navigationCellSize * .25))));
+        for (int step = 0; step <= steps; ++step)
+        {
+            const double t = static_cast<double>(step) / steps;
+            const auto ground = _terrain.Sample({static_cast<float>(from.x + (to.x - from.x) * t),
+                static_cast<float>(from.z + (to.z - from.z) * t)});
+            if (!ground || !Finite(ground->position) || !Finite(ground->normal) ||
+                ground->normal.y < _minimumNormalY)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool LastFieldRun::PrepareNavigation(const GameDefinitions& definitions,
+        std::vector<NavigationProfile>& out)
+    {
+        if ((_staticCylinders.empty() && _staticBoxes.empty()) ||
+            std::none_of(definitions.enemies.begin(), definitions.enemies.end(), [](const auto& enemy)
+            {
+                return enemy.speed > 0;
+            }))
+        {
+            out.clear();
+            _navigationPoints.clear();
+            _navigationColumns = _navigationRows = 0;
+            return true;
+        }
+        constexpr std::uint16_t freeNode = 0x100;
+        constexpr std::array<int, 8> dx{-1, 0, 1, -1, 1, -1, 0, 1};
+        constexpr std::array<int, 8> dz{-1, -1, -1, 0, 0, 1, 1, 1};
+        const auto& terrain = _terrain.Description();
+        const double minX = std::max<double>(terrain.origin.x, _playBounds.min.x);
+        const double minZ = std::max<double>(terrain.origin.z, _playBounds.min.y);
+        const double maxX = std::min<double>(_gridBounds.max.x, _playBounds.max.x);
+        const double maxZ = std::min<double>(_gridBounds.max.y, _playBounds.max.y);
+        if (!(minX < maxX && minZ < maxZ))
+        {
+            return false;
+        }
+        const float cellSize = static_cast<float>(std::max<double>(std::min(terrain.cellSize, 1.0f),
+            std::max(maxX - minX, maxZ - minZ) / 128));
+        const auto columns = static_cast<std::uint32_t>(std::floor((maxX - minX) / cellSize)) + 1;
+        const auto rows = static_cast<std::uint32_t>(std::floor((maxZ - minZ) / cellSize)) + 1;
+        if (columns < 2 || rows < 2 || columns > 129 || rows > 129)
+        {
+            out.clear();
+            _navigationPoints.clear();
+            _navigationColumns = _navigationRows = 0;
+            return true;
+        }
+        const auto count = static_cast<std::size_t>(columns) * rows;
+        std::vector<Engine::Vector3> points(count);
+        std::vector<bool> surfaceFree(count, false);
+        for (std::uint32_t z = 0; z < rows; ++z)
+        {
+            for (std::uint32_t x = 0; x < columns; ++x)
+            {
+                const auto i = static_cast<std::size_t>(z) * columns + x;
+                points[i] = {static_cast<float>(minX + x * static_cast<double>(cellSize)), 0,
+                    static_cast<float>(minZ + z * static_cast<double>(cellSize))};
+                const auto ground = _terrain.Sample({points[i].x, points[i].z});
+                if (ground && Finite(ground->position) && Finite(ground->normal) &&
+                    ground->normal.y >= _minimumNormalY)
+                {
+                    points[i].y = ground->position.y;
+                    surfaceFree[i] = true;
+                }
+            }
+        }
+        std::vector<NavigationProfile> profiles;
+        for (const auto& enemy : definitions.enemies)
+        {
+            if (enemy.speed <= 0 || std::any_of(profiles.begin(), profiles.end(), [&](const auto& profile)
+                {
+                    return profile.radius == enemy.radius && profile.height == enemy.height;
+                }))
+            {
+                continue;
+            }
+            NavigationProfile profile;
+            profile.radius = enemy.radius;
+            profile.height = enemy.height;
+            profile.links.resize(count, 0);
+            profile.distance.resize(count, UINT32_MAX);
+            profile.queue.resize(count);
+            for (std::size_t i = 0; i < count; ++i)
+            {
+                if (surfaceFree[i] && !OverlapsEnvironment({points[i], enemy.radius + .02f, enemy.height}))
+                {
+                    profile.links[i] = freeNode;
+                }
+            }
+            // Cardinals precede diagonals so corner cutting can check all four edges.
+            for (const int direction : {4, 6, 5, 7})
+            {
+                for (int z = 0; z < static_cast<int>(rows); ++z)
+                {
+                    for (int x = 0; x < static_cast<int>(columns); ++x)
+                    {
+                        const int tx = x + dx[direction], tz = z + dz[direction];
+                        if (tx < 0 || tz < 0 || tx >= static_cast<int>(columns) || tz >= static_cast<int>(rows))
+                        {
+                            continue;
+                        }
+                        const auto i = static_cast<std::size_t>(z) * columns + x;
+                        const auto j = static_cast<std::size_t>(tz) * columns + tx;
+                        if (!(profile.links[i] & freeNode) || !(profile.links[j] & freeNode))
+                        {
+                            continue;
+                        }
+                        if (dx[direction] != 0 && dz[direction] != 0)
+                        {
+                            const int horizontal = dx[direction] < 0 ? 3 : 4;
+                            const int vertical = 6;
+                            const auto besideX = static_cast<std::size_t>(z) * columns + tx;
+                            const auto besideZ = static_cast<std::size_t>(tz) * columns + x;
+                            if (!(profile.links[i] & (1u << horizontal)) || !(profile.links[i] & (1u << vertical)) ||
+                                !(profile.links[besideX] & (1u << vertical)) ||
+                                !(profile.links[besideZ] & (1u << horizontal)))
+                            {
+                                continue;
+                            }
+                        }
+                        bool clear = NavigationSegmentClear(points[i], points[j], enemy.radius + .02f, enemy.height);
+                        for (int quarter = 1; quarter < 4 && clear; ++quarter)
+                        {
+                            const float t = quarter * .25f;
+                            const auto ground = _terrain.Sample({points[i].x + (points[j].x - points[i].x) * t,
+                                points[i].z + (points[j].z - points[i].z) * t});
+                            clear = ground && Finite(ground->position) && Finite(ground->normal) &&
+                                ground->normal.y >= _minimumNormalY;
+                        }
+                        if (clear)
+                        {
+                            profile.links[i] |= static_cast<std::uint16_t>(1u << direction);
+                            profile.links[j] |= static_cast<std::uint16_t>(1u << (7 - direction));
+                        }
+                    }
+                }
+            }
+            profiles.push_back(std::move(profile));
+        }
+        _navigationPoints = std::move(points);
+        _navigationOrigin = {static_cast<float>(minX), static_cast<float>(minZ)};
+        _navigationCellSize = cellSize;
+        _navigationColumns = columns;
+        _navigationRows = rows;
+        out = std::move(profiles);
+        return true;
+    }
+
+    void LastFieldRun::UpdateNavigation(float dt)
+    {
+        if (dt <= 0 || _navigationProfiles.empty())
+        {
+            return;
+        }
+        constexpr std::array<int, 8> dx{-1, 0, 1, -1, 1, -1, 0, 1};
+        constexpr std::array<int, 8> dz{-1, -1, -1, 0, 0, 1, 1, 1};
+        _navigationRefresh = std::max(0.0f, _navigationRefresh - dt);
+        const int goalX = std::clamp(static_cast<int>(std::round((_player.base.x - _navigationOrigin.x) /
+            _navigationCellSize)), 0, static_cast<int>(_navigationColumns) - 1);
+        const int goalZ = std::clamp(static_cast<int>(std::round((_player.base.z - _navigationOrigin.y) /
+            _navigationCellSize)), 0, static_cast<int>(_navigationRows) - 1);
+        const auto goal = static_cast<std::uint32_t>(goalZ) * _navigationColumns + goalX;
+        if (_navigationRefresh > 0 || (goal == _navigationGoal &&
+            Engine::DistanceSquaredXZ(_navigationTarget, _player.base) < .1 * .1))
+        {
+            return;
+        }
+        for (auto& profile : _navigationProfiles)
+        {
+            std::fill(profile.distance.begin(), profile.distance.end(), UINT32_MAX);
+            std::size_t head = 0, tail = 0;
+            for (int z = std::max(0, goalZ - 2); z <= std::min(static_cast<int>(_navigationRows) - 1, goalZ + 2); ++z)
+            {
+                for (int x = std::max(0, goalX - 2); x <= std::min(static_cast<int>(_navigationColumns) - 1, goalX + 2); ++x)
+                {
+                    const auto i = static_cast<std::uint32_t>(z) * _navigationColumns + x;
+                    if (!(profile.links[i] & 0x100) || Engine::DistanceSquaredXZ(_navigationPoints[i], _player.base) >
+                        4.0 * _navigationCellSize * _navigationCellSize || !NavigationRouteClear(_navigationPoints[i],
+                            NavigationApproach(_navigationPoints[i], profile.radius), profile.radius, profile.height))
+                    {
+                        continue;
+                    }
+                    profile.distance[i] = 0;
+                    profile.queue[tail++] = i;
+                }
+            }
+            while (head < tail)
+            {
+                const auto i = profile.queue[head++];
+                for (int direction = 0; direction < 8; ++direction)
+                {
+                    if (!(profile.links[i] & (1u << direction)))
+                    {
+                        continue;
+                    }
+                    const auto j = static_cast<std::uint32_t>(static_cast<int>(i) +
+                        dz[direction] * static_cast<int>(_navigationColumns) + dx[direction]);
+                    if (profile.distance[j] != UINT32_MAX)
+                    {
+                        continue;
+                    }
+                    profile.distance[j] = profile.distance[i] + 1;
+                    profile.queue[tail++] = j;
+                }
+            }
+        }
+        _navigationGoal = goal;
+        _navigationTarget = _player.base;
+        _navigationRefresh = .2f;
+    }
+
+    Engine::Vector2 LastFieldRun::PursuitDirection(const Enemy& enemy) const
+    {
+        const auto directionTo = [&](Engine::Vector3 goal)
+        {
+            const double x = static_cast<double>(goal.x) - enemy.position.x;
+            const double z = static_cast<double>(goal.z) - enemy.position.z;
+            const double length = std::hypot(x, z);
+            return length > .000001 ? Engine::Vector2{static_cast<float>(x / length), static_cast<float>(z / length)} :
+                Engine::Vector2{};
+        };
+        if (NavigationSegmentClear(enemy.position, NavigationApproach(enemy.position, enemy.radius),
+            enemy.radius, enemy.height))
+        {
+            return directionTo(_player.base);
+        }
+        const auto found = std::find_if(_navigationProfiles.begin(), _navigationProfiles.end(), [&](const auto& profile)
+            {
+                return profile.radius == enemy.radius && profile.height == enemy.height;
+            });
+        if (found == _navigationProfiles.end() || _navigationGoal == UINT32_MAX)
+        {
+            return directionTo(_player.base);
+        }
+        const auto& profile = *found;
+        const int cellX = std::clamp(static_cast<int>(std::round((enemy.position.x - _navigationOrigin.x) /
+            _navigationCellSize)), 0, static_cast<int>(_navigationColumns) - 1);
+        const int cellZ = std::clamp(static_cast<int>(std::round((enemy.position.z - _navigationOrigin.y) /
+            _navigationCellSize)), 0, static_cast<int>(_navigationRows) - 1);
+        std::uint32_t anchor = UINT32_MAX;
+        double score = std::numeric_limits<double>::infinity();
+        for (int z = std::max(0, cellZ - 2); z <= std::min(static_cast<int>(_navigationRows) - 1, cellZ + 2); ++z)
+        {
+            for (int x = std::max(0, cellX - 2); x <= std::min(static_cast<int>(_navigationColumns) - 1, cellX + 2); ++x)
+            {
+                const auto i = static_cast<std::uint32_t>(z) * _navigationColumns + x;
+                if (profile.distance[i] == UINT32_MAX)
+                {
+                    continue;
+                }
+                const double candidate = profile.distance[i] * _navigationCellSize +
+                    std::sqrt(Engine::DistanceSquaredXZ(enemy.position, _navigationPoints[i]));
+                if (candidate >= score || !NavigationRouteClear(enemy.position, _navigationPoints[i],
+                    enemy.radius, enemy.height))
+                {
+                    continue;
+                }
+                anchor = i;
+                score = candidate;
+            }
+        }
+        if (anchor == UINT32_MAX)
+        {
+            return directionTo(_player.base);
+        }
+        constexpr std::array<int, 8> dx{-1, 0, 1, -1, 1, -1, 0, 1};
+        constexpr std::array<int, 8> dz{-1, -1, -1, 0, 0, 1, 1, 1};
+        auto cursor = anchor, waypoint = anchor;
+        for (int step = 0; step < 3; ++step)
+        {
+            auto next = cursor;
+            for (int direction = 0; direction < 8; ++direction)
+            {
+                if (!(profile.links[cursor] & (1u << direction)))
+                {
+                    continue;
+                }
+                const auto candidate = static_cast<std::uint32_t>(static_cast<int>(cursor) +
+                    dz[direction] * static_cast<int>(_navigationColumns) + dx[direction]);
+                if (profile.distance[candidate] < profile.distance[next])
+                {
+                    next = candidate;
+                }
+            }
+            if (next == cursor || !NavigationRouteClear(enemy.position, _navigationPoints[next],
+                enemy.radius, enemy.height))
+            {
+                break;
+            }
+            cursor = waypoint = next;
+        }
+        return directionTo(_navigationPoints[waypoint]);
+    }
+
     void LastFieldRun::UpdateEnemyCharge(Enemy& enemy, const EnemyChargeDefinition& charge, float dt)
     {
         enemy.chargeCooldown = std::max(0.0, enemy.chargeCooldown - dt);
@@ -1642,7 +2200,8 @@ namespace Client
         const double x = static_cast<double>(_player.base.x) - enemy.position.x;
         const double z = static_cast<double>(_player.base.z) - enemy.position.z;
         const double length = std::hypot(x, z);
-        if (dt > 0 && enemy.chargeCooldown == 0 && length > 0.000001 && length <= charge.range)
+        if (dt > 0 && enemy.chargeCooldown == 0 && length > 0.000001 && length <= charge.range &&
+            NavigationSegmentClear(enemy.position, NavigationApproach(enemy.position, enemy.radius), enemy.radius, enemy.height))
         {
             enemy.chargeAim = _player.base;
             enemy.chargeDirection = {static_cast<float>(x / length), static_cast<float>(z / length)};
@@ -1652,8 +2211,8 @@ namespace Client
             return;
         }
         const auto* definition = _definitions->FindEnemy(enemy.definitionId);
-        enemy.velocity = length > 0 ? Engine::Vector3{static_cast<float>(x / length * definition->speed), 0,
-            static_cast<float>(z / length * definition->speed)} : Engine::Vector3{};
+        const auto direction = PursuitDirection(enemy);
+        enemy.velocity = {direction.x * definition->speed, 0, direction.y * definition->speed};
     }
 
     void LastFieldRun::UpdateEnemyIntent(float dt)
@@ -1672,6 +2231,7 @@ namespace Client
                     }
                     enemy.cooldown = std::max(0.0, enemy.cooldown - dt);
                     enemy.rangedCooldown = std::max(0.0, enemy.rangedCooldown - dt);
+                    enemy.rangedRecovery = std::max(0.0, enemy.rangedRecovery - dt);
                     if (definition->charge && _wave.waveIndex + 1 >= definition->charge->firstStage)
                     {
                         UpdateEnemyCharge(enemy, *definition->charge, dt);
@@ -1686,11 +2246,20 @@ namespace Client
                         if (definition->ranged)
                         {
                             const auto preferred = definition->ranged->preferredDistance;
-                            direction = enemy.rangedCharging || std::abs(length - preferred) <= 0.5 ? 0 :
-                                length < preferred ? -1 : 1;
+                            direction = enemy.rangedCharging || enemy.rangedRecovery > 0 ? 0 :
+                                !EnemyHasShot(enemy, *definition->ranged) ? 1 :
+                                std::abs(length - preferred) <= 0.5 ? 0 : length < preferred ? -1 : 1;
                         }
-                        enemy.velocity = {static_cast<float>(x / length * definition->speed * direction), 0,
-                                          static_cast<float>(z / length * definition->speed * direction)};
+                        if (direction > 0)
+                        {
+                            const auto pursuit = PursuitDirection(enemy);
+                            enemy.velocity = {pursuit.x * definition->speed, 0, pursuit.y * definition->speed};
+                        }
+                        else
+                        {
+                            enemy.velocity = {static_cast<float>(x / length * definition->speed * direction), 0,
+                                static_cast<float>(z / length * definition->speed * direction)};
+                        }
                     }
                     else
                     {
@@ -1747,9 +2316,34 @@ namespace Client
 
     void LastFieldRun::ApplyDamage()
     {
+        const auto playerDamage = [&](const HitEvent& hit)
+        {
+            return std::isfinite(hit.attackPower) && hit.attackPower >= 0 ?
+                std::max({1.0f, hit.attackPower * 0.5f, hit.attackPower - std::max(0.0f, _playerStats.armor)}) : -1.0f;
+        };
         std::sort(_damageRequests.begin(), _damageRequests.end(),
-                  [](const HitEvent& a, const HitEvent& b)
+                  [&](const HitEvent& a, const HitEvent& b)
                   {
+                      if (a.tick != b.tick)
+                      {
+                          return a.tick < b.tick;
+                      }
+                      const bool aPlayer = a.target && a.target->kind == EntityKind::Player && !a.target->handle;
+                      const bool bPlayer = b.target && b.target->kind == EntityKind::Player && !b.target->handle;
+                      if (aPlayer != bPlayer)
+                      {
+                          return !aPlayer;
+                      }
+                      if (aPlayer)
+                      {
+                          // Resolve lethal hits on enemies first, then consider every surviving
+                          // incoming hit. Invalid candidates still pass through normal validation.
+                          const float aDamage = playerDamage(a), bDamage = playerDamage(b);
+                          if (aDamage != bDamage)
+                          {
+                              return aDamage > bDamage;
+                          }
+                      }
                       const auto ap =
                           a.projectile ? a.projectile->handle.value_or(Engine::PoolHandle{}) : Engine::PoolHandle{};
                       const auto bp =
@@ -1775,10 +2369,11 @@ namespace Client
                             [&](const HitEvent& prior)
                             {
                                 return hit.target == prior.target &&
-                                       (hit.kind == HitKind::Projectile
+                                       (hit.target->kind == EntityKind::Player ||
+                                        (hit.kind == HitKind::Projectile
                                             ? hit.projectile == prior.projectile && prior.kind == HitKind::Projectile
                                             : hit.kind == prior.kind && hit.source == prior.source &&
-                                                  hit.attackId == prior.attackId);
+                                                  hit.attackId == prior.attackId));
                             });
             if (duplicate)
             {
@@ -1816,7 +2411,8 @@ namespace Client
             }
             const auto* enemyDefinition = victim ? _definitions->FindEnemy(victim->definitionId) : nullptr;
             const float armor = player ? _playerStats.armor : (enemyDefinition ? enemyDefinition->armor : 0);
-            const float damage = std::max(1.0f, hit.attackPower - std::max(0.0f, armor));
+            const float damage = player ? playerDamage(hit) :
+                std::max(1.0f, hit.attackPower - std::max(0.0f, armor));
             auto& hp = player ? _playerState.hp : victim->hp;
             hp = std::max(0.0f, hp - damage);
             Engine::Vector3 sourcePosition = _player.base;
@@ -1908,26 +2504,13 @@ namespace Client
         const auto start = _pendingProjectileHandles.size();
         const auto* target = _weaponSlots[slotIndex].target ? TryEnemy(*_weaponSlots[slotIndex].target) : nullptr;
         const float startY = _player.base.y + _player.height * 0.55f;
-        const double distance = target ? std::sqrt(Engine::DistanceSquaredXZ(_player.base, target->position)) : 0;
-        const double y = target ? target->position.y + target->height * 0.55 - startY : 0;
-        const double normalizer = std::hypot(distance, y);
-        const double horizontal = normalizer > 0 ? distance / normalizer : 1;
-        const double vertical = normalizer > 0 ? y / normalizer : 0;
         for (std::uint32_t index = 0; index < weapon.projectileCount; ++index)
         {
-            const double angle =
-                weapon.projectileCount == 1
-                    ? 0
-                    : (static_cast<double>(index) / (weapon.projectileCount - 1) - 0.5) * weapon.spreadRadians;
-            const double x = direction.x * std::cos(angle) - direction.y * std::sin(angle);
-            const double z = direction.x * std::sin(angle) + direction.y * std::cos(angle);
             const auto handle = _projectileReservation[index];
             auto* shot = _projectiles.Reserved(handle);
             shot->Reset();
             shot->position = {_player.base.x, startY, _player.base.z};
-            shot->velocity = {static_cast<float>(x * horizontal * weapon.projectileSpeed),
-                              static_cast<float>(vertical * weapon.projectileSpeed),
-                              static_cast<float>(z * horizontal * weapon.projectileSpeed)};
+            shot->velocity = WeaponShotVelocity(weapon, direction, target, index);
             shot->owner = {EntityKind::Player, {}, _runEpoch};
             shot->definitionId = weapon.id;
             shot->attackPower = weapon.damage * _playerStats.damageMultiplier;
@@ -1974,6 +2557,7 @@ namespace Client
                 enemy->rangedCharging = false;
                 enemy->rangedWindup = 0;
                 enemy->rangedCooldown = enemyDefinition->ranged->interval;
+                enemy->rangedRecovery = enemyDefinition->ranged->recovery;
                 GameEvent event;
                 event.kind = GameEventKind::EnemyAttacked;
                 event.definitionId = enemy->definitionId;
@@ -2017,7 +2601,7 @@ namespace Client
                 continue;
             }
             const auto* weapon = _definitions->FindWeapon(slot.definitionId);
-            slot.target = FindNearest(_player.base, weapon->range, _player.height);
+            slot.target = FindWeaponTarget(*weapon);
             const auto* enemy = slot.target ? TryEnemy(*slot.target) : nullptr;
             if (!enemy)
             {
@@ -2078,10 +2662,14 @@ namespace Client
                     return;
                 }
                 const auto& ranged = *definition->ranged;
+                if (enemy.rangedRecovery > 0)
+                {
+                    return;
+                }
                 if (!enemy.rangedCharging)
                 {
                     if (enemy.rangedCooldown > 0 || Engine::DistanceSquaredXZ(enemy.position, _player.base) >
-                        static_cast<double>(ranged.range) * ranged.range)
+                        static_cast<double>(ranged.range) * ranged.range || !EnemyHasShot(enemy, ranged))
                     {
                         return;
                     }
@@ -2103,31 +2691,46 @@ namespace Client
                 if (length <= 0.000001 || _nextAttackId == std::numeric_limits<std::uint64_t>::max() ||
                     _tick == std::numeric_limits<std::uint64_t>::max() ||
                     _pendingShots.size() == _pendingShots.capacity() ||
-                    _pendingProjectileHandles.size() == _pendingProjectileHandles.capacity() ||
-                    !_projectiles.Reserve(1, _projectileReservation))
+                    ranged.projectileCount > _pendingProjectileHandles.capacity() - _pendingProjectileHandles.size() ||
+                    !_projectiles.Reserve(ranged.projectileCount, _projectileReservation))
                 {
                     ++_projectileBatchFailures;
                     enemy.rangedCharging = false;
+                    enemy.rangedWindup = 0;
                     enemy.rangedCooldown = ranged.interval;
                     return;
                 }
-                const auto projectileHandle = _projectileReservation[0];
-                auto* shot = _projectiles.Reserved(projectileHandle);
-                shot->Reset();
-                shot->position = start;
-                shot->velocity = {static_cast<float>(x / length * ranged.projectileSpeed),
-                    static_cast<float>(y / length * ranged.projectileSpeed), static_cast<float>(z / length * ranged.projectileSpeed)};
-                shot->owner = Ref(EntityKind::Enemy, handle);
-                shot->definitionId = enemy.definitionId;
-                shot->attackPower = ranged.damage;
-                shot->ttl = ranged.projectileLife;
-                shot->eligibleTick = _tick + 1;
-                shot->attackId = _nextAttackId++;
-                shot->radius = ranged.projectileRadius;
-                shot->knockback = definition->knockback;
                 const auto first = _pendingProjectileHandles.size();
-                _pendingProjectileHandles.push_back(projectileHandle);
-                _pendingShots.push_back({0, first, 1, shot->owner});
+                const auto owner = Ref(EntityKind::Enemy, handle);
+                for (std::uint32_t index = 0; index < ranged.projectileCount; ++index)
+                {
+                    const auto projectileHandle = _projectileReservation[index];
+                    auto* shot = _projectiles.Reserved(projectileHandle);
+                    shot->Reset();
+                    shot->position = start;
+                    shot->velocity = {static_cast<float>(x / length * ranged.projectileSpeed),
+                        static_cast<float>(y / length * ranged.projectileSpeed),
+                        static_cast<float>(z / length * ranged.projectileSpeed)};
+                    if (ranged.projectileCount > 1)
+                    {
+                        const double angle = ranged.spreadRadians *
+                            (static_cast<double>(index) / (ranged.projectileCount - 1) - 0.5);
+                        const double sine = std::sin(angle), cosine = std::cos(angle);
+                        shot->velocity.x = static_cast<float>((x * cosine + z * sine) / length * ranged.projectileSpeed);
+                        shot->velocity.z = static_cast<float>((z * cosine - x * sine) / length * ranged.projectileSpeed);
+                    }
+                    shot->owner = owner;
+                    shot->definitionId = enemy.definitionId;
+                    shot->attackPower = ranged.damage;
+                    shot->ttl = ranged.projectileLife;
+                    shot->eligibleTick = _tick + 1;
+                    shot->attackId = _nextAttackId;
+                    shot->radius = ranged.projectileRadius;
+                    shot->knockback = definition->knockback;
+                    _pendingProjectileHandles.push_back(projectileHandle);
+                }
+                ++_nextAttackId;
+                _pendingShots.push_back({0, first, ranged.projectileCount, owner});
             }))
         {
             throw std::runtime_error("Run ranged attack iteration failed");
@@ -2481,6 +3084,7 @@ namespace Client
             {
                 slot.cooldown = std::max(0.0, slot.cooldown - seconds);
             }
+            UpdateNavigation(seconds);
             UpdateEnemyIntent(seconds);
             MoveActors(seconds, movement);
             if (!RebuildGrid())

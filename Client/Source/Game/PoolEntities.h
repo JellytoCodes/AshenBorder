@@ -54,7 +54,7 @@ namespace Client
         double timer = 0;
         double cooldown = 0;
         double animationTime = 0;
-        double rangedCooldown = 0, rangedWindup = 0;
+        double rangedCooldown = 0, rangedWindup = 0, rangedRecovery = 0;
         Engine::Vector3 rangedAim = {};
         bool rangedCharging = false;
         EnemyChargePhase chargePhase = EnemyChargePhase::Pursuit;

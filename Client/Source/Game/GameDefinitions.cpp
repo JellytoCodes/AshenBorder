@@ -226,7 +226,7 @@ namespace
     Client::EnemyDefinition ParseEnemy(const Json& value, std::uint32_t schemaVersion)
     {
         const bool hasRanged = schemaVersion >= 3 && value.contains("ranged");
-        const bool hasCharge = schemaVersion == 4 && value.contains("charge");
+        const bool hasCharge = schemaVersion >= 4 && value.contains("charge");
         if (hasRanged && hasCharge)
         {
             throw std::runtime_error("An enemy cannot combine ranged and charge attacks");
@@ -261,12 +261,29 @@ namespace
         if (hasRanged)
         {
             const auto& ranged = value.at("ranged");
-            Fields(ranged, {"damage", "interval", "projectileSpeed", "projectileLife", "projectileRadius",
-                "range", "preferredDistance", "windup", "spawnDelay"}, "enemy ranged attack");
+            const bool hasVolley = schemaVersion >= 5 && (ranged.contains("projectileCount") ||
+                ranged.contains("spreadRadians") || ranged.contains("recovery"));
+            if (hasVolley)
+            {
+                Fields(ranged, {"damage", "interval", "projectileSpeed", "projectileLife", "projectileRadius",
+                    "range", "preferredDistance", "windup", "spawnDelay", "projectileCount", "spreadRadians",
+                    "recovery"}, "enemy ranged volley");
+            }
+            else
+            {
+                Fields(ranged, {"damage", "interval", "projectileSpeed", "projectileLife", "projectileRadius",
+                    "range", "preferredDistance", "windup", "spawnDelay"}, "enemy ranged attack");
+            }
             result.ranged = Client::EnemyRangedDefinition{Scalar(ranged, "damage"), Scalar(ranged, "interval"),
                 Scalar(ranged, "projectileSpeed"), Scalar(ranged, "projectileLife"), Scalar(ranged, "projectileRadius"),
                 Scalar(ranged, "range"), Scalar(ranged, "preferredDistance"), Scalar(ranged, "windup"),
                 Scalar(ranged, "spawnDelay")};
+            if (hasVolley)
+            {
+                result.ranged->projectileCount = Unsigned(ranged, "projectileCount");
+                result.ranged->spreadRadians = Scalar(ranged, "spreadRadians");
+                result.ranged->recovery = Scalar(ranged, "recovery");
+            }
         }
         if (hasCharge)
         {
@@ -421,13 +438,13 @@ namespace Client
     {
         try
         {
-            if (definitions.schemaVersion < 1 || definitions.schemaVersion > 4)
+            if (definitions.schemaVersion < 1 || definitions.schemaVersion > 5)
             {
                 return Reject(error, "Unsupported game definitions schemaVersion");
             }
             if (definitions.schemaVersion < 3 && !definitions.shop.stagePricePercent.empty())
             {
-                return Reject(error, "Stage shop prices require schema three or four");
+                return Reject(error, "Stage shop prices require schema three through five");
             }
             const auto& player = definitions.player;
             if (!Positive(player.maxHp) || !Between(player.speed, 0, kMaximumSpeed) ||
@@ -480,13 +497,23 @@ namespace Client
                         !Between(ranged.spawnDelay, kMinimumCooldown, kMaximumSeconds) ||
                         static_cast<double>(ranged.range) > static_cast<double>(ranged.projectileSpeed) * ranged.projectileLife)
                     {
-                        return Reject(error, "Schema 3/4 ranged attacks require finite reachable range, positive shot fields and visible attack delays");
+                        return Reject(error, "Ranged attacks require finite reachable range, positive shot fields and visible attack delays");
+                    }
+                    if (ranged.projectileCount < 1 || ranged.projectileCount > 16 ||
+                        !Between(ranged.spreadRadians, 0, std::numbers::pi_v<float>) ||
+                        (ranged.projectileCount == 1 && ranged.spreadRadians != 0) ||
+                        (ranged.projectileCount > 1 && ranged.spreadRadians <= 0) ||
+                        !Between(ranged.recovery, 0, kMaximumSeconds) ||
+                        (definitions.schemaVersion < 5 &&
+                            (ranged.projectileCount != 1 || ranged.spreadRadians != 0 || ranged.recovery != 0)))
+                    {
+                        return Reject(error, "Ranged volleys require schema 5, one through sixteen reserved shots, bounded spread and finite recovery");
                     }
                 }
                 if (enemy.charge)
                 {
                     const auto& charge = *enemy.charge;
-                    if (definitions.schemaVersion != 4 || enemy.ranged || !Positive(charge.range, 10000) ||
+                    if (definitions.schemaVersion < 4 || enemy.ranged || !Positive(charge.range, 10000) ||
                         !Positive(charge.speed, kMaximumSpeed) ||
                         !Between(charge.windup, kMinimumCooldown, kMaximumSeconds) ||
                         !Between(charge.duration, kMinimumCooldown, kMaximumSeconds) ||
@@ -495,7 +522,7 @@ namespace Client
                         !Between(charge.spawnDelay, kMinimumCooldown, kMaximumSeconds) ||
                         charge.firstStage < 1 || charge.firstStage > definitions.waves.size())
                     {
-                        return Reject(error, "Schema 4 charge attacks require exclusive finite positive movement, visible phase delays and a valid firstStage");
+                        return Reject(error, "Charge attacks require schema 4/5, exclusive finite positive movement, visible phase delays and a valid firstStage");
                     }
                 }
             }
@@ -556,7 +583,7 @@ namespace Client
                             return value < 0x20 || value == 0x7f;
                         }))
                     {
-                        return Reject(error, "Schema 3/4 bosses require unique known enemy IDs and bounded nonempty display names");
+                        return Reject(error, "Bosses require schema 3 through 5, unique known enemy IDs and bounded nonempty display names");
                     }
                 }
                 else if (!wave.bossName.empty())
@@ -669,7 +696,7 @@ namespace Client
                 }
                 if (definitions.shop.stagePricePercent.size() > 1024)
                 {
-                    return Reject(error, "Stage shop prices require schema three or four and at most 1024 percentages");
+                    return Reject(error, "Stage shop prices require schema three through five and at most 1024 percentages");
                 }
                 std::uint32_t previousPercent = 0;
                 for (const auto percent : definitions.shop.stagePricePercent)
@@ -741,14 +768,14 @@ namespace Client
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout"}, "game definitions");
             }
-            else if (schemaVersion >= 2 && schemaVersion <= 4)
+            else if (schemaVersion >= 2 && schemaVersion <= 5)
             {
                 Fields(root, {"schemaVersion", "player", "pools", "slotLimit", "maxAttacksPerTick", "maxSpawnsPerTick",
                     "minimumCooldown", "enemies", "weapons", "waves", "loadout", "passives", "progression", "shop"}, "game definitions");
             }
             else
             {
-                return Reject(error, "Unsupported game definitions schemaVersion; expected 1, 2, 3 or 4");
+                return Reject(error, "Unsupported game definitions schemaVersion; expected 1 through 5");
             }
             GameDefinitions candidate;
             candidate.schemaVersion = schemaVersion;

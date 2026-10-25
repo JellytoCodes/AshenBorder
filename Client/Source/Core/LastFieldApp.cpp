@@ -711,7 +711,7 @@ namespace Client
         _wireframe = false;
         _shadows = true;
         _instancing = true;
-        _culling = false;
+        _culling = true;
         _run->SetAutoAttackEnabled(_automaticAttack);
         ResetPresentation();
         SyncPlayerTransform();
@@ -793,6 +793,22 @@ namespace Client
             {
                 return false;
             }
+            Engine::ModelData warningData;
+            warningData.nodes.push_back({"AttackWarning"});
+            warningData.materials.push_back({"AttackWarning"});
+            Engine::MeshData warningMesh;
+            warningMesh.name = "GroundRibbon";
+            warningMesh.vertices = {{{-.5f, 0, 0}, {0, 1, 0}, {0, 0}},
+                {{-.5f, 0, 1}, {0, 1, 0}, {0, 1}}, {{.5f, 0, 0}, {0, 1, 0}, {1, 0}},
+                {{.5f, 0, 1}, {0, 1, 0}, {1, 1}}};
+            warningMesh.indices = {0, 1, 2, 2, 1, 3};
+            warningData.meshes.push_back(std::move(warningMesh));
+            auto warningModel = std::make_shared<Engine::Model>();
+            if (!warningModel->Upload(warningData, _application->Graphics(), error))
+            {
+                return false;
+            }
+            _attackWarningModel = std::move(warningModel);
             const auto& audio = config.at("audio");
             if (!audio.is_object())
             {
@@ -1159,23 +1175,25 @@ namespace Client
                         const double aimX = static_cast<double>(enemy.rangedAim.x) - enemy.position.x;
                         const double aimZ = static_cast<double>(enemy.rangedAim.z) - enemy.position.z;
                         visual.yaw = static_cast<float>(std::atan2(aimX, aimZ));
-                        if (!visual.charging && asset.attack)
-                        {
-                            if (!visual.animator.SetClip(asset.attack, Engine::PlaybackMode::Clamp, error))
-                            {
-                                throw std::runtime_error("Enemy ranged windup transition: " + error);
-                            }
-                            visual.attacking = true;
-                        }
                     }
                     else if (moved)
                     {
                         visual.yaw = static_cast<float>(std::atan2(x, z));
                     }
-                    visual.charging = enemy.rangedCharging;
+                    const bool windingUp = enemy.rangedCharging || enemy.chargePhase == EnemyChargePhase::Windup;
+                    if (windingUp && !visual.charging && asset.attack)
+                    {
+                        if (!visual.animator.SetClip(asset.attack, Engine::PlaybackMode::Clamp, error))
+                        {
+                            throw std::runtime_error("Enemy windup transition: " + error);
+                        }
+                        visual.attacking = true;
+                    }
+                    visual.charging = windingUp;
                     if (asset.idle)
                     {
-                        if (visual.attacking && visual.animator.TimeSeconds() >= asset.attack->Data().durationSeconds)
+                        if (visual.attacking && !windingUp &&
+                            visual.animator.TimeSeconds() >= asset.attack->Data().durationSeconds)
                         {
                             visual.attacking = false;
                             if (!visual.animator.SetClip(moved ? asset.move : asset.idle, Engine::PlaybackMode::Loop, error))
@@ -1767,6 +1785,123 @@ namespace Client
         return action;
     }
 
+    void LastFieldApp::AppendAttackWarning(Engine::RenderFrame& frame, const Enemy& enemy,
+        const EnemyDefinition& definition) const
+    {
+        if (!_attackWarningModel || !_terrain)
+        {
+            return;
+        }
+        const auto ribbon = [&](Engine::Segment motion, float radius, float height, bool projectile)
+        {
+            const double dx = static_cast<double>(motion.end.x) - motion.start.x;
+            const double dz = static_cast<double>(motion.end.z) - motion.start.z;
+            const double length = std::hypot(dx, dz);
+            if (!std::isfinite(length) || length <= .001)
+            {
+                return;
+            }
+            float fraction = static_cast<float>(std::min(1.0, 20.0 / length));
+            auto baseMotion = motion;
+            if (projectile)
+            {
+                baseMotion.start.y -= radius;
+                baseMotion.end.y -= radius;
+                if (const auto hit = _terrain->SweepSphere(motion, radius))
+                {
+                    fraction = std::min(fraction, hit->fraction);
+                }
+            }
+            const auto clip = [&](const auto& obstacle)
+            {
+                if (const auto hit = Engine::SweepCylinder(baseMotion, radius, height, obstacle))
+                {
+                    fraction = std::min(fraction, hit->fraction);
+                }
+            };
+            for (const auto& obstacle : _environment.SolidCylinders())
+            {
+                clip(obstacle);
+            }
+            for (const auto& obstacle : _environment.SolidBoxes())
+            {
+                clip(obstacle);
+            }
+            const double warnedLength = length * fraction;
+            if (warnedLength <= .001)
+            {
+                return;
+            }
+            const float width = std::max(.08f, radius * 2);
+            const float rightX = static_cast<float>(dz / length), rightZ = static_cast<float>(-dx / length);
+            const auto segments = static_cast<std::uint32_t>(std::ceil(warnedLength / .5));
+            auto previous = _terrain->Sample({motion.start.x, motion.start.z});
+            for (std::uint32_t i = 1; previous && i <= segments; ++i)
+            {
+                const double t = fraction * static_cast<double>(i) / segments;
+                const float x = static_cast<float>(motion.start.x + dx * t);
+                const float z = static_cast<float>(motion.start.z + dz * t);
+                const auto next = _terrain->Sample({x, z});
+                if (!next || (!projectile && (next->normal.y < _minimumNormalY ||
+                    x < _playBounds.min.x + radius || x > _playBounds.max.x - radius ||
+                    z < _playBounds.min.y + radius || z > _playBounds.max.y - radius)))
+                {
+                    break;
+                }
+                const auto left = _terrain->Sample({(previous->position.x + x) * .5f - rightX * width * .5f,
+                    (previous->position.z + z) * .5f - rightZ * width * .5f});
+                const auto right = _terrain->Sample({(previous->position.x + x) * .5f + rightX * width * .5f,
+                    (previous->position.z + z) * .5f + rightZ * width * .5f});
+                const float sideRise = left && right ? right->position.y - left->position.y : 0;
+                Engine::DrawItem item;
+                item.model = _attackWarningModel;
+                item.world = {rightX * width, sideRise, rightZ * width, 0,
+                    0, 1, 0, 0, next->position.x - previous->position.x,
+                    next->position.y - previous->position.y, next->position.z - previous->position.z, 0,
+                    previous->position.x, previous->position.y + .055f, previous->position.z, 1};
+                item.tint = projectile ? Engine::Vector4{1, .48f, .12f, 1} : Engine::Vector4{1, .72f, .12f, 1};
+                item.fadeCoverage = projectile ? .75f : .4f;
+                item.castsShadow = false;
+                item.receivesShadow = false;
+                frame.draws.push_back(std::move(item));
+                previous = next;
+            }
+        };
+        if (definition.charge && enemy.chargePhase == EnemyChargePhase::Windup)
+        {
+            const auto& charge = *definition.charge;
+            ribbon({enemy.position, {enemy.position.x + enemy.chargeDirection.x * charge.speed * charge.duration,
+                enemy.position.y, enemy.position.z + enemy.chargeDirection.y * charge.speed * charge.duration}},
+                enemy.radius, enemy.height, false);
+        }
+        if (definition.ranged && enemy.rangedCharging)
+        {
+            const auto& ranged = *definition.ranged;
+            const Engine::Vector3 start{enemy.position.x, enemy.position.y + enemy.height * .55f, enemy.position.z};
+            const double x = static_cast<double>(enemy.rangedAim.x) - start.x;
+            const double y = static_cast<double>(enemy.rangedAim.y) - start.y;
+            const double z = static_cast<double>(enemy.rangedAim.z) - start.z;
+            const double length = std::sqrt(x * x + y * y + z * z);
+            if (length <= .000001)
+            {
+                return;
+            }
+            for (std::uint32_t i = 0; i < ranged.projectileCount; ++i)
+            {
+                const double angle = ranged.projectileCount > 1 ? ranged.spreadRadians *
+                    (static_cast<double>(i) / (ranged.projectileCount - 1) - .5) : 0;
+                const double sine = std::sin(angle), cosine = std::cos(angle);
+                const Engine::Vector3 velocity{
+                    static_cast<float>((x * cosine + z * sine) / length * ranged.projectileSpeed),
+                    static_cast<float>(y / length * ranged.projectileSpeed),
+                    static_cast<float>((z * cosine - x * sine) / length * ranged.projectileSpeed)};
+                ribbon({start, {start.x + velocity.x * ranged.projectileLife,
+                    start.y + velocity.y * ranged.projectileLife, start.z + velocity.z * ranged.projectileLife}},
+                    ranged.projectileRadius, ranged.projectileRadius * 2, true);
+            }
+        }
+    }
+
     void LastFieldApp::BuildRenderFrame(Engine::RenderFrame& out)
     {
         out.clearColor =
@@ -1856,16 +1991,16 @@ namespace Client
                         tint = _gameMode ? Engine::Vector4{1, .92f, .8f, 1}
                                          : Engine::Vector4{0.25f, 0.8f, 1, 1};
                     }
-                    if (_gameMode && value.rangedCharging)
+                    if (_gameMode && (value.chargePhase == EnemyChargePhase::Recovery || value.rangedRecovery > 0))
                     {
-                        tint = {1, .58f, .3f, 1};
+                        tint = {.55f, .70f, .76f, 1};
                     }
                     if ((visual && visual->hitFlash > 0) ||
                         (!_gameMode && _hitFlash > 0 && _lastHit && _lastHit->target == ref))
                     {
                         tint = {1, 1, 0.15f, 1};
                     }
-                    if (_gameMode && value.chargePhase == EnemyChargePhase::Windup)
+                    if (_gameMode && (value.chargePhase == EnemyChargePhase::Windup || value.rangedCharging))
                     {
                         tint = {1, .58f, .3f, 1};
                     }
@@ -1890,6 +2025,11 @@ namespace Client
                     if (_gameMode)
                     {
                         const auto* definition = _definitions->FindEnemy(value.definitionId);
+                        if (definition && value.definitionId == _run->Wave().bossEnemyId && value.hp > 0 &&
+                            _run->Wave().phase == WavePhase::Combat && _run->Wave().outcome == RunOutcome::Playing)
+                        {
+                            AppendAttackWarning(out, value, *definition);
+                        }
                         const auto vp =
                             DirectX::XMLoadFloat4x4(&out.camera.view) * DirectX::XMLoadFloat4x4(&out.camera.projection);
                         Engine::Vector4 clip;
@@ -2055,6 +2195,7 @@ namespace Client
         _projectileModels = {};
         _experienceModel.reset();
         _currencyModel.reset();
+        _attackWarningModel.reset();
         _run.reset();
         ResetPresentation();
         _trialMelee.hitTargets.clear();
