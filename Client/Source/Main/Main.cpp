@@ -128,6 +128,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR commandLine, int)
         desc.backgroundFramesPerSecond = 15;
         desc.vsync = true;
         desc.maximumFrameLatency = 1;
+        desc.frameSchedulingTask = L"Games";
         desc.visible = !smoke;
 
         Engine::Application application;

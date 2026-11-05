@@ -24,5 +24,7 @@ namespace Engine
         bool vsync = false;
         // Zero leaves the DXGI queue limit unchanged.
         uint32_t maximumFrameLatency = 0;
+        // Empty keeps normal scheduling. A task is registered only while focused and unpaused.
+        std::wstring frameSchedulingTask;
     };
 }

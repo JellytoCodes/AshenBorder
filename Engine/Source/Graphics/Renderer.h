@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Effects/ParticleData.h"
+
 #include <d3d11.h>
 #include <wrl/client.h>
 
@@ -30,6 +32,9 @@ namespace Engine
         uint32_t rendererScratchGrowths = 0;
         uint32_t forwardCulledMeshes = 0;
         uint32_t shadowCulledMeshes = 0;
+        uint32_t particleDrawCalls = 0;
+        uint32_t particleInstances = 0;
+        uint32_t particleUploadBytes = 0;
     };
 
     class Renderer
@@ -44,6 +49,17 @@ namespace Engine
 
     private:
         struct PreparedMesh;
+        bool RenderParticles(const RenderFrame& frame, RenderingStats& stats);
+
+        std::vector<ParticleDraw> _particles;
+        Microsoft::WRL::ComPtr<ID3D11VertexShader> _particleVertexShader;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> _particlePixelShader;
+        Microsoft::WRL::ComPtr<ID3D11InputLayout> _particleInputLayout;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> _particleBuffer;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> _particleConstants;
+        Microsoft::WRL::ComPtr<ID3D11RasterizerState> _particleRasterizer;
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> _particleDepth;
+        Microsoft::WRL::ComPtr<ID3D11BlendState> _particleBlend;
 
         GraphicsDevice& _graphics;
         std::vector<PreparedMesh> _prepared;

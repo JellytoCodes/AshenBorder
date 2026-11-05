@@ -132,6 +132,18 @@
     <None Include="Shaders\StaticMesh.hlsl" />
     <None Include="Shaders\UI.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Effects\ParticleSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Effects\ParticleSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Effects\ParticleData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Particle.hlsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

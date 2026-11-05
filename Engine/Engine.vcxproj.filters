@@ -7,6 +7,7 @@
     <Filter Include="Source\App" />
     <Filter Include="Source\Audio" />
     <Filter Include="Source\Core" />
+    <Filter Include="Source\Effects" />
     <Filter Include="Source\Entity" />
     <Filter Include="Source\Graphics" />
     <Filter Include="Source\Resource" />
@@ -170,6 +171,26 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\UI.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Effects\ParticleSystem.cpp">
+      <Filter>Source\Effects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Effects\ParticleSystem.h">
+      <Filter>Source\Effects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Effects\ParticleData.h">
+      <Filter>Source\Effects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Particle.hlsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

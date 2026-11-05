@@ -109,6 +109,12 @@
     <ClInclude Include="Source\Scene\Environment.h" />
     <ClInclude Include="Source\UI\LastFieldHud.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Presentation\CombatEffects.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Presentation\CombatEffects.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/Camera.h"
+#include "Effects/ParticleData.h"
 #include "Types/Math.h"
 #include "UI/UiData.h"
 
@@ -52,6 +53,7 @@ namespace Engine
         CameraData camera;
         LightData light;
         std::vector<DrawItem> draws;
+        std::vector<ParticleDraw> particles;
         ShadowData shadow;
         bool instancingEnabled = true;
         UiFrame ui;
@@ -63,6 +65,7 @@ namespace Engine
             camera = CameraData{};
             light = LightData{};
             draws.clear();
+            particles.clear();
             shadow = ShadowData{};
             instancingEnabled = true;
             frustumCullingEnabled = false;

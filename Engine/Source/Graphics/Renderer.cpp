@@ -65,6 +65,18 @@ namespace
         Engine::Vector4 specularParams;
     };
 
+    struct alignas(16) ParticleConstants
+    {
+        Engine::Matrix viewProjection;
+        Engine::Vector4 cameraRight;
+        Engine::Vector4 cameraUp;
+        Engine::Vector4 cameraPosition;
+    };
+
+    static_assert(sizeof(Engine::ParticleDraw) == 64);
+    static_assert(std::is_trivially_copyable_v<Engine::ParticleDraw>);
+    static_assert(sizeof(ParticleConstants) == 112);
+
     struct InstanceData
     {
         Engine::Matrix world;
@@ -615,6 +627,54 @@ namespace Engine
         {
             return false;
         }
+        Microsoft::WRL::ComPtr<ID3DBlob> particleVertex, particlePixel;
+        if (!CompileShader(shaderRoot / L"Particle.hlsl", "VSMain", "vs_5_0", particleVertex) ||
+            !CompileShader(shaderRoot / L"Particle.hlsl", "PSMain", "ps_5_0", particlePixel))
+        {
+            Shutdown();
+            return false;
+        }
+        const D3D11_INPUT_ELEMENT_DESC particleElements[] = {
+            {"PARTICLEPOSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+            {"PARTICLESIZE", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+            {"PARTICLECOLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+            {"PARTICLEAXIS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1}};
+        bufferDesc.ByteWidth = sizeof(ParticleDraw) * kMaxParticleInstances;
+        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+        rasterizerDesc.CullMode = D3D11_CULL_NONE;
+        depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        blendDesc.RenderTarget[0].BlendEnable = TRUE;
+        blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+        if (!checkResult("Create particle VS", device->CreateVertexShader(particleVertex->GetBufferPointer(),
+                particleVertex->GetBufferSize(), nullptr, _particleVertexShader.GetAddressOf())) ||
+            !checkResult("Create particle PS", device->CreatePixelShader(particlePixel->GetBufferPointer(),
+                particlePixel->GetBufferSize(), nullptr, _particlePixelShader.GetAddressOf())) ||
+            !checkResult("Create particle layout", device->CreateInputLayout(particleElements, 4,
+                particleVertex->GetBufferPointer(), particleVertex->GetBufferSize(), _particleInputLayout.GetAddressOf())) ||
+            !checkResult("Create particle instances", device->CreateBuffer(&bufferDesc, nullptr, _particleBuffer.GetAddressOf())) ||
+            !checkResult("Create particle rasterizer", device->CreateRasterizerState(&rasterizerDesc, _particleRasterizer.GetAddressOf())) ||
+            !checkResult("Create particle depth", device->CreateDepthStencilState(&depthDesc, _particleDepth.GetAddressOf())) ||
+            !checkResult("Create particle blend", device->CreateBlendState(&blendDesc, _particleBlend.GetAddressOf())))
+        {
+            return false;
+        }
+        bufferDesc.ByteWidth = sizeof(ParticleConstants);
+        bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        if (!checkResult("Create particle constants", device->CreateBuffer(&bufferDesc, nullptr, _particleConstants.GetAddressOf())))
+        {
+            return false;
+        }
+        try
+        {
+            _particles.reserve(kMaxParticleInstances);
+        }
+        catch (...)
+        {
+            Shutdown();
+            return false;
+        }
         _uiRenderer = std::make_unique<UiRenderer>(_graphics);
         if (!_uiRenderer->Initialize(shaderRoot))
         {
@@ -622,7 +682,7 @@ namespace Engine
             return false;
         }
 
-        Log::Write("Renderer initialized: static/skinned/instanced, shared pose Shadow/Forward, 1024 shadow, Bayer fade, UI.");
+        Log::Write("Renderer initialized: static/skinned/instanced, shared pose Shadow/Forward, 1024 shadow, Bayer fade, pooled particles, UI.");
         return true;
     }
 
@@ -643,6 +703,8 @@ namespace Engine
             !_instancedInputLayout || !_instanceBuffer || !_effectsConstantBuffer || !_shadowDepthView ||
             !_shadowResourceView || !_shadowSampler || !_uiRenderer || !_sampler || !_rasterizer ||
             !_mirroredRasterizer || !_wireframeRasterizer || !_mirroredWireframeRasterizer ||
+            !_particleVertexShader || !_particlePixelShader || !_particleInputLayout || !_particleBuffer ||
+            !_particleConstants || !_particleRasterizer || !_particleDepth || !_particleBlend ||
             !_depthState || !_blendState || !_graphics.Device() || !_graphics.Context())
         {
             Log::Write("Renderer Render called before complete initialization.");
@@ -672,13 +734,19 @@ namespace Engine
             return invalid("Renderer shadow requires a finite matrix, nonnegative bias, and PCF radius 0..2.");
         }
 
+        if (frame.particles.size() > kMaxParticleInstances ||
+            !std::all_of(frame.particles.begin(), frame.particles.end(), ValidParticleDraw))
+        {
+            return invalid("Renderer particle snapshot is invalid or exceeds capacity.");
+        }
+
         DrawConstants common{};
         EffectsConstants effects{};
         effects.lightViewProjection = frame.shadow.viewProjection;
         effects.shadowParams = {frame.shadow.enabled ? 1.0f : 0.0f, frame.shadow.depthBias,
             frame.shadow.normalBias, 1.0f / static_cast<float>(kShadowMapResolution)};
         effects.specularParams = {frame.light.specularIntensity, frame.light.specularPower, 0, 0};
-        if (!frame.draws.empty())
+        if (!frame.draws.empty() || !frame.particles.empty())
         {
             if (!IsFinite(frame.camera.position) || !IsFinite(frame.camera.view) ||
                 !IsFinite(frame.camera.projection) || !IsFinite(frame.light.direction) ||
@@ -1038,7 +1106,8 @@ namespace Engine
             }
         }
         // Clear restores the window targets and viewport after the shadow pass, including after Resize.
-        if (!_graphics.Clear(frame.clearColor) || !renderPass(false) || !_uiRenderer->Render(frame.ui))
+        if (!_graphics.Clear(frame.clearColor) || !renderPass(false) ||
+            !RenderParticles(frame, nextStats) || !_uiRenderer->Render(frame.ui))
         {
             return false;
         }
@@ -1054,6 +1123,73 @@ namespace Engine
         return true;
     }
 
+    bool Renderer::RenderParticles(const RenderFrame& frame, RenderingStats& stats)
+    {
+        if (frame.particles.empty())
+        {
+            return true;
+        }
+        _particles.assign(frame.particles.begin(), frame.particles.end());
+        const auto& view = frame.camera.view;
+        const auto depth = [&](const ParticleDraw& value)
+        {
+            const auto& p = value.positionRotation;
+            return static_cast<double>(p.x) * view.m[0][2] +
+                static_cast<double>(p.y) * view.m[1][2] + static_cast<double>(p.z) * view.m[2][2];
+        };
+        // All shapes share one premultiplied blend state. Sort once, without per-frame allocation.
+        std::sort(_particles.begin(), _particles.end(), [&](const ParticleDraw& a, const ParticleDraw& b)
+            {
+                return depth(a) > depth(b);
+            });
+        auto* context = _graphics.Context();
+        D3D11_MAPPED_SUBRESOURCE mapped{};
+        HRESULT result = context->Map(_particleBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+        if (FAILED(result))
+        {
+            Log::Error("Map particle instances", result);
+            return false;
+        }
+        const auto bytes = static_cast<UINT>(_particles.size() * sizeof(ParticleDraw));
+        std::memcpy(mapped.pData, _particles.data(), bytes);
+        context->Unmap(_particleBuffer.Get(), 0);
+        ParticleConstants constants{};
+        DirectX::XMStoreFloat4x4(&constants.viewProjection,
+            DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&frame.camera.projection));
+        constants.cameraRight = {view.m[0][0], view.m[1][0], view.m[2][0], 0};
+        constants.cameraUp = {view.m[0][1], view.m[1][1], view.m[2][1], 0};
+        constants.cameraPosition = {frame.camera.position.x, frame.camera.position.y, frame.camera.position.z, 1};
+        result = context->Map(_particleConstants.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+        if (FAILED(result))
+        {
+            Log::Error("Map particle constants", result);
+            return false;
+        }
+        std::memcpy(mapped.pData, &constants, sizeof(constants));
+        context->Unmap(_particleConstants.Get(), 0);
+        context->VSSetShader(_particleVertexShader.Get(), nullptr, 0);
+        context->PSSetShader(_particlePixelShader.Get(), nullptr, 0);
+        context->GSSetShader(nullptr, nullptr, 0);
+        context->HSSetShader(nullptr, nullptr, 0);
+        context->DSSetShader(nullptr, nullptr, 0);
+        context->IASetInputLayout(_particleInputLayout.Get());
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        ID3D11Buffer* buffer = _particleBuffer.Get();
+        const UINT stride = sizeof(ParticleDraw), offset = 0;
+        context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+        context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
+        buffer = _particleConstants.Get();
+        context->VSSetConstantBuffers(0, 1, &buffer);
+        context->RSSetState(_particleRasterizer.Get());
+        context->OMSetDepthStencilState(_particleDepth.Get(), 0);
+        context->OMSetBlendState(_particleBlend.Get(), nullptr, 0xffffffff);
+        context->DrawInstanced(6, static_cast<UINT>(_particles.size()), 0, 0);
+        stats.particleDrawCalls = 1;
+        stats.particleInstances = static_cast<UINT>(_particles.size());
+        stats.particleUploadBytes = bytes;
+        return true;
+    }
+
     RenderingStats Renderer::Stats() const noexcept
     {
         return _stats;
@@ -1061,6 +1197,15 @@ namespace Engine
 
     void Renderer::Shutdown()
     {
+        std::vector<ParticleDraw>().swap(_particles);
+        _particleVertexShader.Reset();
+        _particlePixelShader.Reset();
+        _particleInputLayout.Reset();
+        _particleBuffer.Reset();
+        _particleConstants.Reset();
+        _particleRasterizer.Reset();
+        _particleDepth.Reset();
+        _particleBlend.Reset();
         std::vector<PreparedMesh>().swap(_prepared);
         std::vector<uint8_t>().swap(_done);
         if (_uiRenderer)

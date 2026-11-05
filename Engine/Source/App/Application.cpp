@@ -2,10 +2,14 @@
 
 #include "Core/Log.h"
 
+#include <avrt.h>
+
 #include <cmath>
 #include <exception>
 #include <limits>
 #include <string>
+
+#pragma comment(lib, "avrt.lib")
 
 namespace Engine
 {
@@ -124,6 +128,46 @@ namespace Engine
         int result = 0;
         bool wasInactive = !_window.IsFocused() || _window.IsMinimized();
         std::int64_t lastFrameStart = 0;
+        const auto releaseScheduling = [](void* task) noexcept
+        {
+            if (!AvRevertMmThreadCharacteristics(task))
+            {
+                const auto error = static_cast<long>(GetLastError());
+                try
+                {
+                    Log::Error("Application: revert frame scheduling", error);
+                }
+                catch (...)
+                {
+                    OutputDebugStringW(L"Application: revert frame scheduling failed.\n");
+                }
+            }
+        };
+        std::unique_ptr<void, decltype(releaseScheduling)> schedulingTask(nullptr, releaseScheduling);
+        bool schedulingAttempted = false;
+        const auto updateScheduling = [&](bool active)
+        {
+            if (!active || _desc.frameSchedulingTask.empty())
+            {
+                schedulingTask.reset();
+                schedulingAttempted = false;
+            }
+            else if (!schedulingAttempted)
+            {
+                schedulingAttempted = true;
+                DWORD taskIndex = 0;
+                schedulingTask.reset(AvSetMmThreadCharacteristicsW(_desc.frameSchedulingTask.c_str(), &taskIndex));
+                if (!schedulingTask)
+                {
+                    Log::Error("Application: frame scheduling unavailable; using normal scheduling",
+                        static_cast<long>(GetLastError()));
+                }
+                else
+                {
+                    Log::Write("Application: MMCSS active-frame task registered");
+                }
+            }
+        };
         try
         {
             while (!_exitRequested)
@@ -138,6 +182,7 @@ namespace Engine
                         break;
                     }
                     inactive = !_window.IsFocused() || _window.IsMinimized();
+                    updateScheduling(!inactive && !_simulationPaused);
                     if (inactive != wasInactive)
                     {
                         _input.Clear();
@@ -254,6 +299,7 @@ namespace Engine
                     break;
                 }
 
+                updateScheduling(_window.IsFocused() && !_window.IsMinimized() && !_simulationPaused);
                 if (!_window.IsMinimized() && _window.Width() > 0 && _window.Height() > 0)
                 {
                     _frame.Clear();
@@ -284,6 +330,7 @@ namespace Engine
             Log::Write("Application update exception");
             result = 1;
         }
+        schedulingTask.reset();
         _running = false;
         Log::Write("Application: Run finished, code=" + std::to_string(result));
         return result;

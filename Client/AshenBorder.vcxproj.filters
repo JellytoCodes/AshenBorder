@@ -5,6 +5,7 @@
     <Filter Include="Source\Core" />
     <Filter Include="Source\Game" />
     <Filter Include="Source\Main" />
+    <Filter Include="Source\Presentation" />
     <Filter Include="Source\Scene" />
     <Filter Include="Source\UI" />
   </ItemGroup>
@@ -55,4 +56,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ClCompile Include="Source\Presentation\CombatEffects.cpp">
+      <Filter>Source\Presentation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Presentation\CombatEffects.h">
+      <Filter>Source\Presentation</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

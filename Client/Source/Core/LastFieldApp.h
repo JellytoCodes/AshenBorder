@@ -7,6 +7,7 @@
 #include "Graphics/Camera.h"
 #include "Game/GameDefinitions.h"
 #include "Game/LastFieldRun.h"
+#include "Presentation/CombatEffects.h"
 #include "Scene/Terrain.h"
 #include "Scene/Environment.h"
 #include "UI/LastFieldHud.h"
@@ -42,6 +43,8 @@ namespace Client
         void Shutdown() override;
         HudSnapshot Hud() const;
         std::string DiagnosticText() const;
+        void SetParticleEffectsEnabled(bool enabled) noexcept;
+        Engine::ParticleStats ParticleStats() const noexcept;
 
     private:
         bool UpdateCamera(float dt);
@@ -128,6 +131,7 @@ namespace Client
         std::map<std::string, std::shared_ptr<const Engine::AudioClip>> _sounds;
         Engine::AudioDevice _audio;
         Environment _environment;
+        CombatEffects _combatEffects;
         std::optional<HudCommand> _pendingHudCommand;
         std::string _hudMessage;
         Engine::Animator _animator;

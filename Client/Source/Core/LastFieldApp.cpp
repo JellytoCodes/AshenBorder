@@ -596,6 +596,11 @@ namespace Client
             Engine::Log::Write("LastFieldApp presentation: " + error);
             return false;
         }
+        if (!_combatEffects.Initialize(_definitions->projectileCapacity))
+        {
+            Engine::Log::Write("LastFieldApp: combat particle storage initialization failed");
+            return false;
+        }
         _enemyVisuals.clear();
         _deathVisuals.clear();
         _deathVisuals.resize(_definitions->enemyCapacity);
@@ -724,6 +729,7 @@ namespace Client
 
     void LastFieldApp::ResetPresentation() noexcept
     {
+        _combatEffects.Reset(_run ? _run->RunEpoch() : 0);
         _pendingHudCommand.reset();
         _hudMessage.clear();
         _audio.StopAll();
@@ -1243,6 +1249,7 @@ namespace Client
             }
             _lastEventSequence = event.sequence;
             _lastGameEvent = event;
+            _combatEffects.OnEvent(event, *_run, *_definitions);
             std::string animationError;
             if (event.kind == GameEventKind::PlayerDied && _deathClip && _playerAction != PlayerAction::Death)
             {
@@ -1434,6 +1441,10 @@ namespace Client
         const auto previous = _characterTransform.Position();
         const double beforeElapsed = _gameMode ? _run->Wave().elapsed : 0;
         _run->Tick(dt, {x, z});
+        if (_gameMode && !_combatEffects.Advance(dt, *_run))
+        {
+            throw std::runtime_error("Client particle fixed update failed");
+        }
         const double animationSeconds = _gameMode
             ? std::clamp(_run->Wave().elapsed - beforeElapsed, 0.0, static_cast<double>(dt)) : dt;
         SyncPlayerTransform();
@@ -2181,9 +2192,23 @@ namespace Client
             }
             _environment.Append(out);
         }
+        if (_gameMode && !_combatEffects.Append(out))
+        {
+            throw std::runtime_error("Client particle snapshot exceeds render capacity");
+        }
         auto enemyBars = std::move(out.ui.rects);
         BuildHud(Hud(), out.ui, _application->Graphics().Width(), _application->Graphics().Height());
         out.ui.rects.insert(out.ui.rects.begin(), enemyBars.begin(), enemyBars.end());
+    }
+
+    void LastFieldApp::SetParticleEffectsEnabled(bool enabled) noexcept
+    {
+        _combatEffects.SetEnabled(enabled);
+    }
+
+    Engine::ParticleStats LastFieldApp::ParticleStats() const noexcept
+    {
+        return _combatEffects.Stats();
     }
 
     void LastFieldApp::Shutdown()
