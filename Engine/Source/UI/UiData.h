@@ -37,9 +37,19 @@ namespace Engine
         float maxWidth = 0.0f;
     };
 
+    // Solid triangles are drawn after rectangles and before text in the same UI batch.
+    struct UiTriangle
+    {
+        Vector2 a = {0.0f, 0.0f};
+        Vector2 b = {0.0f, 0.0f};
+        Vector2 c = {0.0f, 0.0f};
+        Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+    };
+
     struct UiFrame
     {
         std::vector<UiRect> rects;
         std::vector<UiText> texts;
+        std::vector<UiTriangle> triangles;
     };
 }

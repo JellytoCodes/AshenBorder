@@ -71,6 +71,7 @@ namespace Engine
             frustumCullingEnabled = false;
             ui.rects.clear();
             ui.texts.clear();
+            ui.triangles.clear();
         }
     };
 }

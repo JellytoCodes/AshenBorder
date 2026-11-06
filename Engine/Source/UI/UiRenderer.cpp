@@ -292,17 +292,25 @@ namespace Engine
 
     bool UiRenderer::Validate(const UiFrame& frame) noexcept
     {
-        if (frame.rects.size() > 4096 || frame.texts.size() > 128)
+        if (frame.rects.size() > 4096 || frame.texts.size() > 128 || frame.triangles.size() > 4096)
         {
             return false;
         }
-        size_t vertices = frame.rects.size() * 6;
+        size_t vertices = frame.rects.size() * 6 + frame.triangles.size() * 3;
         size_t characters = 0;
         for (const UiRect& rect : frame.rects)
         {
             if (!Unit(rect.position.x) || !Unit(rect.position.y) || !Unit(rect.size.x) ||
                 !Unit(rect.size.y) || rect.position.x + rect.size.x > 1.0f ||
                 rect.position.y + rect.size.y > 1.0f || !Color(rect.color))
+            {
+                return false;
+            }
+        }
+        for (const UiTriangle& triangle : frame.triangles)
+        {
+            if (!Unit(triangle.a.x) || !Unit(triangle.a.y) || !Unit(triangle.b.x) || !Unit(triangle.b.y) ||
+                !Unit(triangle.c.x) || !Unit(triangle.c.y) || !Color(triangle.color))
             {
                 return false;
             }
@@ -492,6 +500,14 @@ namespace Engine
             AddQuad(rect.position.x, rect.position.y, rect.position.x + rect.size.x,
                 rect.position.y + rect.size.y, rect.color.x, rect.color.y, rect.color.z, rect.color.w,
                 whiteU, whiteV, whiteU, whiteV);
+        }
+        for (const UiTriangle& triangle : frame.triangles)
+        {
+            for (const Vector2 point : {triangle.a, triangle.b, triangle.c})
+            {
+                _vertices.push_back({point.x * 2.0f - 1.0f, 1.0f - point.y * 2.0f, whiteU, whiteV,
+                    triangle.color.x, triangle.color.y, triangle.color.z, triangle.color.w});
+            }
         }
         const float width = static_cast<float>(_graphics.Width());
         const float height = static_cast<float>(_graphics.Height());
